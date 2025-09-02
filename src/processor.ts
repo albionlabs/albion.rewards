@@ -1,30 +1,15 @@
-import { Transfer } from "./types";
-
-interface TokenBalances {
-  snapshot1: bigint;
-  snapshot2: bigint;
-  current: bigint;
-}
+import { Transfer, MultiSnapshotTokenBalances, TokenProportions, SnapshotInfo } from "./types";
 
 interface AccountBalances {
-  [tokenAddress: string]: TokenBalances;
-}
-
-interface TokenProportions {
-  [address: string]: {
-    balance: bigint;
-    proportion: number;
-  };
+  [tokenAddress: string]: MultiSnapshotTokenBalances;
 }
 
 export class Processor {
   private accountBalances = new Map<string, AccountBalances>();
-  private snapshotBlock1: number;
-  private snapshotBlock2: number;
+  private snapshots: SnapshotInfo[];
 
-  constructor(snapshotBlock1: number, snapshotBlock2: number) {
-    this.snapshotBlock1 = snapshotBlock1;
-    this.snapshotBlock2 = snapshotBlock2;
+  constructor(snapshots: SnapshotInfo[]) {
+    this.snapshots = snapshots;
   }
 
   /**
@@ -32,6 +17,7 @@ export class Processor {
    */
   processTransfers(transfers: Transfer[]): void {
     console.log("Processing transfers and calculating balances...");
+    console.log(`Using ${this.snapshots.length} snapshots`);
     
     // Initialize balances for all accounts and tokens
     for (const transfer of transfers) {
@@ -49,15 +35,13 @@ export class Processor {
       // Initialize token balances if they don't exist
       if (!this.accountBalances.get(from)![tokenAddress]) {
         this.accountBalances.get(from)![tokenAddress] = {
-          snapshot1: 0n,
-          snapshot2: 0n,
+          snapshots: new Array(this.snapshots.length).fill(0n),
           current: 0n
         };
       }
       if (!this.accountBalances.get(to)![tokenAddress]) {
         this.accountBalances.get(to)![tokenAddress] = {
-          snapshot1: 0n,
-          snapshot2: 0n,
+          snapshots: new Array(this.snapshots.length).fill(0n),
           current: 0n
         };
       }
@@ -76,22 +60,15 @@ export class Processor {
         toBalances.current += valueBigInt;
       }
       
-      // Update snapshot balances
-      if (blockNumber <= this.snapshotBlock1) {
-        if (from !== "0x0000000000000000000000000000000000000000") {
-          fromBalances.snapshot1 -= valueBigInt;
-          toBalances.snapshot1 += valueBigInt;
-        } else {
-          toBalances.snapshot1 += valueBigInt;
-        }
-      }
-      
-      if (blockNumber <= this.snapshotBlock2) {
-        if (from !== "0x0000000000000000000000000000000000000000") {
-          fromBalances.snapshot2 -= valueBigInt;
-          toBalances.snapshot2 += valueBigInt;
-        } else {
-          toBalances.snapshot2 += valueBigInt;
+      // Update snapshot balances for all snapshots
+      for (let i = 0; i < this.snapshots.length; i++) {
+        if (blockNumber <= this.snapshots[i].blockNumber) {
+          if (from !== "0x0000000000000000000000000000000000000000") {
+            fromBalances.snapshots[i] -= valueBigInt;
+            toBalances.snapshots[i] += valueBigInt;
+          } else {
+            toBalances.snapshots[i] += valueBigInt;
+          }
         }
       }
     }
@@ -100,7 +77,7 @@ export class Processor {
   /**
    * Calculate proportions for each token based on snapshot balances
    */
-  calculateProportions(): Map<string, TokenProportions> {
+  calculateProportions(distributionAmount?: number): Map<string, TokenProportions> {
     console.log("Calculating proportions...");
     const tokenProportions = new Map<string, TokenProportions>();
     
@@ -114,15 +91,16 @@ export class Processor {
     
     for (const tokenAddress of uniqueTokens) {
       const proportions: TokenProportions = {};
-      let totalBalanceSnapshot1 = 0n;
-      let totalBalanceSnapshot2 = 0n;
+      let totalBalanceSum = 0n;
       
-      // Calculate total balances for this token at each snapshot
+      // Calculate total average balances for this token across all snapshots
       for (const [address, accountBal] of this.accountBalances) {
         const tokenBalances = accountBal[tokenAddress];
         if (tokenBalances) {
-          totalBalanceSnapshot1 += tokenBalances.snapshot1 > 0n ? tokenBalances.snapshot1 : 0n;
-          totalBalanceSnapshot2 += tokenBalances.snapshot2 > 0n ? tokenBalances.snapshot2 : 0n;
+          // Calculate average balance across all snapshots for this account
+          const accountBalanceSum = tokenBalances.snapshots.reduce((sum, balance) => sum + (balance > 0n ? balance : 0n), 0n);
+          const accountAverageBalance = accountBalanceSum / BigInt(this.snapshots.length);
+          totalBalanceSum += accountAverageBalance;
         }
       }
       
@@ -130,18 +108,28 @@ export class Processor {
       for (const [address, accountBal] of this.accountBalances) {
         const tokenBalances = accountBal[tokenAddress];
         if (tokenBalances) {
-          const balanceSnapshot1 = tokenBalances.snapshot1 > 0n ? tokenBalances.snapshot1 : 0n;
-          const balanceSnapshot2 = tokenBalances.snapshot2 > 0n ? tokenBalances.snapshot2 : 0n;
-          const averageBalance = (balanceSnapshot1 + balanceSnapshot2) / 2n;
+          // Calculate average balance across all snapshots for this account
+          const accountBalanceSum = tokenBalances.snapshots.reduce((sum, balance) => sum + (balance > 0n ? balance : 0n), 0n);
+          const accountAverageBalance = accountBalanceSum / BigInt(this.snapshots.length);
           
-          if (averageBalance > 0n) {
-            const proportion = totalBalanceSnapshot1 > 0n && totalBalanceSnapshot2 > 0n 
-              ? Number(averageBalance) / Number((totalBalanceSnapshot1 + totalBalanceSnapshot2) / 2n)
+          if (accountAverageBalance > 0n) {
+            const proportion = totalBalanceSum > 0n 
+              ? Number(accountAverageBalance) / Number(totalBalanceSum)
               : 0;
             
+            // Calculate reward if distribution amount is provided
+            let reward: bigint | undefined;
+            if (distributionAmount && distributionAmount > 0) {
+              // Convert distribution amount to BigInt with 18 decimals
+              const distributionAmountBigInt = BigInt(Math.floor(distributionAmount * 1e18));
+              // Calculate reward: proportion * distributionAmount (in 18 decimals)
+              reward = BigInt(Math.floor(proportion * Number(distributionAmountBigInt)));
+            }
+            
             proportions[address] = {
-              balance: averageBalance,
-              proportion: proportion
+              balance: accountAverageBalance,
+              proportion: proportion,
+              reward: reward
             };
           }
         }
@@ -180,17 +168,38 @@ export class Processor {
     console.log("\n=== BALANCE SUMMARY ===");
     for (const [tokenAddress, proportions] of tokenProportions) {
       console.log(`\nToken: ${tokenAddress}`);
-      console.log("Address | Balance | Proportion");
-      console.log("--------|---------|------------");
+      console.log("Address | Balance | Proportion | Reward");
+      console.log("--------|---------|------------|-------");
       
       // Sort by balance (descending)
       const sortedEntries = Object.entries(proportions)
         .sort(([,a], [,b]) => Number(b.balance - a.balance));
       
       for (const [address, data] of sortedEntries) {
-        console.log(`${address} | ${data.balance.toString()} | ${(data.proportion * 100).toFixed(4)}%`);
+        const rewardStr = data.reward ? ` | ${data.reward.toString()}` : '';
+        console.log(`${address} | ${data.balance.toString()} | ${(data.proportion * 100).toFixed(4)}%${rewardStr}`);
       }
     }
+  }
+
+  /**
+   * Generate CSV output for rewards
+   */
+  generateRewardsCSV(tokenProportions: Map<string, TokenProportions>): string {
+    const csvLines: string[] = [];
+    csvLines.push("index,address,reward"); // CSV header
+    
+    let index = 0;
+    for (const [tokenAddress, proportions] of tokenProportions) {
+      for (const [address, data] of Object.entries(proportions)) {
+        if (data.reward && data.reward > 0n) {
+          csvLines.push(`${index},${address},${data.reward.toString()}`);
+          index++;
+        }
+      }
+    }
+    
+    return csvLines.join('\n');
   }
 
   /**
@@ -207,14 +216,14 @@ export class Processor {
       for (const [address, data] of Object.entries(proportions)) {
         serializableProportions[tokenAddress][address] = {
           balance: data.balance.toString(), // Convert BigInt to string
-          proportion: data.proportion
+          proportion: data.proportion,
+          reward: data.reward ? data.reward.toString() : undefined // Convert BigInt to string
         };
       }
     }
     
     return {
-      snapshotBlock1: this.snapshotBlock1,
-      snapshotBlock2: this.snapshotBlock2,
+      snapshots: this.snapshots,
       tokenProportions: serializableProportions
     };
   }
