@@ -7,12 +7,14 @@
   "scripts": {
     "start": "tsx src/index.ts",
     "scrape": "tsx src/scraper.ts",
+    "merkle": "tsx src/merkle.ts",
     "generate-snapshots": "tsx src/snapshot-generator.ts",
     "build": "tsc",
     "test": "vitest"
   },
   "dependencies": {
     "axios": "^1.7.9",
+    "@openzeppelin/merkle-tree": "^1.0.8",
     "dotenv": "^16.4.7",
     "ethers": "^6.15.0",
     "graphql": "^16.8.1",

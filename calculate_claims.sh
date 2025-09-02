@@ -51,7 +51,19 @@ fi
 echo "Processing completed successfully"
 echo ""
 
+# Step 4: Generate merkle tree
+echo "Step 4: Generating merkle tree..."
+REWARDS_CSV="output/$YEAR-$(printf "%02d" $MONTH)/$TOKEN_ADDRESS/rewards.csv"
+npm run merkle "$REWARDS_CSV"
+if [ $? -ne 0 ]; then
+    echo "Error: Merkle tree generation failed"
+    exit 1
+fi
+echo "Merkle tree generated successfully"
+echo ""
+
 echo "Pipeline completed! Check the following files:"
 echo "- $SNAPSHOT_FILE"
 echo "- output/$YEAR-$(printf "%02d" $MONTH)/$TOKEN_ADDRESS/balances.json"
-echo "- output/$YEAR-$(printf "%02d" $MONTH)/$TOKEN_ADDRESS/rewards.csv"
+echo "- $REWARDS_CSV"
+echo "- output/$YEAR-$(printf "%02d" $MONTH)/$TOKEN_ADDRESS/tree.json"

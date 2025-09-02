@@ -1,312 +1,312 @@
 {
   "snapshots": [
     {
-      "blockNumber": 32305289,
+      "blockNumber": 32304469,
       "timestamp": 0,
       "day": 1
     },
     {
-      "blockNumber": 32308824,
+      "blockNumber": 32300397,
       "timestamp": 0,
       "day": 1
     },
     {
-      "blockNumber": 32347718,
+      "blockNumber": 32345931,
       "timestamp": 0,
       "day": 2
     },
     {
-      "blockNumber": 32336399,
+      "blockNumber": 32337918,
       "timestamp": 0,
       "day": 2
     },
     {
-      "blockNumber": 32386832,
+      "blockNumber": 32381580,
       "timestamp": 0,
       "day": 3
     },
     {
-      "blockNumber": 32391314,
+      "blockNumber": 32384407,
       "timestamp": 0,
       "day": 3
     },
     {
-      "blockNumber": 32429265,
+      "blockNumber": 32425870,
       "timestamp": 0,
       "day": 4
     },
     {
-      "blockNumber": 32407601,
+      "blockNumber": 32441741,
       "timestamp": 0,
       "day": 4
     },
     {
-      "blockNumber": 32482404,
+      "blockNumber": 32462724,
       "timestamp": 0,
       "day": 5
     },
     {
-      "blockNumber": 32443372,
+      "blockNumber": 32457652,
       "timestamp": 0,
       "day": 5
     },
     {
-      "blockNumber": 32518048,
+      "blockNumber": 32499272,
       "timestamp": 0,
       "day": 6
     },
     {
-      "blockNumber": 32507076,
+      "blockNumber": 32513820,
       "timestamp": 0,
       "day": 6
     },
     {
-      "blockNumber": 32563996,
+      "blockNumber": 32551332,
       "timestamp": 0,
       "day": 7
     },
     {
-      "blockNumber": 32571036,
+      "blockNumber": 32542719,
       "timestamp": 0,
       "day": 7
     },
     {
-      "blockNumber": 32588093,
+      "blockNumber": 32607221,
       "timestamp": 0,
       "day": 8
     },
     {
-      "blockNumber": 32580814,
+      "blockNumber": 32613032,
       "timestamp": 0,
       "day": 8
     },
     {
-      "blockNumber": 32620704,
+      "blockNumber": 32624864,
       "timestamp": 0,
       "day": 9
     },
     {
-      "blockNumber": 32627936,
+      "blockNumber": 32631894,
       "timestamp": 0,
       "day": 9
     },
     {
-      "blockNumber": 32662835,
+      "blockNumber": 32699923,
       "timestamp": 0,
       "day": 10
     },
     {
-      "blockNumber": 32694645,
+      "blockNumber": 32685727,
       "timestamp": 0,
       "day": 10
     },
     {
-      "blockNumber": 32725991,
+      "blockNumber": 32722031,
       "timestamp": 0,
       "day": 11
     },
     {
-      "blockNumber": 32740918,
+      "blockNumber": 32742779,
       "timestamp": 0,
       "day": 11
     },
     {
-      "blockNumber": 32780257,
+      "blockNumber": 32767501,
       "timestamp": 0,
       "day": 12
     },
     {
-      "blockNumber": 32754221,
+      "blockNumber": 32778778,
       "timestamp": 0,
       "day": 12
     },
     {
-      "blockNumber": 32827500,
+      "blockNumber": 32803062,
       "timestamp": 0,
       "day": 13
     },
     {
-      "blockNumber": 32810189,
+      "blockNumber": 32823216,
       "timestamp": 0,
       "day": 13
     },
     {
-      "blockNumber": 32866109,
+      "blockNumber": 32853922,
       "timestamp": 0,
       "day": 14
     },
     {
-      "blockNumber": 32845529,
+      "blockNumber": 32848562,
       "timestamp": 0,
       "day": 14
     },
     {
-      "blockNumber": 32886322,
+      "blockNumber": 32900369,
       "timestamp": 0,
       "day": 15
     },
     {
-      "blockNumber": 32905640,
+      "blockNumber": 32894429,
       "timestamp": 0,
       "day": 15
     },
     {
-      "blockNumber": 32921208,
+      "blockNumber": 32943520,
       "timestamp": 0,
       "day": 16
     },
     {
-      "blockNumber": 32945756,
+      "blockNumber": 32936668,
       "timestamp": 0,
       "day": 16
     },
     {
-      "blockNumber": 32989328,
+      "blockNumber": 32979550,
       "timestamp": 0,
       "day": 17
     },
     {
-      "blockNumber": 32973538,
+      "blockNumber": 32972668,
       "timestamp": 0,
       "day": 17
     },
     {
-      "blockNumber": 33018672,
+      "blockNumber": 33004270,
       "timestamp": 0,
       "day": 18
     },
     {
-      "blockNumber": 33015516,
+      "blockNumber": 33043043,
       "timestamp": 0,
       "day": 18
     },
     {
-      "blockNumber": 33089847,
+      "blockNumber": 33062398,
       "timestamp": 0,
       "day": 19
     },
     {
-      "blockNumber": 33085300,
+      "blockNumber": 33060850,
       "timestamp": 0,
       "day": 19
     },
     {
-      "blockNumber": 33125056,
+      "blockNumber": 33119306,
       "timestamp": 0,
       "day": 20
     },
     {
-      "blockNumber": 33099935,
+      "blockNumber": 33104754,
       "timestamp": 0,
       "day": 20
     },
     {
-      "blockNumber": 33133542,
+      "blockNumber": 33171059,
       "timestamp": 0,
       "day": 21
     },
     {
-      "blockNumber": 33172870,
+      "blockNumber": 33174825,
       "timestamp": 0,
       "day": 21
     },
     {
-      "blockNumber": 33186473,
+      "blockNumber": 33195562,
       "timestamp": 0,
       "day": 22
     },
     {
-      "blockNumber": 33216184,
+      "blockNumber": 33177133,
       "timestamp": 0,
       "day": 22
     },
     {
-      "blockNumber": 33235353,
+      "blockNumber": 33260409,
       "timestamp": 0,
       "day": 23
     },
     {
-      "blockNumber": 33242198,
+      "blockNumber": 33245831,
       "timestamp": 0,
       "day": 23
     },
     {
-      "blockNumber": 33288604,
+      "blockNumber": 33297941,
       "timestamp": 0,
       "day": 24
     },
     {
-      "blockNumber": 33278121,
+      "blockNumber": 33301388,
       "timestamp": 0,
       "day": 24
     },
     {
-      "blockNumber": 33342073,
+      "blockNumber": 33309130,
       "timestamp": 0,
       "day": 25
     },
     {
-      "blockNumber": 33319483,
+      "blockNumber": 33343347,
       "timestamp": 0,
       "day": 25
     },
     {
-      "blockNumber": 33371536,
+      "blockNumber": 33378811,
       "timestamp": 0,
       "day": 26
     },
     {
-      "blockNumber": 33349989,
+      "blockNumber": 33374705,
       "timestamp": 0,
       "day": 26
     },
     {
-      "blockNumber": 33419077,
+      "blockNumber": 33397752,
       "timestamp": 0,
       "day": 27
     },
     {
-      "blockNumber": 33425706,
+      "blockNumber": 33392971,
       "timestamp": 0,
       "day": 27
     },
     {
-      "blockNumber": 33453762,
+      "blockNumber": 33467479,
       "timestamp": 0,
       "day": 28
     },
     {
-      "blockNumber": 33442553,
+      "blockNumber": 33451068,
       "timestamp": 0,
       "day": 28
     },
     {
-      "blockNumber": 33494181,
+      "blockNumber": 33479399,
       "timestamp": 0,
       "day": 29
     },
     {
-      "blockNumber": 33495741,
+      "blockNumber": 33485188,
       "timestamp": 0,
       "day": 29
     },
     {
-      "blockNumber": 33555748,
+      "blockNumber": 33525037,
       "timestamp": 0,
       "day": 30
     },
     {
-      "blockNumber": 33556090,
+      "blockNumber": 33540926,
       "timestamp": 0,
       "day": 30
     },
     {
-      "blockNumber": 33567762,
+      "blockNumber": 33598239,
       "timestamp": 0,
       "day": 31
     },
     {
-      "blockNumber": 33581705,
+      "blockNumber": 33576666,
       "timestamp": 0,
       "day": 31
     },
@@ -324,14 +324,14 @@
   "tokenProportions": {
     "0xd5316ca888491575befc0273a00de2186c53f760": {
       "0xd2843d9e7738d46d90cb6dff8d6c83db58b9c165": {
-        "balance": "315973437500000000000000",
-        "proportion": 0.9948345328695892,
-        "reward": "994834532869589172224"
+        "balance": "316053125000000000000000",
+        "proportion": 0.9948358285298342,
+        "reward": "994835828529834229760"
       },
       "0x8f6bf4a948af2fc74ee34982c4435a7c013d1a52": {
         "balance": "1640625000000000000000",
-        "proportion": 0.005165467130410827,
-        "reward": "5165467130410826752"
+        "proportion": 0.005164171470165844,
+        "reward": "5164171470165843968"
       }
     }
   }
