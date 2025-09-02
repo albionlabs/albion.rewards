@@ -7,7 +7,7 @@ import axios from "axios";
 config();
 
 const HYPERSYNC_URL = "https://8453.hypersync.xyz/query";
-const BASE_RPC="https://base-mainnet.g.alchemy.com/v2/y3BXawVv5uuP_g8BaDlKbKoTBGHo9zD9";
+const BASE_RPC="https://mainnet.base.org";
 const BASE_BLOCK_TIME = 2;
 
 async function getBlockNumberForTimestampByHyperSync(
