@@ -22,7 +22,7 @@ echo ""
 
 # Step 1: Run scrape
 echo "Step 1: Running scrape..."
-npm run scrape
+nix develop -c npm run scrape
 if [ $? -ne 0 ]; then
     echo "Error: Scrape failed"
     exit 1
@@ -32,7 +32,7 @@ echo ""
 
 # Step 2: Generate snapshots
 echo "Step 2: Generating snapshots for $YEAR-$MONTH for token $TOKEN_ADDRESS..."
-npm run generate-snapshots $YEAR $MONTH $TOKEN_ADDRESS
+nix develop -c npm run generate-snapshots $YEAR $MONTH $TOKEN_ADDRESS
 if [ $? -ne 0 ]; then
     echo "Error: Generate snapshots failed"
     exit 1
@@ -43,7 +43,7 @@ echo ""
 # Step 3: Process and calculate claims
 echo "Step 3: Processing transfers and calculating claims..."
 SNAPSHOT_FILE="output/$YEAR-$(printf "%02d" $MONTH)/$TOKEN_ADDRESS/snapshot.json"
-npm run start "$SNAPSHOT_FILE" "$TOKEN_ADDRESS" "$DISTRIBUTION_AMOUNT"
+nix develop -c npm run start "$SNAPSHOT_FILE" "$TOKEN_ADDRESS" "$DISTRIBUTION_AMOUNT"
 if [ $? -ne 0 ]; then
     echo "Error: Processing failed"
     exit 1
@@ -54,7 +54,7 @@ echo ""
 # Step 4: Generate merkle tree
 echo "Step 4: Generating merkle tree..."
 REWARDS_CSV="output/$YEAR-$(printf "%02d" $MONTH)/$TOKEN_ADDRESS/rewards.csv"
-npm run merkle "$REWARDS_CSV"
+nix develop -c npm run merkle "$REWARDS_CSV"
 if [ $? -ne 0 ]; then
     echo "Error: Merkle tree generation failed"
     exit 1
