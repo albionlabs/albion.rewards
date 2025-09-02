@@ -82,3 +82,24 @@ export interface AccountTransfers {
   transfersIn: TransferDetail[];
   transfersOut: { value: string }[];
 }
+
+// Types for multi-snapshot processing
+export interface MultiSnapshotTokenBalances {
+  snapshots: bigint[]; // Array of balances at each snapshot (up to 62)
+  current: bigint;
+}
+
+export interface TokenProportions {
+  [address: string]: {
+    balance: bigint;
+    proportion: number;
+    claimAmount?: string; // USDC claim amount
+    reward?: bigint; // Reward amount in BigInt (18 decimals)
+  };
+}
+
+export interface SnapshotInfo {
+  blockNumber: number;
+  timestamp: number;
+  day: number; // Day of month (1-31)
+}
