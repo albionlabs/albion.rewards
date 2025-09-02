@@ -187,7 +187,7 @@ export class Processor {
    */
   generateRewardsCSV(tokenProportions: Map<string, TokenProportions>): string {
     const csvLines: string[] = [];
-    csvLines.push("index,address,reward"); // CSV header
+    csvLines.push("index,address,amount"); // CSV header
     
     let index = 0;
     for (const [tokenAddress, proportions] of tokenProportions) {

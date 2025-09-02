@@ -75,7 +75,7 @@ output/
 
 - **`snapshot.json`**: Contains randomly generated block numbers for daily snapshots
 - **`balances.json`**: Detailed balance analysis with proportions and rewards
-- **`rewards.csv`**: Simple CSV format with `index,address,reward` for distribution
+- **`rewards.csv`**: Simple CSV format with `index,address,amount` for distribution
 - **`tree.json`**: Merkle tree data for on-chain reward claiming
 
 ## Configuration
