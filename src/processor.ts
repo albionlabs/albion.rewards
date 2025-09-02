@@ -199,6 +199,12 @@ export class Processor {
       }
     }
     
+    // Pad to 256 entries if needed
+    while (csvLines.length < 257) { // 257 because we have the header line
+      csvLines.push(`${index},0x0000000000000000000000000000000000000000,0`);
+      index++;
+    }
+    
     return csvLines.join('\n');
   }
 

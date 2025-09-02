@@ -32,13 +32,15 @@ async function main() {
 
     console.log(`Read ${csvData.length} entries from CSV`);
 
-    // Pad to 256 entries if needed
-    const rawValues = [...csvData];
-    let currentIndex = rawValues.length;
-    while (rawValues.length < 256) {
-        rawValues.push([currentIndex.toString(), "0x0000000000000000000000000000000000000000", "0"]);
-        currentIndex++;
+    // Check if CSV has exactly 256 entries
+    if (csvData.length !== 256) {
+        console.error(`Error: CSV must have exactly 256 entries, but found ${csvData.length}`);
+        console.error("Please ensure your CSV file contains exactly 256 entries");
+        process.exit(1);
     }
+
+    // Use the CSV data directly since it's exactly 256 entries
+    const rawValues = csvData;
     console.log("=== CSV Content ===");
     console.log("index,address,amount");
     rawValues.forEach(([index, address, amount]) => {
