@@ -59,7 +59,7 @@ echo ""
 
 # Step 4: Generate merkle tree
 echo "Step 4: Generating merkle tree..."
-REWARDS_CSV="output/$TIMESTAMP_RANGE/$TOKEN_ADDRESS/rewards.csv"
+REWARDS_CSV="output/$TIMESTAMP_RANGE/$TOKEN_ADDRESS/rewards_$TIMESTAMP_RANGE.csv"
 nix develop -c npm run merkle "$REWARDS_CSV"
 if [ $? -ne 0 ]; then
     echo "Error: Merkle tree generation failed"
@@ -72,4 +72,4 @@ echo "Pipeline completed! Check the following files:"
 echo "- $SNAPSHOT_FILE"
 echo "- output/$TIMESTAMP_RANGE/$TOKEN_ADDRESS/balances.json"
 echo "- $REWARDS_CSV"
-echo "- output/$TIMESTAMP_RANGE/$TOKEN_ADDRESS/tree.json"
+echo "- output/$TIMESTAMP_RANGE/$TOKEN_ADDRESS/tree_$TIMESTAMP_RANGE.json"

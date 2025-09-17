@@ -61,7 +61,7 @@ nix develop -c npm run generate-snapshots 1725148800 1727740799 0xd5316ca8884915
 nix develop -c npm run start output/2025-09-01_to_2025-09-30/0xd5316ca888491575befc0273a00de2186c53f760/snapshot.json 0xd5316ca888491575befc0273a00de2186c53f760 1000000
 
 # Step 4: Generate merkle tree
-nix develop -c npm run merkle output/2025-09-01_to_2025-09-30/0xd5316ca888491575befc0273a00de2186c53f760/rewards.csv
+nix develop -c npm run merkle output/2025-09-01_to_2025-09-30/0xd5316ca888491575befc0273a00de2186c53f760/rewards_2025-09-01_to_2025-09-30.csv
 ```
 
 ## Output Structure
@@ -74,16 +74,16 @@ output/
     └── 0xd5316ca888491575befc0273a00de2186c53f760/  # Token address directory
         ├── snapshot.json                       # Generated snapshots
         ├── balances.json                       # Detailed balance analysis
-        ├── rewards.csv                         # CSV format rewards
-        └── tree.json                          # Merkle tree for smart contract
+        ├── rewards_2025-09-01_to_2025-09-30.csv # CSV format rewards with date range
+        └── tree_2025-09-01_to_2025-09-30.json # Merkle tree for smart contract with date range
 ```
 
 ### File Descriptions
 
 - **`snapshot.json`**: Contains randomly generated block numbers for daily snapshots
 - **`balances.json`**: Detailed balance analysis with proportions and rewards
-- **`rewards.csv`**: Simple CSV format with `index,address,amount` for distribution
-- **`tree.json`**: Merkle tree data for on-chain reward claiming
+- **`rewards_YYYY-MM-DD_to_YYYY-MM-DD.csv`**: Simple CSV format with `index,address,amount` for distribution (includes date range in filename)
+- **`tree_YYYY-MM-DD_to_YYYY-MM-DD.json`**: Merkle tree data for on-chain reward claiming (includes date range in filename)
 
 ## Configuration
 

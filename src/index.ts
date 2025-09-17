@@ -81,8 +81,9 @@ async function main() {
     
     // Generate and save rewards CSV
     const rewardsCSV = processor.generateRewardsCSV(tokenProportions);
-    await writeFile(`${outputDir}/rewards.csv`, rewardsCSV);
-    console.log(`Rewards CSV saved to ${outputDir}/rewards.csv`);
+    const rewardsFilename = `rewards_${timestampRange}.csv`;
+    await writeFile(`${outputDir}/${rewardsFilename}`, rewardsCSV);
+    console.log(`Rewards CSV saved to ${outputDir}/${rewardsFilename}`);
 }
 
 main().catch((error) => {

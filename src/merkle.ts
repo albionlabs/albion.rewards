@@ -87,7 +87,7 @@ async function main() {
         fs.mkdirSync(outputDir, { recursive: true });
     }
 
-    const treeOutputPath = `${outputDir}/tree.json`;
+    const treeOutputPath = `${outputDir}/tree_${timestampRange}.json`;
     
     // Save the tree to a file
     fs.writeFileSync(treeOutputPath, JSON.stringify(tree.dump(), null, 2));
