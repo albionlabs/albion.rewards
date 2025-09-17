@@ -23,11 +23,11 @@ async function main() {
 
     console.log(`Snapshots file: ${snapshotsFile}`);
     
-    // Extract year-month and token address from snapshots file path (e.g., output/2025-08/0x.../snapshot.json -> 2025-08/0x...)
+    // Extract timestamp range and token address from snapshots file path (e.g., output/2025-09-01_to_2025-09-30/0x.../snapshot.json -> 2025-09-01_to_2025-09-30/0x...)
     const pathParts = snapshotsFile.split('/');
     const tokenAddressFromPath = pathParts[pathParts.length - 2]; // Get the token address directory
-    const yearMonth = pathParts[pathParts.length - 3]; // Get the year-month directory
-    const outputDir = `output/${yearMonth}/${tokenAddressFromPath}`;
+    const timestampRange = pathParts[pathParts.length - 3]; // Get the timestamp range directory
+    const outputDir = `output/${timestampRange}/${tokenAddressFromPath}`;
     
     console.log(`Output directory: ${outputDir}`);
     if (tokenAddress) {
