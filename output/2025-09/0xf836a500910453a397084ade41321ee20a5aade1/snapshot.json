@@ -1,0 +1,28 @@
+{
+  "generatedAt": "2025-09-17T08:24:14.114Z",
+  "totalSnapshots": 4,
+  "network": "Base",
+  "dataSource": "Hypersync",
+  "snapshots": [
+    {
+      "blockNumber": 35618166,
+      "timestamp": 0,
+      "day": 1
+    },
+    {
+      "blockNumber": 35606872,
+      "timestamp": 0,
+      "day": 1
+    },
+    {
+      "blockNumber": 35638926,
+      "timestamp": 0,
+      "day": 2
+    },
+    {
+      "blockNumber": 35638926,
+      "timestamp": 0,
+      "day": 2
+    }
+  ]
+}

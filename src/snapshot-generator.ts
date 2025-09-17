@@ -141,8 +141,8 @@ async function generateRandomBlocks(startBlock: number, endBlock: number, year: 
 }
 
 async function getBlocksForMonth(year: number, month: number, tokenAddress: string) {
-    const startTimestamp = Date.UTC(year, month - 1, 1, 0, 0, 0, 0) / 1000;
-    const endTimestamp = Date.UTC(year, month, 0, 23, 59, 59, 0) / 1000;
+    const startTimestamp = Date.UTC(year, 8, 16, 0, 0, 0, 0) / 1000;
+    const endTimestamp = Date.UTC(year, 8, 16, 23, 59, 59, 0) / 1000;
     const startBlock = await getBlockNumberForTimestampByHyperSync(startTimestamp);
     const endBlock = await getBlockNumberForTimestampByHyperSync(endTimestamp);
     await generateRandomBlocks(startBlock, endBlock, year, month, tokenAddress);
