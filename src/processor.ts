@@ -91,44 +91,52 @@ export class Processor {
     
     for (const tokenAddress of uniqueTokens) {
       const proportions: TokenProportions = {};
-      let totalBalanceSum = 0n;
       
-      // Calculate total average balances for this token across all snapshots
+      // Calculate proportions for each account by averaging snapshot proportions
       for (const [address, accountBal] of this.accountBalances) {
         const tokenBalances = accountBal[tokenAddress];
         if (tokenBalances) {
-          // Calculate average balance across all snapshots for this account
-          const accountBalanceSum = tokenBalances.snapshots.reduce((sum, balance) => sum + (balance > 0n ? balance : 0n), 0n);
-          const accountAverageBalance = accountBalanceSum / BigInt(this.snapshots.length);
-          totalBalanceSum += accountAverageBalance;
-        }
-      }
-      
-      // Calculate proportions for each account
-      for (const [address, accountBal] of this.accountBalances) {
-        const tokenBalances = accountBal[tokenAddress];
-        if (tokenBalances) {
-          // Calculate average balance across all snapshots for this account
-          const accountBalanceSum = tokenBalances.snapshots.reduce((sum, balance) => sum + (balance > 0n ? balance : 0n), 0n);
-          const accountAverageBalance = accountBalanceSum / BigInt(this.snapshots.length);
+          let totalProportionSum = 0;
+          let averageBalance = 0n;
           
-          if (accountAverageBalance > 0n) {
-            const proportion = totalBalanceSum > 0n 
-              ? Number(accountAverageBalance) / Number(totalBalanceSum)
-              : 0;
+          // Calculate proportion at each snapshot
+          for (let i = 0; i < this.snapshots.length; i++) {
+            const accountBalanceAtSnapshot = tokenBalances.snapshots[i];
+            averageBalance += accountBalanceAtSnapshot;
             
+            // Calculate total supply at this snapshot
+            let totalSupplyAtSnapshot = 0n;
+            for (const [_, otherAccountBal] of this.accountBalances) {
+              const otherTokenBalances = otherAccountBal[tokenAddress];
+              if (otherTokenBalances) {
+                totalSupplyAtSnapshot += otherTokenBalances.snapshots[i];
+              }
+            }
+            
+            // Calculate proportion at this snapshot
+            if (totalSupplyAtSnapshot > 0n) {
+              const snapshotProportion = Number(accountBalanceAtSnapshot) / Number(totalSupplyAtSnapshot);
+              totalProportionSum += snapshotProportion;
+            }
+          }
+          
+          // Calculate average proportion across all snapshots
+          const averageProportion = totalProportionSum / this.snapshots.length;
+          const averageBalanceBigInt = averageBalance / BigInt(this.snapshots.length);
+          
+          if (averageProportion > 0) {
             // Calculate reward if distribution amount is provided
             let reward: bigint | undefined;
             if (distributionAmount && distributionAmount > 0) {
               // Convert distribution amount to BigInt with 18 decimals
               const distributionAmountBigInt = BigInt(Math.floor(distributionAmount * 1e18));
               // Calculate reward: proportion * distributionAmount (in 18 decimals)
-              reward = BigInt(Math.floor(proportion * Number(distributionAmountBigInt)));
+              reward = BigInt(Math.floor(averageProportion * Number(distributionAmountBigInt)));
             }
             
             proportions[address] = {
-              balance: accountAverageBalance,
-              proportion: proportion,
+              balance: averageBalanceBigInt,
+              proportion: averageProportion,
               reward: reward
             };
           }
