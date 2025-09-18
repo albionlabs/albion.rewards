@@ -8,7 +8,7 @@ import { ENERGY_FEILDS } from "./constants";
 config();
 
 const SUBGRAPH_URL =
-  "https://api.goldsky.com/api/public/project_cm153vmqi5gke01vy66p4ftzf/subgraphs/sft-offchainassetvaulttest-base/1.0.4/gn";
+  "https://api.goldsky.com/api/public/project_cm153vmqi5gke01vy66p4ftzf/subgraphs/sft-offchainassetvaulttest-base/1.0.5/gn";
 const BATCH_SIZE = 1000;
 
 // ensure SNAPSHOT_BLOCK_2 env is set for deterministic transfers.dat,

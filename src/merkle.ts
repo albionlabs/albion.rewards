@@ -79,15 +79,15 @@ async function main() {
     // Extract directory from CSV file path and create tree output path
     const csvPathParts = csvFile.split('/');
     const tokenAddress = csvPathParts[csvPathParts.length - 2];
-    const yearMonth = csvPathParts[csvPathParts.length - 3];
-    const outputDir = `output/${yearMonth}/${tokenAddress}`;
+    const timestampRange = csvPathParts[csvPathParts.length - 3];
+    const outputDir = `output/${timestampRange}/${tokenAddress}`;
     
     // Ensure output directory exists
     if (!fs.existsSync(outputDir)) {
         fs.mkdirSync(outputDir, { recursive: true });
     }
 
-    const treeOutputPath = `${outputDir}/tree.json`;
+    const treeOutputPath = `${outputDir}/tree_${timestampRange}.json`;
     
     // Save the tree to a file
     fs.writeFileSync(treeOutputPath, JSON.stringify(tree.dump(), null, 2));
