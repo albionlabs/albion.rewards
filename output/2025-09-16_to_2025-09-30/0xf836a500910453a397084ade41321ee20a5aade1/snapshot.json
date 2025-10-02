@@ -1,0 +1,150 @@
+{
+  "generatedAt": "2025-10-02T06:24:57.500Z",
+  "totalSnapshots": 28,
+  "network": "Base",
+  "dataSource": "Hypersync",
+  "startTimestamp": 1757980800,
+  "endTimestamp": 1759190400,
+  "snapshots": [
+    {
+      "blockNumber": 35628056,
+      "timestamp": 0,
+      "day": 1
+    },
+    {
+      "blockNumber": 35602940,
+      "timestamp": 0,
+      "day": 1
+    },
+    {
+      "blockNumber": 35680849,
+      "timestamp": 0,
+      "day": 2
+    },
+    {
+      "blockNumber": 35672156,
+      "timestamp": 0,
+      "day": 2
+    },
+    {
+      "blockNumber": 35692168,
+      "timestamp": 0,
+      "day": 3
+    },
+    {
+      "blockNumber": 35716395,
+      "timestamp": 0,
+      "day": 3
+    },
+    {
+      "blockNumber": 35768313,
+      "timestamp": 0,
+      "day": 4
+    },
+    {
+      "blockNumber": 35734922,
+      "timestamp": 0,
+      "day": 4
+    },
+    {
+      "blockNumber": 35804032,
+      "timestamp": 0,
+      "day": 5
+    },
+    {
+      "blockNumber": 35783675,
+      "timestamp": 0,
+      "day": 5
+    },
+    {
+      "blockNumber": 35848847,
+      "timestamp": 0,
+      "day": 6
+    },
+    {
+      "blockNumber": 35827927,
+      "timestamp": 0,
+      "day": 6
+    },
+    {
+      "blockNumber": 35878699,
+      "timestamp": 0,
+      "day": 7
+    },
+    {
+      "blockNumber": 35887328,
+      "timestamp": 0,
+      "day": 7
+    },
+    {
+      "blockNumber": 35924174,
+      "timestamp": 0,
+      "day": 8
+    },
+    {
+      "blockNumber": 35915918,
+      "timestamp": 0,
+      "day": 8
+    },
+    {
+      "blockNumber": 35962882,
+      "timestamp": 0,
+      "day": 9
+    },
+    {
+      "blockNumber": 35983701,
+      "timestamp": 0,
+      "day": 9
+    },
+    {
+      "blockNumber": 35985561,
+      "timestamp": 0,
+      "day": 10
+    },
+    {
+      "blockNumber": 35988614,
+      "timestamp": 0,
+      "day": 10
+    },
+    {
+      "blockNumber": 36030493,
+      "timestamp": 0,
+      "day": 11
+    },
+    {
+      "blockNumber": 36058008,
+      "timestamp": 0,
+      "day": 11
+    },
+    {
+      "blockNumber": 36109004,
+      "timestamp": 0,
+      "day": 12
+    },
+    {
+      "blockNumber": 36083308,
+      "timestamp": 0,
+      "day": 12
+    },
+    {
+      "blockNumber": 36151495,
+      "timestamp": 0,
+      "day": 13
+    },
+    {
+      "blockNumber": 36142102,
+      "timestamp": 0,
+      "day": 13
+    },
+    {
+      "blockNumber": 36172633,
+      "timestamp": 0,
+      "day": 14
+    },
+    {
+      "blockNumber": 36157547,
+      "timestamp": 0,
+      "day": 14
+    }
+  ]
+}
