@@ -22,7 +22,7 @@
         "month": "2025-08",
         "tokenPayout": {
           "date": "",
-          "totalPayout": 664.07,
+          "totalPayout": 659.375,
           "payoutPerToken": 0.0554,
           "txHash": "0x",
           "orderHash": "0x",
@@ -383,7 +383,7 @@
             "month": "2025-08",
             "assetData": {
               "production": 410.85,
-              "revenue": 26563.09,
+              "revenue": 26375,
               "expenses": 0,
               "netIncome": 0
             },
