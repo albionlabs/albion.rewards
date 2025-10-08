@@ -13,19 +13,19 @@
           "date": "2025-09-17T12:00:00Z",
           "totalPayout": 163.60,
           "payoutPerToken": 0.01361,
-          "txHash": "0x08210c9045f7275c5e36b158900a7abcc1c57cfee60961cedea0c08b1fe634fa",
-          "orderHash": "0x16b5ac9d132fde28a684256e4be230b137ee27ddf72077d61c272cfda096cf30",
+          "txHash": "0x399dd5ebf3fa250717d0e6da6a21685bb8c6e8a4db4707afadb2365c5b714b89",
+          "orderHash": "0x93f57975d7ecedcbd89aa74e0663e390c4afc7858d37a0d612a986042ae49ebb",
           "note": "This is just the pending distribution portion of August - special circumstances"
         }
       },
       {
         "month": "2025-08",
         "tokenPayout": {
-          "date": "",
+          "date": "2025-10-08T12:00:00Z",
           "totalPayout": 659.375,
           "payoutPerToken": 0.0554,
-          "txHash": "0x",
-          "orderHash": "0x",
+          "txHash": "0x08210c9045f7275c5e36b158900a7abcc1c57cfee60961cedea0c08b1fe634fa",
+          "orderHash": "0x16b5ac9d132fde28a684256e4be230b137ee27ddf72077d61c272cfda096cf30",
           "note": "This is the monthly payment portion of August - special circumstances"
         }
       }
