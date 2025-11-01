@@ -33,7 +33,7 @@
         "month": "2025-09",
         "tokenPayout": {
           "date": "2025-11-03T12:00:00Z",
-          "totalPayout": 590.85,
+          "totalPayout":590.39,
           "payoutPerToken": 0.0492,
           "txHash": "",
           "orderHash": "",
