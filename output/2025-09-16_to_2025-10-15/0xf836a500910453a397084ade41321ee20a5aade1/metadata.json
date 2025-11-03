@@ -35,8 +35,8 @@
           "date": "2025-11-03T12:00:00Z",
           "totalPayout":590.39,
           "payoutPerToken": 0.0492,
-          "txHash": "",
-          "orderHash": "",
+          "txHash": "0x67edc542a2d3c0bf035d324c611bdb1cd75549437cc7ed9a0cfd4dce183c95df",
+          "orderHash": "0x3b9902f8f9424e88c3c847ffb7337dc8b9a88fb4a2672d6bbfc8b12372eaebd2",
           "note": "September monthly payment + 1/12 pending distributions"
         }
       }
