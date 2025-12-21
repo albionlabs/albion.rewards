@@ -9,11 +9,11 @@ config();
 const HYPERSYNC_URL = "https://8453.hypersync.xyz/query";
 const BASE_RPC="https://mainnet.base.org";
 const BASE_BLOCK_TIME = 2;
+const HYPERSYNC_BEARER_TOKEN = process.env.HYPERSYNC_BEARER_TOKEN;
 
 async function getBlockNumberForTimestampByHyperSync(
 	targetTimestamp: number
 ): Promise<number> {
-
 	try {
 		// Get the latest block number
 		const provider = new ethers.JsonRpcProvider(BASE_RPC);
@@ -25,9 +25,12 @@ async function getBlockNumberForTimestampByHyperSync(
 
 		let closestBlock = null;    
 		let smallestDiff = Infinity;
+		let iterations = 0;
+		const maxIterations = 50;
 
 		// Binary search loop
-		while (left <= right) {
+		while (left <= right && iterations < maxIterations) {
+			iterations++;
 			const mid = Math.floor((left + right) / 2);
 
 			// Create Hypersync query for the mid block
@@ -41,10 +44,26 @@ async function getBlockNumberForTimestampByHyperSync(
 			};
 
 			try {
+				// Add delay to avoid rate limiting
+				await new Promise(resolve => setTimeout(resolve, 200)); // 200ms delay between requests
+				
+				// Prepare headers with authentication if token is available
+				const headers: Record<string, string> = {
+					'Content-Type': 'application/json'
+				};
+				
+				if (HYPERSYNC_BEARER_TOKEN) {
+					headers['Authorization'] = `Bearer ${HYPERSYNC_BEARER_TOKEN}`;
+				}
+				
 				// Fetch block data from Hypersync
-				const response = await axios.post(HYPERSYNC_URL, query);
+				const response = await axios.post(HYPERSYNC_URL, query, {
+					headers,
+					timeout: 10000
+				});
+				
 				//eslint-disable-next-line @typescript-eslint/no-explicit-any
-				const blocks = response.data.data.flatMap((item: any) => item.blocks);
+				const blocks = response.data.data?.flatMap((item: any) => item.blocks || []) || [];
 
 				if (blocks.length === 0) {
 					right = mid - 1;
@@ -52,7 +71,13 @@ async function getBlockNumberForTimestampByHyperSync(
 				}
 
 				const block = blocks[0];
-				const blockTimestamp = parseInt(block.timestamp, 16); // Convert hex to integer
+				// Parse block number - could be hex or decimal
+				const blockNumber = typeof block.number === 'string' 
+					? (block.number.startsWith('0x') ? parseInt(block.number, 16) : parseInt(block.number, 10))
+					: block.number;
+				const blockTimestamp = typeof block.timestamp === 'string'
+					? parseInt(block.timestamp, 16) // Convert hex to integer
+					: block.timestamp;
 
 				// Calculate the difference from the target timestamp
 				const diff = Math.abs(blockTimestamp - targetTimestamp);
@@ -60,7 +85,7 @@ async function getBlockNumberForTimestampByHyperSync(
 				// Update closest block if this is a better match
 				if (diff < smallestDiff) {
 					smallestDiff = diff;
-					closestBlock = block.number;
+					closestBlock = blockNumber;
 				}
 
 				// Adjust binary search range
@@ -69,7 +94,36 @@ async function getBlockNumberForTimestampByHyperSync(
 				} else {
 					right = mid - 1;
 				}
-			} catch {
+			} catch (error) {
+				if (axios.isAxiosError(error)) {
+					const status = error.response?.status;
+					
+					// If it's a 403, use RPC as fallback for this specific block
+					if (status === 403) {
+						if (!HYPERSYNC_BEARER_TOKEN && iterations === 1) {
+							console.log(`Warning: Hypersync requires authentication. Set HYPERSYNC_BEARER_TOKEN in your .env file. Get a token at https://envio.dev/app/api-tokens`);
+						}
+						try {
+							const block = await provider.getBlock(mid);
+							if (block) {
+								const blockTimestamp = Number(block.timestamp);
+								const diff = Math.abs(blockTimestamp - targetTimestamp);
+								if (diff < smallestDiff) {
+									smallestDiff = diff;
+									closestBlock = block.number;
+								}
+								if (blockTimestamp < targetTimestamp) {
+									left = mid + 1;
+								} else {
+									right = mid - 1;
+								}
+								continue;
+							}
+						} catch (rpcError) {
+							// RPC fallback failed, continue with binary search
+						}
+					}
+				}
 				// Skip this block range and move backward
 				right = mid - 1;
 			}
@@ -80,7 +134,8 @@ async function getBlockNumberForTimestampByHyperSync(
 		} else {
 			return 0;
 		}
-	} catch {
+	} catch(error) {
+		console.error(`Error getting block number for timestamp: ${error}`);
 		return 0;
 	}
 }
@@ -148,7 +203,9 @@ async function generateRandomBlocks(startBlock: number, endBlock: number, startT
 
 async function getBlocksForTimestampRange(startTimestamp: number, endTimestamp: number, tokenAddress: string) {
     const startBlock = await getBlockNumberForTimestampByHyperSync(startTimestamp);
+    console.log(`Start block: ${startBlock}`);
     const endBlock = await getBlockNumberForTimestampByHyperSync(endTimestamp);
+    console.log(`End block: ${endBlock}`);
     await generateRandomBlocks(startBlock, endBlock, startTimestamp, endTimestamp, tokenAddress);
 }
 
