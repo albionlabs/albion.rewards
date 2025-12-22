@@ -55,8 +55,8 @@
       "month": "2025-11", 
       "tokenPayout": {
         "date": "2026-01-05T12:00:00Z",
-        "totalPayout": 485.05,
-        "payoutPerToken":0.4042,
+        "totalPayout": 648.65,
+        "payoutPerToken":0.054054,
         "txHash": "",
         "orderHash": "",
         "note": "November monthly payment + 1/12 pending distributions"
