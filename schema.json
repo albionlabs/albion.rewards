@@ -1,0 +1,46 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "DVINPilotProof",
+  "type": "object",
+  "properties": {
+    "proofDocuments": {
+      "type": "array",
+      "description": "IPFS CIDs for PDF proof documents",
+      "items": {
+        "type": "string",
+        "description": "IPFS CID (v0 or v1), without protocol prefix (e.g. no ipfs://)",
+        "pattern": "^[a-zA-Z0-9]+$"
+      }
+    },
+    "holdingWalletAddress": {
+      "type": "string",
+      "description": "Solana wallet address (base58) holding wine NFTs",
+      "pattern": "^[1-9A-HJ-NP-Za-km-z]{32,44}$"
+    },
+    "transactionHashes": {
+      "type": "array",
+      "description": "On-chain transaction hashes relevant to this proof (Solana)",
+      "items": {
+        "type": "string",
+        "description": "Transaction hash/signature: 0x-prefixed 32-byte EVM hash or base58 Solana signature",
+        "pattern": "^(0x[a-fA-F0-9]{64}|[1-9A-HJ-NP-Za-km-z]{32,88})$"
+      }
+    },
+    "nftMints": {
+      "type": "array",
+      "description": "Solana NFT mint addresses (each uniquely identifies an NFT)",
+      "items": {
+        "type": "string",
+        "description": "Base58-encoded Solana mint address",
+        "pattern": "^[1-9A-HJ-NP-Za-km-z]{32,44}$"
+      }
+    }
+  },
+  "required": [
+    "proofDocuments",
+    "holdingWalletAddress",
+    "transactionHashes",
+    "nftMints"
+  ],
+  "additionalProperties": false
+}
