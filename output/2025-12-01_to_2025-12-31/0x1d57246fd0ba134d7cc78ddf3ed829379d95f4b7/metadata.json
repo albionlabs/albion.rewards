@@ -21,9 +21,9 @@
     {
       "month": "2025-12",
       "tokenPayout": {
-        "date": "",
-        "totalPayout": 0,
-        "payoutPerToken": 0,
+        "date": "2026-02-12T12:00:00Z",
+        "totalPayout": 2448.979,
+        "payoutPerToken": 0.1361,
         "txHash": "",
         "orderHash": "",
         "note": "December monthly payment + 1/12 pending distributions"
@@ -436,7 +436,7 @@
           "month": "2025-12",
           "assetData": {
             "production": 331.61,
-            "revenue": 6106.17,
+            "revenue": 20177,
             "expenses": 0,
             "netIncome": 0
           },
