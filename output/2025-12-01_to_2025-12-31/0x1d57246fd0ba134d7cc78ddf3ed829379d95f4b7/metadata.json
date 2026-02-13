@@ -11,7 +11,7 @@
       "month": "2025-11",
       "tokenPayout": {
         "date": "2026-01-05T12:00:00Z",
-        "totalPayout": 2390.854, //935.704 + 1455.15
+        "totalPayout": 2390.854,
         "payoutPerToken":0.1106,
         "txHash": "0x3c382c0dd282d46060f0cef888ab73588ed2e01a7bfa3827ea8e6d61c173ad05",
         "orderHash": "0xca9ebf6d282d24a63d6892c0a888d3604b17ddfca69a035b2a6c06b769fc84f7",
