@@ -68,8 +68,8 @@
         "date": "2026-02-12T12:00:00Z",
         "totalPayout": 668.025,
         "payoutPerToken": 0.055669,
-        "txHash": "",
-        "orderHash": "",
+        "txHash": "0xcc13f3cc3b0230a07f11fc917280e1d00379094164efe3f89a4b1edb1b0d38ac",
+        "orderHash": "0x2f7baf4369d8e2953138c0f4d77f5c0a83388cd3793722e076caf47d0308504a",
         "note": "December monthly payment + 1/12 pending distributions"
       }
     }
