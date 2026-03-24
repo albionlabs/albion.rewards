@@ -76,11 +76,11 @@
     {
       "month": "2026-01",
       "tokenPayout": {
-        "date": "",
+        "date": "2026-03-24T12:00:00Z",
         "totalPayout": 737.625,
         "payoutPerToken": 0.061469,
-        "txHash": "",
-        "orderHash": "",
+        "txHash": "0xd108023bc1a6508b473ad6188bd0d2cffacf5b91e99157bb6838bf8f72e27c81",
+        "orderHash": "0xf3128826a1ae3ed36f519bb1bcffcaa4ac4b513a5ff91e927108353e6a6777fc",
         "note": "January monthly payment + 1/12 pending distributions"
       }
     }
