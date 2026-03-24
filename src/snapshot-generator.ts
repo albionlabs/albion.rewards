@@ -95,34 +95,25 @@ async function getBlockNumberForTimestampByHyperSync(
 					right = mid - 1;
 				}
 			} catch (error) {
-				if (axios.isAxiosError(error)) {
-					const status = error.response?.status;
-					
-					// If it's a 403, use RPC as fallback for this specific block
-					if (status === 403) {
-						if (!HYPERSYNC_BEARER_TOKEN && iterations === 1) {
-							console.log(`Warning: Hypersync requires authentication. Set HYPERSYNC_BEARER_TOKEN in your .env file. Get a token at https://envio.dev/app/api-tokens`);
+				// Fall back to RPC for any HyperSync failure (network error, 403, etc.)
+				try {
+					const block = await provider.getBlock(mid);
+					if (block) {
+						const blockTimestamp = Number(block.timestamp);
+						const diff = Math.abs(blockTimestamp - targetTimestamp);
+						if (diff < smallestDiff) {
+							smallestDiff = diff;
+							closestBlock = block.number;
 						}
-						try {
-							const block = await provider.getBlock(mid);
-							if (block) {
-								const blockTimestamp = Number(block.timestamp);
-								const diff = Math.abs(blockTimestamp - targetTimestamp);
-								if (diff < smallestDiff) {
-									smallestDiff = diff;
-									closestBlock = block.number;
-								}
-								if (blockTimestamp < targetTimestamp) {
-									left = mid + 1;
-								} else {
-									right = mid - 1;
-								}
-								continue;
-							}
-						} catch (rpcError) {
-							// RPC fallback failed, continue with binary search
+						if (blockTimestamp < targetTimestamp) {
+							left = mid + 1;
+						} else {
+							right = mid - 1;
 						}
+						continue;
 					}
+				} catch (rpcError) {
+					// RPC fallback also failed
 				}
 				// Skip this block range and move backward
 				right = mid - 1;

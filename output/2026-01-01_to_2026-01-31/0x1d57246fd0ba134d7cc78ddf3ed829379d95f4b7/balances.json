@@ -1,0 +1,363 @@
+{
+  "snapshots": [
+    {
+      "blockNumber": 40218485,
+      "timestamp": 0,
+      "day": 1
+    },
+    {
+      "blockNumber": 40238237,
+      "timestamp": 0,
+      "day": 1
+    },
+    {
+      "blockNumber": 40279674,
+      "timestamp": 0,
+      "day": 2
+    },
+    {
+      "blockNumber": 40268536,
+      "timestamp": 0,
+      "day": 2
+    },
+    {
+      "blockNumber": 40341743,
+      "timestamp": 0,
+      "day": 3
+    },
+    {
+      "blockNumber": 40328517,
+      "timestamp": 0,
+      "day": 3
+    },
+    {
+      "blockNumber": 40370034,
+      "timestamp": 0,
+      "day": 4
+    },
+    {
+      "blockNumber": 40361944,
+      "timestamp": 0,
+      "day": 4
+    },
+    {
+      "blockNumber": 40391479,
+      "timestamp": 0,
+      "day": 5
+    },
+    {
+      "blockNumber": 40424038,
+      "timestamp": 0,
+      "day": 5
+    },
+    {
+      "blockNumber": 40471865,
+      "timestamp": 0,
+      "day": 6
+    },
+    {
+      "blockNumber": 40455562,
+      "timestamp": 0,
+      "day": 6
+    },
+    {
+      "blockNumber": 40515877,
+      "timestamp": 0,
+      "day": 7
+    },
+    {
+      "blockNumber": 40496698,
+      "timestamp": 0,
+      "day": 7
+    },
+    {
+      "blockNumber": 40538197,
+      "timestamp": 0,
+      "day": 8
+    },
+    {
+      "blockNumber": 40553317,
+      "timestamp": 0,
+      "day": 8
+    },
+    {
+      "blockNumber": 40597918,
+      "timestamp": 0,
+      "day": 9
+    },
+    {
+      "blockNumber": 40567925,
+      "timestamp": 0,
+      "day": 9
+    },
+    {
+      "blockNumber": 40629690,
+      "timestamp": 0,
+      "day": 10
+    },
+    {
+      "blockNumber": 40621845,
+      "timestamp": 0,
+      "day": 10
+    },
+    {
+      "blockNumber": 40661275,
+      "timestamp": 0,
+      "day": 11
+    },
+    {
+      "blockNumber": 40659010,
+      "timestamp": 0,
+      "day": 11
+    },
+    {
+      "blockNumber": 40713322,
+      "timestamp": 0,
+      "day": 12
+    },
+    {
+      "blockNumber": 40731611,
+      "timestamp": 0,
+      "day": 12
+    },
+    {
+      "blockNumber": 40753826,
+      "timestamp": 0,
+      "day": 13
+    },
+    {
+      "blockNumber": 40767068,
+      "timestamp": 0,
+      "day": 13
+    },
+    {
+      "blockNumber": 40822788,
+      "timestamp": 0,
+      "day": 14
+    },
+    {
+      "blockNumber": 40806083,
+      "timestamp": 0,
+      "day": 14
+    },
+    {
+      "blockNumber": 40837190,
+      "timestamp": 0,
+      "day": 15
+    },
+    {
+      "blockNumber": 40851805,
+      "timestamp": 0,
+      "day": 15
+    },
+    {
+      "blockNumber": 40882398,
+      "timestamp": 0,
+      "day": 16
+    },
+    {
+      "blockNumber": 40885943,
+      "timestamp": 0,
+      "day": 16
+    },
+    {
+      "blockNumber": 40941043,
+      "timestamp": 0,
+      "day": 17
+    },
+    {
+      "blockNumber": 40925906,
+      "timestamp": 0,
+      "day": 17
+    },
+    {
+      "blockNumber": 40957205,
+      "timestamp": 0,
+      "day": 18
+    },
+    {
+      "blockNumber": 40976891,
+      "timestamp": 0,
+      "day": 18
+    },
+    {
+      "blockNumber": 41031042,
+      "timestamp": 0,
+      "day": 19
+    },
+    {
+      "blockNumber": 41009865,
+      "timestamp": 0,
+      "day": 19
+    },
+    {
+      "blockNumber": 41063101,
+      "timestamp": 0,
+      "day": 20
+    },
+    {
+      "blockNumber": 41080726,
+      "timestamp": 0,
+      "day": 20
+    },
+    {
+      "blockNumber": 41120366,
+      "timestamp": 0,
+      "day": 21
+    },
+    {
+      "blockNumber": 41096504,
+      "timestamp": 0,
+      "day": 21
+    },
+    {
+      "blockNumber": 41166861,
+      "timestamp": 0,
+      "day": 22
+    },
+    {
+      "blockNumber": 41133381,
+      "timestamp": 0,
+      "day": 22
+    },
+    {
+      "blockNumber": 41188042,
+      "timestamp": 0,
+      "day": 23
+    },
+    {
+      "blockNumber": 41202583,
+      "timestamp": 0,
+      "day": 23
+    },
+    {
+      "blockNumber": 41218779,
+      "timestamp": 0,
+      "day": 24
+    },
+    {
+      "blockNumber": 41228445,
+      "timestamp": 0,
+      "day": 24
+    },
+    {
+      "blockNumber": 41266118,
+      "timestamp": 0,
+      "day": 25
+    },
+    {
+      "blockNumber": 41279432,
+      "timestamp": 0,
+      "day": 25
+    },
+    {
+      "blockNumber": 41299197,
+      "timestamp": 0,
+      "day": 26
+    },
+    {
+      "blockNumber": 41315141,
+      "timestamp": 0,
+      "day": 26
+    },
+    {
+      "blockNumber": 41368004,
+      "timestamp": 0,
+      "day": 27
+    },
+    {
+      "blockNumber": 41345185,
+      "timestamp": 0,
+      "day": 27
+    },
+    {
+      "blockNumber": 41399579,
+      "timestamp": 0,
+      "day": 28
+    },
+    {
+      "blockNumber": 41396749,
+      "timestamp": 0,
+      "day": 28
+    },
+    {
+      "blockNumber": 41450996,
+      "timestamp": 0,
+      "day": 29
+    },
+    {
+      "blockNumber": 41435825,
+      "timestamp": 0,
+      "day": 29
+    },
+    {
+      "blockNumber": 41513746,
+      "timestamp": 0,
+      "day": 30
+    },
+    {
+      "blockNumber": 41492758,
+      "timestamp": 0,
+      "day": 30
+    }
+  ],
+  "tokenProportions": {
+    "0x1d57246fd0ba134d7cc78ddf3ed829379d95f4b7": {
+      "0x513603aa35e07a6e899e351168a45f8005f7032e": {
+        "balance": "3552940000000000000000",
+        "proportion": 0.2700794013356568,
+        "reward": "717811361202480480256"
+      },
+      "0x1d56a5ed5cbeaa8885bb61c820b7f897da00531c": {
+        "balance": "3116028378000000000000",
+        "proportion": 0.23686723639441037,
+        "reward": "629540766677099610112"
+      },
+      "0x66147ec1f1d518b1c1710d79536cdbeabc3d1e71": {
+        "balance": "1951000000000000000000",
+        "proportion": 0.14830672963964095,
+        "reward": "394166511594915233792"
+      },
+      "0x47a92c6ad39044362f8dd4f87036d2e0c147ad81": {
+        "balance": "1900000000000000000000",
+        "proportion": 0.14442992635331525,
+        "reward": "383862825233387814912"
+      },
+      "0x240a69cb275ae0635a5ca05cd3b4c1de1f9b7693": {
+        "balance": "11000000000000000000",
+        "proportion": 0.000836173257834983,
+        "reward": "2222363725035403264"
+      },
+      "0xa2fe1d4145443ebc027f15c9f7ca27f7e9fd5f33": {
+        "balance": "1500000000000000000000",
+        "proportion": 0.11402362606840664,
+        "reward": "303049598868463747072"
+      },
+      "0x672504bd016b4345928d15a97097438bc1312471": {
+        "balance": "749640000000000000000",
+        "proportion": 0.05698444736394683,
+        "reward": "151452067530503225344"
+      },
+      "0x794428941d4c0bbc589b9571e065b023a3f4b5cb": {
+        "balance": "1500000000000000000",
+        "proportion": 0.00011402362606840673,
+        "reward": "303049598868463936"
+      },
+      "0xc56bf5a78098115cf31de85feef41895c7b1605d": {
+        "balance": "39060000000000000000",
+        "proportion": 0.0029691752228213084,
+        "reward": "7891411554534793216"
+      },
+      "0xe1c85f50efff8184868c7305923f8d148cea5ad4": {
+        "balance": "329000000000000000000",
+        "proportion": 0.02500918198433721,
+        "reward": "66468878685149765632"
+      },
+      "0x36e0ec4fec9419267d4c7003ee215e61411cb7ef": {
+        "balance": "5000000000000000000",
+        "proportion": 0.00038007875356135557,
+        "reward": "1010165329561545984"
+      }
+    }
+  }
+}
