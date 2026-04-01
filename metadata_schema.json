@@ -1,0 +1,408 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "Token Metadata Schema",
+    "description": "Schema for royalty token metadata stored on IPFS",
+    "type": "object",
+    "properties": {
+        "contractAddress": {
+            "type": "string",
+            "description": "Ethereum contract address for the token",
+            "pattern": "^0x[a-fA-F0-9]{40}$|^TBD!+$"
+        },
+        "assetId": {
+            "type": "string",
+            "description": "Unique identifier for the asset"
+        },
+        "symbol": {
+            "type": "string",
+            "description": "Token symbol (e.g., ALB-WR1-R2)"
+        },
+        "releaseName": {
+            "type": "string",
+            "description": "Name of the token release"
+        },
+        "tokenType": {
+            "type": "string",
+            "enum": [
+                "royalty",
+                "working-interest",
+                "overriding-royalty"
+            ],
+            "description": "Type of interest the token represents"
+        },
+        "tokenTerms": {
+            "type": "string",
+            "description": "IPFS CID for the token terms document"
+        },
+        "firstPaymentDate": {
+            "type": "string",
+            "pattern": "^\\d{4}-(0[1-9]|1[0-2])$",
+            "description": "First month tracked for token accrual and payments in YYYY-MM format"
+        },
+        "sharePercentage": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 100,
+            "description": "Percentage of asset ownership this token represents"
+        },
+        "payoutData": {
+            "type": "array",
+            "description": "Historical payout data",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "month": {
+                        "type": "string",
+                        "pattern": "^\\d{4}-(0[1-9]|1[0-2])$",
+                        "description": "Month of payout in YYYY-MM format"
+                    },
+                    "tokenPayout": {
+                        "type": "object",
+                        "properties": {
+                            "totalPayout": {
+                                "type": "number",
+                                "description": "Total payout amount in USD"
+                            },
+                            "payoutPerToken": {
+                                "type": "number",
+                                "description": "Payout per token in USD"
+                            },
+                            "txHash": {
+                                "type": "string",
+                                "description": "Transaction hash for the payout"
+                            },
+                            "orderHash": {
+                                "type": "string",
+                                "description": "Order hash for claims vault"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "asset": {
+            "type": "object",
+            "properties": {
+                "assetName": {
+                    "type": "string",
+                    "description": "Name of the asset"
+                },
+                "description": {
+                    "type": "string",
+                    "description": "Detailed description of the asset"
+                },
+                "cashflowProvider": {
+                    "type": "string",
+                    "description": "Entity providing the cash flows. Can be different to operator (optional)"
+                },
+                "cashflowStartDate": {
+                    "type": "string",
+                    "pattern": "^\\d{4}-(0[1-9]|1[0-2])$",
+                    "description": "Start date of cash flows that accrue to holders in YYYY-MM format (optional)"
+                },
+                "status": {
+                    "type": "string",
+                    "enum": [
+                        "producing",
+                        "development",
+                        "exploration",
+                        "suspended",
+                        "decommissioned"
+                    ],
+                    "description": "Current production status of the asset"
+                },
+                "location": {
+                    "type": "object",
+                    "properties": {
+                        "state": {
+                            "type": "string",
+                            "description": "State or region"
+                        },
+                        "county": {
+                            "type": "string",
+                            "description": "County (optional)"
+                        },
+                        "country": {
+                            "type": "string",
+                            "description": "Country"
+                        },
+                        "coordinates": {
+                            "type": "object",
+                            "properties": {
+                                "lat": {
+                                    "type": "number",
+                                    "minimum": -90,
+                                    "maximum": 90,
+                                    "description": "Latitude"
+                                },
+                                "lng": {
+                                    "type": "number",
+                                    "minimum": -180,
+                                    "maximum": 180,
+                                    "description": "Longitude"
+                                }
+                            }
+                        }
+                    }
+                },
+                "operator": {
+                    "type": "object",
+                    "properties": {
+                        "name": {
+                            "type": "string",
+                            "description": "Operator name"
+                        },
+                        "website": {
+                            "type": "string",
+                            "format": "uri",
+                            "description": "Operator website URL (optional)"
+                        }
+                    }
+                },
+                "technical": {
+                    "type": "object",
+                    "properties": {
+                        "fieldType": {
+                            "type": "string",
+                            "description": "Type of field (e.g., Conventional Oil)"
+                        },
+                        "license": {
+                            "type": "string",
+                            "description": "License or permit number"
+                        },
+                        "firstOil": {
+                            "type": "string",
+                            "pattern": "^\\d{4}-(0[1-9]|1[0-2])$",
+                            "description": "Date of first oil production in YYYY-MM format"
+                        },
+                        "infrastructure": {
+                            "type": "string",
+                            "description": "Infrastructure description"
+                        },
+                        "environmental": {
+                            "type": "string",
+                            "description": "Environmental and regulatory compliance"
+                        },
+                        "expectedEndDate": {
+                            "type": "string",
+                            "pattern": "^\\d{4}-(0[1-9]|1[0-2])$",
+                            "description": "Expected end date of production in YYYY-MM format"
+                        },
+                        "crudeBenchmark": {
+                            "type": "string",
+                            "description": "Crude oil benchmark (e.g., Brent, WTI)"
+                        },
+                        "pricing": {
+                            "type": "object",
+                            "properties": {
+                                "benchmarkPremium": {
+                                    "type": "number",
+                                    "description": "Premium or discount to benchmark price (negative = discount)"
+                                },
+                                "transportCosts": {
+                                    "type": "number",
+                                    "description": "Transport costs per barrel"
+                                }
+                            }
+                        }
+                    }
+                },
+                "assetTerms": {
+                    "type": "object",
+                    "properties": {
+                        "interestType": {
+                            "type": "string",
+                            "description": "Type of interest (e.g., Royalty, Working Interest)"
+                        },
+                        "amount": {
+                            "type": "number",
+                            "description": "Percentage or amount of interest"
+                        },
+                        "paymentFrequencyDays": {
+                            "type": "number",
+                            "description": "Payment frequency in days (optional)"
+                        }
+                    }
+                },
+                "plannedProduction": {
+                    "type": "object",
+                    "properties": {
+                        "oilPriceAssumption": {
+                            "type": "number",
+                            "description": "Oil price assumption for projections in USD"
+                        },
+                        "projections": {
+                            "type": "array",
+                            "description": "Future production projections",
+                            "items": {
+                                "type": "object",
+                                "properties": {
+                                    "month": {
+                                        "type": "string",
+                                        "pattern": "^\\d{4}-(0[1-9]|1[0-2])$",
+                                        "description": "Month in YYYY-MM format"
+                                    },
+                                    "production": {
+                                        "type": "number",
+                                        "description": "Projected production in BOE"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "historicalProduction": {
+                    "type": "array",
+                    "description": "Historical production data",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "month": {
+                                "type": "string",
+                                "pattern": "^\\d{4}-(0[1-9]|1[0-2])$",
+                                "description": "Month in YYYY-MM format"
+                            },
+                            "production": {
+                                "type": "number",
+                                "description": "Production volume in BOE"
+                            }
+                        }
+                    }
+                },
+                "receiptsData": {
+                    "type": "array",
+                    "description": "Monthly revenue and production receipts",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "month": {
+                                "type": "string",
+                                "pattern": "^\\d{4}-(0[1-9]|1[0-2])$",
+                                "description": "Month in YYYY-MM format"
+                            },
+                            "assetData": {
+                                "type": "object",
+                                "properties": {
+                                    "production": {
+                                        "type": "number",
+                                        "description": "Production volume in BOE"
+                                    },
+                                    "revenue": {
+                                        "type": "number",
+                                        "description": "Revenue in USD"
+                                    },
+                                    "expenses": {
+                                        "type": "number",
+                                        "description": "Expenses in USD"
+                                    },
+                                    "netIncome": {
+                                        "type": "number",
+                                        "description": "Net income in USD"
+                                    }
+                                }
+                            },
+                            "realisedPrice": {
+                                "type": "object",
+                                "properties": {
+                                    "oilPrice": {
+                                        "type": "number",
+                                        "description": "Realized oil price in USD per barrel"
+                                    },
+                                    "gasPrice": {
+                                        "type": "number",
+                                        "description": "Realized gas price in USD per MMBtu"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "operationalMetrics": {
+                    "type": "object",
+                    "properties": {
+                        "uptime": {
+                            "type": "object",
+                            "properties": {
+                                "percentage": {
+                                    "type": "number",
+                                    "minimum": 0,
+                                    "maximum": 100,
+                                    "description": "Uptime percentage"
+                                },
+                                "unit": {
+                                    "type": "string",
+                                    "description": "Unit of measurement (optional)"
+                                },
+                                "period": {
+                                    "type": "string",
+                                    "description": "Time period (e.g., last_30_days)"
+                                }
+                            }
+                        },
+                        "hseMetrics": {
+                            "type": "object",
+                            "properties": {
+                                "incidentFreeDays": {
+                                    "type": "number",
+                                    "description": "Number of days since last HSE incident"
+                                }
+                            }
+                        }
+                    }
+                },
+                "documents": {
+                    "type": "array",
+                    "description": "Legal and technical documents",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "name": {
+                                "type": "string",
+                                "description": "Document name"
+                            },
+                            "type": {
+                                "type": "string",
+                                "enum": [
+                                    "pdf",
+                                    "images",
+                                    "csv",
+                                    "zip"
+                                ],
+                                "description": "Document type"
+                            },
+                            "ipfs": {
+                                "type": "string",
+                                "description": "IPFS hash for the document"
+                            }
+                        }
+                    }
+                },
+                "coverImage": {
+                    "type": "string",
+                    "description": "IPFS hash for the cover image"
+                },
+                "galleryImages": {
+                    "type": "array",
+                    "description": "Gallery images",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "title": {
+                                "type": "string",
+                                "description": "Image title (optional)"
+                            },
+                            "caption": {
+                                "type": "string",
+                                "description": "Image caption (optional)"
+                            },
+                            "url": {
+                                "type": "string",
+                                "description": "IPFS hash for the image"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
