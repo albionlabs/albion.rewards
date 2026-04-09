@@ -10,6 +10,7 @@
     "merkle": "tsx src/merkle.ts",
     "generate-snapshots": "tsx src/snapshot-generator.ts",
     "build": "tsc",
+    "distribute": "tsx src/distribute.ts",
     "test": "vitest"
   },
   "dependencies": {
