@@ -72,8 +72,9 @@ PHASE 1: Prepare
 
 PHASE 2: Finalize
   4. Read execution results
-     - Use retained safeTxHashes to poll Safe Transaction Service
-     - Verify both R1 and R2 txs show isExecuted === true
+     - Use retained safeTxHashes to query Safe Transaction Service
+     - Poll every 5 seconds, up to 2 minutes, for both R1 and R2 txs to show isExecuted === true
+     - If timeout reached, print which tx(es) are still pending and abort
      - If only one executed, abort with message identifying the missing one
      - Fetch on-chain tx receipts from Base RPC using tx.transactionHash
      - Extract orderHash from AddOrderV2 event logs
@@ -102,8 +103,16 @@ PHASE 2: Finalize
   PAUSE: "Sign and execute metadata Safe tx, then press Enter..."
 
   8. Update network.ts (gist step 5)
-     - Patch DEV_ENERGY_FIELDS with orderHash, csvLink, merkleRoot, contentHash
-     - Open PR to Albion-issuance-site via gh CLI
+     - Read Albion-issuance-site/src/lib/network.ts (local clone or checkout)
+     - Find the `claims` array for each token within DEV_ENERGY_FIELDS
+     - Append a new entry object: { orderHash, csvLink, expectedMerkleRoot, expectedContentHash }
+       - orderHash: from step 4
+       - csvLink: Pinata gateway URL from step 6 (https://<gateway>/ipfs/<cid>)
+       - expectedMerkleRoot: the merkle root computed from the CSV
+       - expectedContentHash: the Pinata CID from step 6
+     - The exact field names and array structure will be confirmed during implementation
+       by reading the existing entries in network.ts as a template
+     - Commit to new branch, open PR via gh CLI
 
   DONE
 ```
@@ -205,6 +214,10 @@ Final metadata = "0x" + RAIN_META_DOCUMENT (hex) + encodedStructure + encodedHas
 ```
 
 Contract call: `metaboard.emitMeta(subject, metadata)` where `subject = 0x000000000000000000000000<tokenAddress>`.
+
+**Schema hash:** The `schemaHash` value in the CBOR structure is not a static constant — it is extracted from the current on-chain metadata. The script fetches the latest metadata from the Base metadata subgraph (same as operator.portal's `metadataService.ts`), decodes the CBOR container, and reads the schema hash from the `OA_SCHEMA` key. This hash is then re-used when encoding the updated metadata. The subgraph URL is `https://api.goldsky.com/api/public/project_clv14x04y9kzi01saerx7bxpg/subgraphs/metadata-base/2025-07-06-594f/gn`.
+
+**Address normalization:** All address comparisons throughout the script are case-insensitive (lowercased before comparison). Constants in `src/constants.ts` use lowercase for consistency.
 
 **Magic numbers** (from operator.portal `consts.ts`):
 - `RAIN_META_DOCUMENT`: `0xff0a89c674ee7874`
@@ -337,11 +350,12 @@ Before proposing any Safe transactions, the script runs these validations:
 
 | Check | How | Abort if |
 |---|---|---|
+| Clean git state | `git status --porcelain` shows no uncommitted changes | Dirty working tree |
 | Output dir exists | Resolve `--month 2026-03` → `output/2026-03-01_to_2026-03-31/` | Directory missing |
 | CSV exists | Read `output/<date_range>/<token>/rewards_<date_range>.csv` for each token | File missing |
 | CSV format valid | Parse columns: index, address, amount; exactly 256 rows | Wrong columns or row count |
 | Merkle root matches | Rebuild tree from CSV via `src/merkle.ts`, compare with `tree_<date_range>.json` | Root mismatch |
-| Amounts match | Sum CSV `amount` column = CLI `--r1-amount` / `--r2-amount` (in USDC wei) | Mismatch |
+| Amounts match | CLI amounts are in human-readable USDC (e.g., `1234.56`). Convert to wei (multiply by 10^6) and compare against sum of CSV `amount` column (which is already in wei). | Mismatch |
 | Pending metadata entry | Parse `output/<date_range>/<token>/metadata.json`, find payoutData entry with empty `date`/`txHash`/`orderHash` | No pending entry |
 | Safe delegate registered | `apiKit.getSafeDelegates(safeAddress)` includes proposer | Not registered |
 | USDC balance sufficient | `usdc.balanceOf(safeAddress)` >= distribution amount | Insufficient balance |
