@@ -14,6 +14,9 @@
   },
   "dependencies": {
     "@openzeppelin/merkle-tree": "^1.0.8",
+    "@rainlanguage/orderbook": "^0.0.1-alpha.229",
+    "@safe-global/api-kit": "^4.1.0",
+    "@safe-global/protocol-kit": "^7.0.0",
     "axios": "^1.7.9",
     "cbor-web": "^10.0.12",
     "dotenv": "^16.4.7",
