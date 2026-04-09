@@ -35,17 +35,20 @@ tsx src/distribute.ts \
   --r2-amount 789.01
 ```
 
-Single interactive script with two pause points for Safe multisig signing. State lives in memory (no intermediate files).
+Single interactive script with two pause points for Safe multisig signing. State lives in memory (no intermediate files). The `--month` argument (e.g., `2026-03`) is mapped to the output directory by convention: `output/2026-03-01_to_2026-03-31/`. The script derives start/end dates from the month (handling February, leap years, etc.) and globs for a matching directory.
+
+The `--r1-amount` and `--r2-amount` arguments serve as an intentional double-check against the CSV totals. The script validates they match and aborts if not.
 
 ### Script Flow
 
 ```
 PHASE 1: Prepare
   1. Validate inputs
-     - CSV exists for both tokens in output/<month>/
+     - Resolve output directory: --month 2026-03 → output/2026-03-01_to_2026-03-31/<token>/
+     - CSV exists for both tokens: rewards_2026-03-01_to_2026-03-31.csv
      - Merkle tree builds, root matches tree JSON
-     - Pending metadata entry exists with empty date/txHash/orderHash
-     - Amounts match CSV totals
+     - Per-token metadata.json has a pending payoutData entry (empty date/txHash/orderHash)
+     - CLI amounts match CSV totals
      - Safe delegate is registered
      - USDC balance sufficient in each Safe
 
@@ -63,16 +66,23 @@ PHASE 1: Prepare
      - proposeTransaction to R2 Safe
      - Print Safe TX URLs
 
+  safeTxHashes for R1 and R2 are retained in memory for Phase 2.
+
   PAUSE: "Sign and execute both Safe txs, then press Enter..."
 
 PHASE 2: Finalize
   4. Read execution results
-     - Fetch R1 + R2 tx receipts from Base RPC
+     - Use retained safeTxHashes to poll Safe Transaction Service
+     - Verify both R1 and R2 txs show isExecuted === true
+     - If only one executed, abort with message identifying the missing one
+     - Fetch on-chain tx receipts from Base RPC using tx.transactionHash
      - Extract orderHash from AddOrderV2 event logs
-     - Extract txHash from executed Safe transactions
+     - Record txHash from executed Safe transactions
 
-  5. Update metadata.json (gist step 2)
-     - Patch pending payoutData entries with orderHash, txHash, date
+  5. Update per-token metadata.json files (gist step 2)
+     - For each token: read output/<date_range>/<token>/metadata.json
+     - Find the pending payoutData entry (empty date/txHash/orderHash)
+     - Patch with orderHash, txHash, current ISO date
      - git commit + push to current branch
 
   6. Upload CSVs to Pinata (gist step 4)
@@ -80,7 +90,8 @@ PHASE 2: Finalize
      - Capture CIDs
 
   7. Pin metadata on SFTs (gist step 3)
-     - Upload updated metadata JSON to Pinata, get CID
+     - For each token: read the updated output/<date_range>/<token>/metadata.json
+     - Upload each metadata JSON to Pinata, get CID
      - CBOR-encode: deflate JSON, encode structure with OA_STRUCTURE + schema hash,
        encode hash list with OA_HASH_LIST, prefix with RAIN_META_DOCUMENT magic
      - Build emitMeta(subject, metadata) calls for both tokens
@@ -301,8 +312,8 @@ GITHUB_TOKEN=ghp_...
 ```ts
 export const USDC_BASE = '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913';
 export const WETH_BASE = '0x4200000000000000000000000000000000000006';
-export const METABOARD_ADDRESS = '0x...';  // from operator.portal network config
-export const CLAIMS_STRATEGY_URL = '...';  // pinned .rain strategy file
+export const METABOARD_ADDRESS = '0x59401C9302E79Eb8AC6aea659B8B3ae475715e86';  // Base MetaBoard
+export const CLAIMS_STRATEGY_URL = 'https://raw.githubusercontent.com/rainlanguage/rain.strategies/c2c4e2e75a034dd819110e223cb12344ea7ddf15/src/claims.rain';
 
 export const R1_SAFE = '0xA51fd23D6E2442805130eac0712F590691e91517';
 export const R2_SAFE = '0x1c56Fc57BBc18879D8059562A371722b682CA984';
@@ -326,11 +337,12 @@ Before proposing any Safe transactions, the script runs these validations:
 
 | Check | How | Abort if |
 |---|---|---|
-| CSV exists | Read `output/<month>/<token>/rewards_*.csv` | File missing |
+| Output dir exists | Resolve `--month 2026-03` → `output/2026-03-01_to_2026-03-31/` | Directory missing |
+| CSV exists | Read `output/<date_range>/<token>/rewards_<date_range>.csv` for each token | File missing |
 | CSV format valid | Parse columns: index, address, amount; exactly 256 rows | Wrong columns or row count |
-| Merkle root matches | Rebuild tree from CSV via `src/merkle.ts`, compare with `tree_*.json` | Root mismatch |
+| Merkle root matches | Rebuild tree from CSV via `src/merkle.ts`, compare with `tree_<date_range>.json` | Root mismatch |
 | Amounts match | Sum CSV `amount` column = CLI `--r1-amount` / `--r2-amount` (in USDC wei) | Mismatch |
-| Pending metadata entry | Parse `metadata.json`, find entry with empty `date`/`txHash`/`orderHash` | No pending entry |
+| Pending metadata entry | Parse `output/<date_range>/<token>/metadata.json`, find payoutData entry with empty `date`/`txHash`/`orderHash` | No pending entry |
 | Safe delegate registered | `apiKit.getSafeDelegates(safeAddress)` includes proposer | Not registered |
 | USDC balance sufficient | `usdc.balanceOf(safeAddress)` >= distribution amount | Insufficient balance |
 
