@@ -35,19 +35,20 @@ export async function proposeSafeTransaction(
   });
 
   const safeTransaction = await protocolKit.createTransaction({ transactions });
-  const signedTx = await protocolKit.signTransaction(safeTransaction);
-  const safeTxHash = await protocolKit.getTransactionHash(signedTx);
+  const safeTxHash = await protocolKit.getTransactionHash(safeTransaction);
 
+  // Sign the hash directly — delegates can't use protocolKit.signTransaction()
   const signer = new ethers.Wallet(signerKey);
   const proposerAddress = signer.address;
+  const signature = await signer.signMessage(ethers.getBytes(safeTxHash));
 
   const apiKit = new SafeApiKit({ chainId: BASE_CHAIN_ID, apiKey: process.env.SAFE_API_KEY });
   await apiKit.proposeTransaction({
     safeAddress: checksummedSafe,
-    safeTransactionData: signedTx.data,
+    safeTransactionData: safeTransaction.data,
     safeTxHash,
     senderAddress: proposerAddress,
-    senderSignature: signedTx.encodedSignatures(),
+    senderSignature: signature,
   });
 
   const safeUrl = `https://app.safe.global/transactions/tx?safe=base:${checksummedSafe}&id=multisig_${checksummedSafe}_${safeTxHash}`;
