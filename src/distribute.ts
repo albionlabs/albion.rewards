@@ -4,7 +4,7 @@ config();
 import fs from 'fs';
 import readline from 'readline';
 import { ethers } from 'ethers';
-import { TOKENS, METABOARD_ADDRESS, METADATA_SAFE, METABOARD_ABI } from './constants';
+import { TOKENS, METABOARD_ADDRESS, METADATA_SAFE, METABOARD_ABI, USDC_BASE, WETH_BASE } from './constants';
 import { resolveOutputDir, validateToken, checkUsdcBalance, type TokenValidation } from './lib/validation';
 import { buildOrderCalldata, type DeploymentArgs } from './lib/order';
 import { runSimulation } from './lib/simulation';
@@ -16,25 +16,38 @@ import { updateIssuanceSiteAndPR, type IssuanceSiteUpdate } from './lib/github';
 
 // --- CLI argument parsing ---
 
-function parseArgs(): { month: string; r1Amount: number; r2Amount: number } {
+interface CliArgs {
+  month: string;
+  r1Amount: number;
+  r2Amount: number;
+  outputToken: string;
+  inputToken: string;
+}
+
+function parseArgs(): CliArgs {
   const args = process.argv.slice(2);
   let month = '';
   let r1Amount = NaN;
   let r2Amount = NaN;
+  let outputToken = USDC_BASE;
+  let inputToken = WETH_BASE;
 
   for (let i = 0; i < args.length; i++) {
     if (args[i] === '--month' && args[i + 1]) month = args[++i];
     else if (args[i] === '--r1-amount' && args[i + 1]) r1Amount = parseFloat(args[++i]);
     else if (args[i] === '--r2-amount' && args[i + 1]) r2Amount = parseFloat(args[++i]);
+    else if (args[i] === '--output-token' && args[i + 1]) outputToken = args[++i];
+    else if (args[i] === '--input-token' && args[i + 1]) inputToken = args[++i];
   }
 
   if (!month || isNaN(r1Amount) || r1Amount <= 0 || isNaN(r2Amount) || r2Amount <= 0) {
     console.error('Usage: tsx src/distribute.ts --month YYYY-MM --r1-amount <USDC> --r2-amount <USDC>');
+    console.error('Optional: --output-token <address> --input-token <address>');
     console.error('Amounts must be positive numbers.');
     process.exit(1);
   }
 
-  return { month, r1Amount, r2Amount };
+  return { month, r1Amount, r2Amount, outputToken, inputToken };
 }
 
 function waitForEnter(prompt: string): Promise<void> {
@@ -50,10 +63,14 @@ function waitForEnter(prompt: string): Promise<void> {
 // --- Main ---
 
 async function main() {
-  const { month, r1Amount, r2Amount } = parseArgs();
+  const { month, r1Amount, r2Amount, outputToken, inputToken } = parseArgs();
   const amounts = [r1Amount, r2Amount];
 
-  console.log(`\n=== Albion Rewards Distribution: ${month} ===\n`);
+  console.log(`\n=== Albion Rewards Distribution: ${month} ===`);
+  if (outputToken !== USDC_BASE || inputToken !== WETH_BASE) {
+    console.log(`  Custom tokens: output=${outputToken}, input=${inputToken}`);
+  }
+  console.log();
 
   // ---- PHASE 1: Prepare ----
 
@@ -75,8 +92,8 @@ async function main() {
   const provider = new ethers.JsonRpcProvider(process.env.BASE_RPC_URL);
   for (let i = 0; i < TOKENS.length; i++) {
     await checkDelegate(TOKENS[i].safe);
-    await checkUsdcBalance(provider, TOKENS[i].safe, amounts[i]);
-    console.log(`  ${TOKENS[i].symbol}: delegate OK, USDC balance OK`);
+    await checkUsdcBalance(provider, TOKENS[i].safe, amounts[i], outputToken);
+    console.log(`  ${TOKENS[i].symbol}: delegate OK, balance OK`);
   }
   await checkDelegate(METADATA_SAFE);
   console.log('  Metadata Safe: delegate OK');
@@ -92,6 +109,8 @@ async function main() {
       v.merkleRoot,
       String(amounts[i]),
       TOKENS[i].safe,
+      outputToken,
+      inputToken,
     );
     deployments.push({ validation: v, args });
     console.log(`  ${TOKENS[i].symbol}: calldata built, orderbook=${args.orderbookAddress}`);

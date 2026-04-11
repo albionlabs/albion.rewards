@@ -98,6 +98,76 @@ output/
 - `1725148800` = September 1, 2025 00:00:00 UTC
 - `1727740799` = September 30, 2025 23:59:59 UTC
 
+## Distribution Script
+
+Automates the full 5-step manual workflow: order deployment, metadata updates, Pinata uploads, on-chain metadata pinning, and issuance-site PR creation.
+
+### Prerequisites
+
+- **Foundry** (for `anvil` fork simulation):
+  ```bash
+  curl -L https://foundry.paradigm.xyz | bash && foundryup
+  ```
+- **GitHub CLI** authenticated (`gh auth status`)
+- **Proposer EOA** registered as a delegate on all 3 Safes (R1, R2, Metadata) via Safe UI > Settings > Delegates
+
+### Environment Variables
+
+Add the following to your `.env`:
+
+```
+# Proposer wallet (delegate on all 3 Safes)
+PROPOSER_PRIVATE_KEY=0x...
+
+# Pinata v3
+PINATA_JWT=...
+PINATA_GATEWAY=https://gateway.pinata.cloud/ipfs
+
+# Base RPC
+BASE_RPC_URL=https://mainnet.base.org
+
+# GitHub token (or rely on gh CLI auth)
+GITHUB_TOKEN=ghp_...
+```
+
+### Usage
+
+```bash
+npm run distribute -- --month 2026-02 --r1-amount 1234.56 --r2-amount 789.01
+```
+
+- `--month` — distribution month (e.g., `2026-02`), maps to `output/2026-02-01_to_2026-02-28/`
+- `--r1-amount` / `--r2-amount` — human-readable USDC amounts, validated against CSV totals
+
+### Script Flow
+
+1. **Pre-flight checks** — validates CSVs exist, merkle roots match, Safe delegates registered, USDC balances sufficient
+2. **Build calldata** — uses `DotrainOrderGui` SDK to build order deployment transactions
+3. **Fork simulation** — spins up Anvil, simulates both deployments, verifies `AddOrderV2` events
+4. **Propose Safe txs** — submits R1 + R2 order deployment transactions to their respective Safes
+5. **PAUSE 1** — sign and execute both Safe txs in the Safe UI, then press Enter
+6. **Finalize** — polls for execution, extracts orderHashes, updates `metadata.json`, commits and pushes
+7. **Upload to Pinata** — uploads reward CSVs and metadata JSONs, captures CIDs
+8. **Pin metadata on-chain** — CBOR-encodes metadata, proposes `emitMeta` calls via Metadata Safe
+9. **PAUSE 2** — sign and execute the metadata Safe tx, then press Enter
+10. **Issuance-site PR** — patches `network.ts` in `Albion-issuance-site` and opens a PR
+
+### Module Structure
+
+```
+src/
+  distribute.ts          # Main distribution orchestrator
+  lib/
+    validation.ts        # Pre-flight checks (CSV, merkle, balances)
+    order.ts             # DotrainOrderGui wrapper (order calldata)
+    simulation.ts        # Anvil fork simulation
+    safe.ts              # Safe SDK (propose, poll, extract results)
+    metadata.ts          # CBOR encoding, MetaBoard calls, JSON patching
+    pinata.ts            # Pinata v3 API upload
+    git.ts               # Git operations (commit + push metadata)
+    github.ts            # Issuance-site patching + PR creation
+```
+
 ## Algorithm Details
 
 ### Reward Calculation

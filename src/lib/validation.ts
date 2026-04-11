@@ -2,7 +2,7 @@ import fs from 'fs';
 import { ethers } from 'ethers';
 import { SimpleMerkleTree } from '@openzeppelin/merkle-tree';
 import { keccak256 } from 'ethers';
-import { USDC_BASE, USDC_DECIMALS, CSV_AMOUNT_DECIMALS, TOKENS } from '../constants';
+import { USDC_DECIMALS, CSV_AMOUNT_DECIMALS, TOKENS } from '../constants';
 
 /**
  * Convert --month YYYY-MM to date range string: YYYY-MM-DD_to_YYYY-MM-DD
@@ -164,10 +164,11 @@ export function validateToken(
 export async function checkUsdcBalance(
   provider: ethers.JsonRpcProvider,
   safeAddress: string,
-  requiredAmountHuman: number
+  requiredAmountHuman: number,
+  tokenAddress: string,
 ): Promise<void> {
   const usdc = new ethers.Contract(
-    USDC_BASE,
+    tokenAddress,
     ['function balanceOf(address) view returns (uint256)'],
     provider
   );

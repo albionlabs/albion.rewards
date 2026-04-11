@@ -1,4 +1,4 @@
-import { CLAIMS_STRATEGY_URL, USDC_BASE, WETH_BASE } from '../constants';
+import { CLAIMS_STRATEGY_URL } from '../constants';
 
 export interface DeploymentArgs {
   approvals: Array<{ token: string; calldata: string; symbol: string }>;
@@ -28,6 +28,8 @@ export async function buildOrderCalldata(
   merkleRoot: string,
   depositAmountHuman: string,
   safeAddress: string,
+  outputToken: string,
+  inputToken: string,
 ): Promise<DeploymentArgs> {
   // Dynamic import since @rainlanguage/orderbook uses WASM
   const { DotrainOrderGui } = await import('@rainlanguage/orderbook');
@@ -51,12 +53,12 @@ export async function buildOrderCalldata(
   const gui = guiResult.value;
 
   // Configure tokens
-  const outputResult = await gui.setSelectToken('output', USDC_BASE);
+  const outputResult = await gui.setSelectToken('output', outputToken);
   if (outputResult.error) {
     throw new Error(`Failed to set output token: ${outputResult.error.readableMsg ?? JSON.stringify(outputResult.error)}`);
   }
 
-  const inputResult = await gui.setSelectToken('input', WETH_BASE);
+  const inputResult = await gui.setSelectToken('input', inputToken);
   if (inputResult.error) {
     throw new Error(`Failed to set input token: ${inputResult.error.readableMsg ?? JSON.stringify(inputResult.error)}`);
   }
