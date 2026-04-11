@@ -48,8 +48,8 @@ async function main() {
   });
 
   // Read actual merkle roots from saved trees
+  const { SimpleMerkleTree } = await import('@openzeppelin/merkle-tree');
   const actualMerkleRoots = tokenPaths.map((p) => {
-    const { SimpleMerkleTree } = require('@openzeppelin/merkle-tree');
     const tree = SimpleMerkleTree.load(JSON.parse(fs.readFileSync(p.treePath, 'utf8')));
     return tree.root as string;
   });
