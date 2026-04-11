@@ -26,7 +26,8 @@ export function validateCsvTotal(cliAmount: number, csvAmountsWei: bigint[]): bo
   const totalWei = csvAmountsWei.reduce((sum, a) => sum + a, 0n);
   // Use ethers.parseUnits via string to avoid floating-point precision loss at 10^18
   const cliWei = ethers.parseUnits(cliAmount.toString(), CSV_AMOUNT_DECIMALS);
-  return totalWei === cliWei;
+  // Allow CLI amount to be >= CSV total (rounding up the deposit is fine)
+  return cliWei >= totalWei;
 }
 
 /**
@@ -137,7 +138,7 @@ export function validateToken(
   if (!validateCsvTotal(cliAmount, csvAmounts)) {
     const totalWei = csvAmounts.reduce((sum, a) => sum + a, 0n);
     throw new Error(
-      `${token.symbol} amount mismatch: CLI=${cliAmount} USDC, CSV total=${totalWei} wei`
+      `${token.symbol} deposit too low: CLI=${cliAmount} USDC (${ethers.parseUnits(cliAmount.toString(), CSV_AMOUNT_DECIMALS)} wei), CSV total=${totalWei} wei`
     );
   }
 
