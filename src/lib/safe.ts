@@ -108,7 +108,7 @@ export async function checkDelegate(safeAddress: string): Promise<void> {
  */
 export function extractOrderHashFromReceipt(receipt: ethers.TransactionReceipt): string {
   const iface = new ethers.Interface([
-    'event AddOrderV2(address sender, bytes32 orderHash, (address owner, (address interpreter, address store, bytes bytecode) evaluable, (address token, bytes32 vaultId)[] validInputs, (address token, bytes32 vaultId)[] validOutputs, bytes32 nonce) order)',
+    'event AddOrderV2(address sender, bytes32 orderHash, (address owner, (address interpreter, address store, bytes bytecode) evaluable, (address token, uint8 decimals, uint256 vaultId)[] validInputs, (address token, uint8 decimals, uint256 vaultId)[] validOutputs, bytes32 nonce) order)',
   ]);
 
   for (const log of receipt.logs) {

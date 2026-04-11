@@ -68,7 +68,7 @@ export async function simulateDeployment(
   }
 
   const iface = new ethers.Interface([
-    'event AddOrderV2(address sender, bytes32 orderHash, (address, (address, address, bytes), (address, bytes32)[], (address, bytes32)[], bytes32) order)',
+    'event AddOrderV2(address sender, bytes32 orderHash, (address, (address, address, bytes), (address, uint8, uint256)[], (address, uint8, uint256)[], bytes32) order)',
   ]);
 
   let foundEvent = false;
