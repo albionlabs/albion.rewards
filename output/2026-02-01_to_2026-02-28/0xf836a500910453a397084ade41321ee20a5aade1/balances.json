@@ -1,292 +1,282 @@
 {
   "snapshots": [
     {
-      "blockNumber": 41568510,
+      "blockNumber": 41593196,
       "timestamp": 0,
       "day": 1
     },
     {
-      "blockNumber": 41563990,
+      "blockNumber": 41596504,
       "timestamp": 0,
       "day": 1
     },
     {
-      "blockNumber": 41629150,
+      "blockNumber": 41637265,
       "timestamp": 0,
       "day": 2
     },
     {
-      "blockNumber": 41638014,
+      "blockNumber": 41641499,
       "timestamp": 0,
       "day": 2
     },
     {
-      "blockNumber": 41656578,
+      "blockNumber": 41664540,
       "timestamp": 0,
       "day": 3
     },
     {
-      "blockNumber": 41662298,
+      "blockNumber": 41676696,
       "timestamp": 0,
       "day": 3
     },
     {
-      "blockNumber": 41687939,
+      "blockNumber": 41718715,
       "timestamp": 0,
       "day": 4
     },
     {
-      "blockNumber": 41712056,
+      "blockNumber": 41706811,
       "timestamp": 0,
       "day": 4
     },
     {
-      "blockNumber": 41766616,
+      "blockNumber": 41750129,
       "timestamp": 0,
       "day": 5
     },
     {
-      "blockNumber": 41772466,
+      "blockNumber": 41755993,
       "timestamp": 0,
       "day": 5
     },
     {
-      "blockNumber": 41776084,
+      "blockNumber": 41796288,
       "timestamp": 0,
       "day": 6
     },
     {
-      "blockNumber": 41800086,
+      "blockNumber": 41802760,
       "timestamp": 0,
       "day": 6
     },
     {
-      "blockNumber": 41826310,
+      "blockNumber": 41827027,
       "timestamp": 0,
       "day": 7
     },
     {
-      "blockNumber": 41816901,
+      "blockNumber": 41855969,
       "timestamp": 0,
       "day": 7
     },
     {
-      "blockNumber": 41874214,
+      "blockNumber": 41897824,
       "timestamp": 0,
       "day": 8
     },
     {
-      "blockNumber": 41877628,
+      "blockNumber": 41865412,
       "timestamp": 0,
       "day": 8
     },
     {
-      "blockNumber": 41909618,
+      "blockNumber": 41908728,
       "timestamp": 0,
       "day": 9
     },
     {
-      "blockNumber": 41912582,
+      "blockNumber": 41914421,
       "timestamp": 0,
       "day": 9
     },
     {
-      "blockNumber": 41988099,
+      "blockNumber": 41976343,
       "timestamp": 0,
       "day": 10
     },
     {
-      "blockNumber": 41972707,
+      "blockNumber": 41946143,
       "timestamp": 0,
       "day": 10
     },
     {
-      "blockNumber": 41994921,
+      "blockNumber": 42003965,
       "timestamp": 0,
       "day": 11
     },
     {
-      "blockNumber": 42030936,
+      "blockNumber": 42032068,
       "timestamp": 0,
       "day": 11
     },
     {
-      "blockNumber": 42069968,
+      "blockNumber": 42037913,
       "timestamp": 0,
       "day": 12
     },
     {
-      "blockNumber": 42044349,
+      "blockNumber": 42066262,
       "timestamp": 0,
       "day": 12
     },
     {
-      "blockNumber": 42078740,
+      "blockNumber": 42084847,
       "timestamp": 0,
       "day": 13
     },
     {
-      "blockNumber": 42091313,
+      "blockNumber": 42104804,
       "timestamp": 0,
       "day": 13
     },
     {
-      "blockNumber": 42122152,
+      "blockNumber": 42154151,
       "timestamp": 0,
       "day": 14
     },
     {
-      "blockNumber": 42127315,
+      "blockNumber": 42154406,
       "timestamp": 0,
       "day": 14
     },
     {
-      "blockNumber": 42194098,
+      "blockNumber": 42164301,
       "timestamp": 0,
       "day": 15
     },
     {
-      "blockNumber": 42178232,
+      "blockNumber": 42199774,
       "timestamp": 0,
       "day": 15
     },
     {
-      "blockNumber": 42206519,
+      "blockNumber": 42220590,
       "timestamp": 0,
       "day": 16
     },
     {
-      "blockNumber": 42230727,
+      "blockNumber": 42220571,
       "timestamp": 0,
       "day": 16
     },
     {
-      "blockNumber": 42291616,
+      "blockNumber": 42283694,
       "timestamp": 0,
       "day": 17
     },
     {
-      "blockNumber": 42275878,
+      "blockNumber": 42284515,
       "timestamp": 0,
       "day": 17
     },
     {
-      "blockNumber": 42317665,
+      "blockNumber": 42319525,
       "timestamp": 0,
       "day": 18
     },
     {
-      "blockNumber": 42309748,
+      "blockNumber": 42309104,
       "timestamp": 0,
       "day": 18
     },
     {
-      "blockNumber": 42340258,
+      "blockNumber": 42354999,
       "timestamp": 0,
       "day": 19
     },
     {
-      "blockNumber": 42352484,
+      "blockNumber": 42348716,
       "timestamp": 0,
       "day": 19
     },
     {
-      "blockNumber": 42378991,
+      "blockNumber": 42396245,
       "timestamp": 0,
       "day": 20
     },
     {
-      "blockNumber": 42420161,
+      "blockNumber": 42416050,
       "timestamp": 0,
       "day": 20
     },
     {
-      "blockNumber": 42430837,
+      "blockNumber": 42462214,
       "timestamp": 0,
       "day": 21
     },
     {
-      "blockNumber": 42432521,
+      "blockNumber": 42436897,
       "timestamp": 0,
       "day": 21
     },
     {
-      "blockNumber": 42476372,
+      "blockNumber": 42472475,
       "timestamp": 0,
       "day": 22
     },
     {
-      "blockNumber": 42478649,
+      "blockNumber": 42496846,
       "timestamp": 0,
       "day": 22
     },
     {
-      "blockNumber": 42516593,
+      "blockNumber": 42521443,
       "timestamp": 0,
       "day": 23
     },
     {
-      "blockNumber": 42526630,
+      "blockNumber": 42541866,
       "timestamp": 0,
       "day": 23
     },
     {
-      "blockNumber": 42574181,
+      "blockNumber": 42559435,
       "timestamp": 0,
       "day": 24
     },
     {
-      "blockNumber": 42557717,
+      "blockNumber": 42563867,
       "timestamp": 0,
       "day": 24
     },
     {
-      "blockNumber": 42599898,
+      "blockNumber": 42631524,
       "timestamp": 0,
       "day": 25
     },
     {
-      "blockNumber": 42632022,
+      "blockNumber": 42624294,
       "timestamp": 0,
       "day": 25
     },
     {
-      "blockNumber": 42646094,
+      "blockNumber": 42654585,
       "timestamp": 0,
       "day": 26
     },
     {
-      "blockNumber": 42674808,
+      "blockNumber": 42673572,
       "timestamp": 0,
       "day": 26
     },
     {
-      "blockNumber": 42711658,
+      "blockNumber": 42710444,
       "timestamp": 0,
       "day": 27
     },
     {
-      "blockNumber": 42694059,
+      "blockNumber": 42708684,
       "timestamp": 0,
       "day": 27
-    },
-    {
-      "blockNumber": 42723727,
-      "timestamp": 0,
-      "day": 28
-    },
-    {
-      "blockNumber": 42723726,
-      "timestamp": 0,
-      "day": 28
     }
   ],
   "tokenProportions": {
     "0xf836a500910453a397084ade41321ee20a5aade1": {
       "0xbd17b1069816c3194e8a7a264f32b8f037d82f8e": {
-        "balance": "1878000000000000000000",
-        "proportion": 0.15650000000000008,
-        "reward": "114002425000000077824"
+        "balance": "1589111111111111111111",
+        "proportion": 0.13242592592592597,
+        "reward": "96465665740740788224"
       },
       "0x66147ec1f1d518b1c1710d79536cdbeabc3d1e71": {
         "balance": "102000000000000000000",
@@ -545,8 +535,8 @@
       },
       "0xa9d6ab42f32dc476269db2407715d8c15a36d781": {
         "balance": "114000000000000000000",
-        "proportion": 0.009500000000000003,
-        "reward": "6920275000000003072"
+        "proportion": 0.009500000000000005,
+        "reward": "6920275000000004096"
       },
       "0xaae7223ed3eb891de6ff6372f12183e12450cc12": {
         "balance": "100000000000000000000",
@@ -719,9 +709,9 @@
         "reward": "6070416666666675200"
       },
       "0x7251f62a8e56fede7c86888a89571c3fa2d6df06": {
-        "balance": "100000000000000000000",
-        "proportion": 0.008333333333333344,
-        "reward": "6070416666666675200"
+        "balance": "129629629629629629629",
+        "proportion": 0.010802469135802475,
+        "reward": "7869058641975314432"
       },
       "0x7b60432f38a0eb82fdb5c77e902dc2dc28d4c2aa": {
         "balance": "100000000000000000000",
@@ -749,89 +739,89 @@
         "reward": "6070416666666675200"
       },
       "0x52ceb8ebef648744ffdde89f7bc9c3ac35944775": {
-        "balance": "591965089878510488785",
-        "proportion": 0.04933042415654261,
-        "reward": "35934747476833468416"
+        "balance": "579039157704387168319",
+        "proportion": 0.04825326314203231,
+        "reward": "35150089535813435392"
       },
       "0x29384a295cce669b9edcd96e1ad41127e4340caf": {
-        "balance": "2124111236666778635",
-        "proportion": 0.0001770092697222314,
-        "reward": "128942402529159472"
+        "balance": "470307038873470140",
+        "proportion": 0.00003919225323945585,
+        "reward": "28549596872281616"
       },
       "0x72a228bd780cb41ba27bfc729e3cbceec75b9a7f": {
-        "balance": "1253064021126556989",
-        "proportion": 0.0001044220017605464,
-        "reward": "76066207182470032"
+        "balance": "319875676619837989",
+        "proportion": 0.000026656306384986507,
+        "reward": "19417786386143424"
       },
       "0xeafc1e8076500fd0b286d575bbeabad0794d3125": {
-        "balance": "3690588017556780816",
-        "proportion": 0.000307549001463065,
-        "reward": "224034070115769728"
+        "balance": "453415767931321483",
+        "proportion": 0.0000377846473276101,
+        "reward": "27524226345797576"
       },
       "0x7e59691f6b72d8cc5c64fb6eb4b00f28117802e8": {
-        "balance": "1304319804680802069",
-        "proportion": 0.00010869331705673336,
-        "reward": "79177646809977424"
+        "balance": "362256677558138821",
+        "proportion": 0.00003018805646317826,
+        "reward": "21990489730602204"
       },
       "0x36f45c7490a77f101cc12cab11ff3a8738621f1d": {
-        "balance": "1051673116554388103",
-        "proportion": 0.0000876394263795323,
-        "reward": "63840940146170312"
+        "balance": "565862242060401165",
+        "proportion": 0.000047155186838366784,
+        "reward": "34350195852408288"
       },
       "0xdb469e1a0afbfee783c266ad7f251b44b1f8279e": {
-        "balance": "1937514004416398677",
-        "proportion": 0.00016145950036803328,
-        "reward": "117615173043093856"
+        "balance": "613944274896259160",
+        "proportion": 0.00005116202290802155,
+        "reward": "37268975587348304"
       },
       "0x5078e91df99490ef44e35ddde3246172d22d29bc": {
-        "balance": "1285354387366825810",
-        "proportion": 0.0001071128656139021,
-        "reward": "78026366956446992"
+        "balance": "556396951618978932",
+        "proportion": 0.0000463664126349149,
+        "reward": "33775613283903764"
       },
       "0x3b5477cecbc12ada85728cd06cd98c9c87bceae7": {
-        "balance": "1384187384324188214",
-        "proportion": 0.0001153489486936822,
-        "reward": "84025941675912800"
+        "balance": "487200889802089905",
+        "proportion": 0.00004060007415017414,
+        "reward": "29575124014694352"
       },
       "0x970f1a3e7e36fa0e421eb816eb68be938332c45d": {
-        "balance": "2462249057780043817",
-        "proportion": 0.00020518742148167024,
-        "reward": "149468777178322688"
+        "balance": "417468459130802833",
+        "proportion": 0.00003478903826090023,
+        "reward": "25342074921152772"
       },
       "0xcb5d2b58e160162355f4ef79e723008d4fa39825": {
-        "balance": "2044171846103126657",
-        "proportion": 0.00017034765384192735,
-        "reward": "124089748441151984"
+        "balance": "2352513531518786179",
+        "proportion": 0.0001960427942932323,
+        "reward": "142807373502905072"
       },
       "0xb492b536e20eabc16857b79d672556773ad7518d": {
-        "balance": "2288605296606189665",
-        "proportion": 0.00019071710805051593,
-        "reward": "138927877359398336"
+        "balance": "465530815734006476",
+        "proportion": 0.00003879423464450058,
+        "reward": "28259660226786452"
       },
       "0x86870c1b2872ff8f0beddddd57e869ef99f4966b": {
-        "balance": "1767692036415913199",
-        "proportion": 0.00014730766970132603,
-        "reward": "107306271993930960"
+        "balance": "507900217803259424",
+        "proportion": 0.00004232501815027164,
+        "reward": "30831659471565380"
       },
       "0x2847dd0cde8d58740e52666e912c015189e11b5e": {
-        "balance": "1530556114964274676",
-        "proportion": 0.00012754634291368966,
-        "reward": "92911133495477248"
+        "balance": "399792003779082090",
+        "proportion": 0.00003331600031492348,
+        "reward": "24269040429406012"
       },
       "0x00425d3bb4b326e00edcb53a7bdbe205847efe26": {
-        "balance": "1719256536662269220",
-        "proportion": 0.0001432713780551891,
-        "reward": "104366035344302496"
+        "balance": "395309871930866724",
+        "proportion": 0.00003294248932757221,
+        "reward": "23996956350669980"
       },
       "0x36ce57db0eae67bc827afc7ff0d287ca8dcc359f": {
-        "balance": "1898802954301456328",
-        "proportion": 0.0001582335795251213,
-        "reward": "115265251005074624"
+        "balance": "480235814735426052",
+        "proportion": 0.00004001965122795214,
+        "reward": "29152314937001740"
       },
       "0x4830d191aaac7a58ce61739781ec684ccb9d45e5": {
-        "balance": "1190556783712490883",
-        "proportion": 0.0000992130653093742,
-        "reward": "72271757424613648"
+        "balance": "482320995032147316",
+        "proportion": 0.00004019341625267898,
+        "reward": "29278894069264004"
       },
       "0x513603aa35e07a6e899e351168a45f8005f7032e": {
         "balance": "10000000000000000000",
@@ -839,24 +829,24 @@
         "reward": "607041666666666112"
       },
       "0x245fcce2d5d0e365c2777b5984460742ce438e7e": {
-        "balance": "2507466513589681427",
-        "proportion": 0.0002089555427991404,
-        "reward": "152213665152033824"
+        "balance": "1532432206568897059",
+        "proportion": 0.00012770268388074144,
+        "reward": "93025020072926112"
       },
       "0xe0ca2e8451361c1667bcc92f6785d5160790db67": {
-        "balance": "2586829242633020745",
-        "proportion": 0.0002155691035527519,
-        "reward": "157031313483002144"
+        "balance": "399542046820153674",
+        "proportion": 0.00003329517056834614,
+        "reward": "24253867000511748"
       },
       "0xc92be5c1a82da1ab3984a3923dcc5d8576279c7d": {
-        "balance": "2491530743238517731",
-        "proportion": 0.00020762756193654303,
-        "reward": "151246297492674784"
+        "balance": "363042707944536950",
+        "proportion": 0.00003025355899537805,
+        "reward": "22038205050183140"
       },
       "0xc37570809df38b06540e259eda187f7210299d3d": {
-        "balance": "1774263209367769059",
-        "proportion": 0.00014785526744731404,
-        "reward": "107705169571995920"
+        "balance": "572631406219995902",
+        "proportion": 0.00004771928385166633,
+        "reward": "34761112321746340"
       },
       "0x36116cc21be5d62bf27e1e7967b762d26c2f944c": {
         "balance": "770878430099674002",
@@ -880,17 +870,17 @@
       },
       "0x74c65c2d640bd2e1bc4e25d914243546ba056fc8": {
         "balance": "990069614941173850",
-        "proportion": 0.00008250580124509783,
-        "reward": "60101350916991520"
+        "proportion": 0.00008250580124509781,
+        "reward": "60101350916991512"
       },
       "0x337c99c5d1267b4c551bfeecfa37692177c671ee": {
         "balance": "901886509438456128",
-        "proportion": 0.00007515720911987136,
-        "reward": "54748268983370296"
+        "proportion": 0.00007515720911987135,
+        "reward": "54748268983370288"
       },
       "0xcacceb1ea657224244da9e7e07cdd699a75602e5": {
         "balance": "1209057969112517187",
-        "proportion": 0.00010075483075937631,
+        "proportion": 0.00010075483075937632,
         "reward": "73394856466667680"
       },
       "0xb795ecaf5b2c28d1fa29387e239555f147f1e3e3": {
@@ -912,6 +902,41 @@
         "balance": "50000000000000000000",
         "proportion": 0.004166666666666672,
         "reward": "3035208333333337600"
+      },
+      "0x7177b9d00bb5dbcaaf069cc63190902763783b09": {
+        "balance": "39003469955052823442",
+        "proportion": 0.003250289162921065,
+        "reward": "2367673140729849856"
+      },
+      "0xfa4b9ad5bec999211f2a1ddfeb8827b5a11c1b01": {
+        "balance": "17274930559511470",
+        "proportion": 0.0000014395775466259578,
+        "reward": "1048660263839679"
+      },
+      "0xfbc353452542f758dd8d87e8d19bf33c1d2ed39d": {
+        "balance": "100000000000000000000",
+        "proportion": 0.008333333333333344,
+        "reward": "6070416666666675200"
+      },
+      "0xf972199c3fcb6d3330ad1733ead0e67ca9652550": {
+        "balance": "100000000000000000000",
+        "proportion": 0.008333333333333344,
+        "reward": "6070416666666675200"
+      },
+      "0xac4363ab752daeae110708edf44ac0d08a93c448": {
+        "balance": "29629629629629629629",
+        "proportion": 0.0024691358024691358,
+        "reward": "1798641975308642048"
+      },
+      "0x60c01c7b65ff57a2af841d79fdd89b6dbbcc245f": {
+        "balance": "5555555555555555555",
+        "proportion": 0.000462962962962963,
+        "reward": "337245370370370432"
+      },
+      "0xe522cb4a5fcb2eb31a52ff41a4653d85a4fd7c9d": {
+        "balance": "24074074074074074074",
+        "proportion": 0.0020061728395061726,
+        "reward": "1461396604938271488"
       }
     }
   }
