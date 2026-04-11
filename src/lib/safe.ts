@@ -41,7 +41,7 @@ export async function proposeSafeTransaction(
   const signer = new ethers.Wallet(signerKey);
   const proposerAddress = signer.address;
 
-  const apiKit = new SafeApiKit({ chainId: BASE_CHAIN_ID });
+  const apiKit = new SafeApiKit({ chainId: BASE_CHAIN_ID, apiKey: process.env.SAFE_API_KEY });
   await apiKit.proposeTransaction({
     safeAddress: checksummedSafe,
     safeTransactionData: signedTx.data,
@@ -65,7 +65,7 @@ export async function waitForExecution(
   const intervalMs = options?.intervalMs ?? 5000;
   const timeoutMs = options?.timeoutMs ?? 120000;
 
-  const apiKit = new SafeApiKit({ chainId: BASE_CHAIN_ID });
+  const apiKit = new SafeApiKit({ chainId: BASE_CHAIN_ID, apiKey: process.env.SAFE_API_KEY });
   const start = Date.now();
 
   while (Date.now() - start < timeoutMs) {
@@ -89,7 +89,7 @@ export async function checkDelegate(safeAddress: string): Promise<void> {
   const signer = new ethers.Wallet(signerKey);
   const proposerAddress = signer.address.toLowerCase();
 
-  const apiKit = new SafeApiKit({ chainId: BASE_CHAIN_ID });
+  const apiKit = new SafeApiKit({ chainId: BASE_CHAIN_ID, apiKey: process.env.SAFE_API_KEY });
   const delegates = await apiKit.getSafeDelegates({ safeAddress: ethers.getAddress(safeAddress) });
 
   const isDelegate = delegates.results.some(
