@@ -40,7 +40,11 @@ export async function proposeSafeTransaction(
   // Sign the hash directly — delegates can't use protocolKit.signTransaction()
   const signer = new ethers.Wallet(signerKey);
   const proposerAddress = signer.address;
-  const signature = await signer.signMessage(ethers.getBytes(safeTxHash));
+  // eth_sign: sign with message prefix, then adjust v += 4 (27→31, 28→32)
+  const rawSig = await signer.signMessage(ethers.getBytes(safeTxHash));
+  const sigBytes = ethers.getBytes(rawSig);
+  sigBytes[64] += 4;
+  const signature = ethers.hexlify(sigBytes);
 
   const apiKit = new SafeApiKit({ chainId: BASE_CHAIN_ID, apiKey: process.env.SAFE_API_KEY });
   await apiKit.proposeTransaction({
