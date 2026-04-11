@@ -12,7 +12,7 @@
       "tokenPayout": {
         "date": "2026-01-05T12:00:00Z",
         "totalPayout": 2390.854,
-        "payoutPerToken":0.1106,
+        "payoutPerToken": 0.1106,
         "txHash": "0x3c382c0dd282d46060f0cef888ab73588ed2e01a7bfa3827ea8e6d61c173ad05",
         "orderHash": "0xca9ebf6d282d24a63d6892c0a888d3604b17ddfca69a035b2a6c06b769fc84f7",
         "note": "November monthly payment + 1/12 pending distributions"
@@ -43,11 +43,11 @@
     {
       "month": "2026-02",
       "tokenPayout": {
-        "date": "",
+        "date": "2026-04-11T18:12:09.100Z",
         "totalPayout": 2630.254,
         "payoutPerToken": 0,
-        "txHash": "",
-        "orderHash": "",
+        "txHash": "0x01c689234fa3912d22a64f2f0e5bb2e1b0020db0ac469adaff099c1d429e83a0",
+        "orderHash": "0xc0b5da036283d08ff457b4146198e66ed1e81a3f7da67d638b3a3c40a9a92f5e",
         "note": "February monthly payment + 1/12 pending distributions"
       }
     }
@@ -403,100 +403,100 @@
         }
       },
       {
-          "month": "2025-08",
-          "assetData": {
-            "production": 397.03,
-            "revenue": 26375,
-            "expenses": 0,
-            "netIncome": 0
-          },
-          "realisedPrice": {
-            "oilPrice": 66.9,
-            "gasPrice": 4.25
-          }
+        "month": "2025-08",
+        "assetData": {
+          "production": 397.03,
+          "revenue": 26375,
+          "expenses": 0,
+          "netIncome": 0
         },
-        {
-          "month": "2025-09",
-          "assetData": {
-            "production": 258.93,
-            "revenue": 17090,
-            "expenses": 0,
-            "netIncome": 0
-          },
-          "realisedPrice": {
-            "oilPrice": 66.7,
-            "gasPrice": 2.38
-          }
-        },
-        {
-          "month": "2025-10",
-          "assetData": {
-            "production": 421.88,
-            "revenue": 26601,
-            "expenses": 0,
-            "netIncome": 0
-          },
-          "realisedPrice": {
-            "oilPrice": 63.45,
-            "gasPrice": 3.1
-          }
-        },
-        {
-          "month": "2025-11",
-          "assetData": {
-            "production": 314.00,
-            "revenue": 19402,
-            "expenses": 0,
-            "netIncome": 0
-          },
-          "realisedPrice": {
-            "oilPrice": 62.35,
-            "gasPrice": 3.1
-          }
-        },
-        {
-          "month": "2025-12",
-          "assetData": {
-            "production": 331.61,
-            "revenue": 20177,
-            "expenses": 0,
-            "netIncome": 0
-          },
-          "realisedPrice": {
-            "oilPrice": 61.38,
-            "gasPrice": 0
-          }
-        },
-        {
-          "month": "2026-01",
-          "assetData": {
-            "production": 353.35,
-            "revenue": 22961,
-            "expenses": 0,
-            "netIncome": 0
-          },
-          "realisedPrice": {
-            "oilPrice": 65.5,
-            "gasPrice": 0
-          }
-        },
-        {
-          "month": "2026-02",
-          "assetData": {
-            "production": 325.95,
-            "revenue": 22594,
-            "expenses": 0,
-            "netIncome": 0
-          },
-          "realisedPrice": {
-            "oilPrice": 69.85,
-            "gasPrice": 0
-          }
+        "realisedPrice": {
+          "oilPrice": 66.9,
+          "gasPrice": 4.25
         }
+      },
+      {
+        "month": "2025-09",
+        "assetData": {
+          "production": 258.93,
+          "revenue": 17090,
+          "expenses": 0,
+          "netIncome": 0
+        },
+        "realisedPrice": {
+          "oilPrice": 66.7,
+          "gasPrice": 2.38
+        }
+      },
+      {
+        "month": "2025-10",
+        "assetData": {
+          "production": 421.88,
+          "revenue": 26601,
+          "expenses": 0,
+          "netIncome": 0
+        },
+        "realisedPrice": {
+          "oilPrice": 63.45,
+          "gasPrice": 3.1
+        }
+      },
+      {
+        "month": "2025-11",
+        "assetData": {
+          "production": 314,
+          "revenue": 19402,
+          "expenses": 0,
+          "netIncome": 0
+        },
+        "realisedPrice": {
+          "oilPrice": 62.35,
+          "gasPrice": 3.1
+        }
+      },
+      {
+        "month": "2025-12",
+        "assetData": {
+          "production": 331.61,
+          "revenue": 20177,
+          "expenses": 0,
+          "netIncome": 0
+        },
+        "realisedPrice": {
+          "oilPrice": 61.38,
+          "gasPrice": 0
+        }
+      },
+      {
+        "month": "2026-01",
+        "assetData": {
+          "production": 353.35,
+          "revenue": 22961,
+          "expenses": 0,
+          "netIncome": 0
+        },
+        "realisedPrice": {
+          "oilPrice": 65.5,
+          "gasPrice": 0
+        }
+      },
+      {
+        "month": "2026-02",
+        "assetData": {
+          "production": 325.95,
+          "revenue": 22594,
+          "expenses": 0,
+          "netIncome": 0
+        },
+        "realisedPrice": {
+          "oilPrice": 69.85,
+          "gasPrice": 0
+        }
+      }
     ],
     "operationalMetrics": {
       "uptime": {
-        "percentage": 100.0,
+        "percentage": 100,
         "unit": "percent",
         "period": "last_30_days",
         "notes": ""
