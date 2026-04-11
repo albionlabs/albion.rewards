@@ -1,6 +1,6 @@
 /**
- * Resume distribution from Phase 2 (step 5) using known safeTxHashes
- * from an already-executed first run.
+ * Resume distribution from step 7 — metadata already patched and committed.
+ * Hardcoded results from the first run's executed transactions.
  */
 import { config } from 'dotenv';
 config();
@@ -9,16 +9,22 @@ import fs from 'fs';
 import readline from 'readline';
 import { ethers } from 'ethers';
 import { TOKENS, METABOARD_ADDRESS, METADATA_SAFE, METABOARD_ABI } from '../src/constants';
-import { resolveOutputDir, validateToken, type TokenValidation } from '../src/lib/validation';
-import { waitForExecution, extractOrderHashFromReceipt, proposeSafeTransaction } from '../src/lib/safe';
+import { resolveOutputDir } from '../src/lib/validation';
+import { proposeSafeTransaction, waitForExecution } from '../src/lib/safe';
 import { uploadToPinata } from '../src/lib/pinata';
-import { fetchSchemaHash, buildMetadataHex, generateMetaboardSubject, patchPendingPayout } from '../src/lib/metadata';
-import { commitAndPushMetadata } from '../src/lib/git';
+import { fetchSchemaHash, buildMetadataHex, generateMetaboardSubject } from '../src/lib/metadata';
 import { updateIssuanceSiteAndPR, type IssuanceSiteUpdate } from '../src/lib/github';
 
 const MONTH = '2026-02';
-const R1_SAFE_TX_HASH = '0x0e261dc525213a9f5aa13e2a3c97c286f03b14af4ecf5e8d5b22b843443b9395';
-const R2_SAFE_TX_HASH = '0xe156ba5ec6e023142398eec3c7fa0634642f7fe683a4b476581e149870ac8031';
+
+// Results from step 5 (already extracted)
+const executionResults = [
+  { orderHash: '0x3b976cdb37e00c214fd7212abd052e5da0760e39f0c8d9631ac122a13c3b4b44', txHash: '0xd047459e82ffce76ba43312465a33a21406ef7ba6cc4d2fc124f5ae0d97f0959' },
+  { orderHash: '0xc0b5da036283d08ff457b4146198e66ed1e81a3f7da67d638b3a3c40a9a92f5e', txHash: '0x01c689234fa3912d22a64f2f0e5bb2e1b0020db0ac469adaff099c1d429e83a0' },
+];
+
+// Merkle roots from validation (needed for issuance site update)
+const merkleRoots = ['0x12b0ad08', '0xa8a356b9']; // Will be read from tree files
 
 function waitForEnter(prompt: string): Promise<void> {
   const rl = readline.createInterface({ input: process.stdin, output: process.stdout });
@@ -30,60 +36,29 @@ function waitForEnter(prompt: string): Promise<void> {
 async function main() {
   const dateRange = resolveOutputDir(MONTH);
   const outputBase = 'output';
-  const provider = new ethers.JsonRpcProvider(process.env.BASE_RPC_URL);
 
-  // Re-validate to get paths
-  const validations: TokenValidation[] = [];
-  for (let i = 0; i < TOKENS.length; i++) {
-    // Use 999999 as dummy amount — we just need paths, not amount validation
-    const v = validateToken(outputBase, dateRange, TOKENS[i], 999999);
-    validations.push(v);
-  }
+  // Get paths and merkle roots from tree files
+  const tokenPaths = TOKENS.map((token) => {
+    const tokenDir = `${outputBase}/${dateRange}/${token.address}`;
+    return {
+      csvPath: `${tokenDir}/rewards_${dateRange}.csv`,
+      treePath: `${tokenDir}/tree_${dateRange}.json`,
+      metadataPath: `${tokenDir}/metadata.json`,
+    };
+  });
 
-  const safeTxHashes = [R1_SAFE_TX_HASH, R2_SAFE_TX_HASH];
-
-  // 5. Check execution and extract results
-  console.log('5. Checking execution status...');
-  const executionResults: Array<{ orderHash: string; txHash: string }> = [];
-
-  for (let i = 0; i < TOKENS.length; i++) {
-    console.log(`  Polling ${TOKENS[i].symbol}...`);
-    const execResult = await waitForExecution(safeTxHashes[i]);
-    console.log(`  ${TOKENS[i].symbol}: executed, txHash=${execResult.transactionHash}`);
-
-    const receipt = await provider.getTransactionReceipt(execResult.transactionHash);
-    if (!receipt) throw new Error(`Could not fetch receipt for ${execResult.transactionHash}`);
-
-    const orderHash = extractOrderHashFromReceipt(receipt);
-    console.log(`  ${TOKENS[i].symbol}: orderHash=${orderHash}`);
-
-    executionResults.push({ orderHash, txHash: execResult.transactionHash });
-  }
-
-  // 6. Update metadata.json files
-  console.log('\n6. Updating metadata.json files...');
-  const metadataPaths: string[] = [];
-  for (let i = 0; i < TOKENS.length; i++) {
-    const metadataPath = validations[i].metadataPath;
-    const metadata = JSON.parse(fs.readFileSync(metadataPath, 'utf8'));
-    patchPendingPayout(metadata, {
-      date: new Date().toISOString(),
-      txHash: executionResults[i].txHash,
-      orderHash: executionResults[i].orderHash,
-    });
-    fs.writeFileSync(metadataPath, JSON.stringify(metadata, null, 2) + '\n');
-    metadataPaths.push(metadataPath);
-    console.log(`  ${TOKENS[i].symbol}: metadata.json updated`);
-  }
-
-  commitAndPushMetadata(metadataPaths, MONTH);
-  console.log('  Committed and pushed metadata updates.');
+  // Read actual merkle roots from saved trees
+  const actualMerkleRoots = tokenPaths.map((p) => {
+    const { SimpleMerkleTree } = require('@openzeppelin/merkle-tree');
+    const tree = SimpleMerkleTree.load(JSON.parse(fs.readFileSync(p.treePath, 'utf8')));
+    return tree.root as string;
+  });
 
   // 7. Upload CSVs to Pinata
-  console.log('\n7. Uploading CSVs to Pinata...');
+  console.log('7. Uploading CSVs to Pinata...');
   const csvUploads: Array<{ cid: string; gatewayUrl: string }> = [];
   for (let i = 0; i < TOKENS.length; i++) {
-    const csvContent = fs.readFileSync(validations[i].csvPath, 'utf8');
+    const csvContent = fs.readFileSync(tokenPaths[i].csvPath, 'utf8');
     const filename = `rewards_${dateRange}_${TOKENS[i].symbol}.csv`;
     const result = await uploadToPinata(csvContent, filename);
     csvUploads.push(result);
@@ -97,7 +72,7 @@ async function main() {
 
   const emitMetaCalls: Array<{ to: string; data: string; value: string }> = [];
   for (let i = 0; i < TOKENS.length; i++) {
-    const metadataJson = fs.readFileSync(validations[i].metadataPath, 'utf8');
+    const metadataJson = fs.readFileSync(tokenPaths[i].metadataPath, 'utf8');
     const metadataFilename = `metadata_${TOKENS[i].symbol}_${MONTH}.json`;
     const metadataUpload = await uploadToPinata(metadataJson, metadataFilename, 'application/json');
     console.log(`  ${TOKENS[i].symbol}: metadata CID=${metadataUpload.cid}`);
@@ -130,13 +105,13 @@ async function main() {
   const r1Update: IssuanceSiteUpdate = {
     orderHash: executionResults[0].orderHash,
     csvCid: csvUploads[0].cid,
-    merkleRoot: validations[0].merkleRoot,
+    merkleRoot: actualMerkleRoots[0],
     csvGatewayUrl: csvUploads[0].gatewayUrl,
   };
   const r2Update: IssuanceSiteUpdate = {
     orderHash: executionResults[1].orderHash,
     csvCid: csvUploads[1].cid,
-    merkleRoot: validations[1].merkleRoot,
+    merkleRoot: actualMerkleRoots[1],
     csvGatewayUrl: csvUploads[1].gatewayUrl,
   };
 
