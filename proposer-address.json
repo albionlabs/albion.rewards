@@ -1,0 +1,5 @@
+{
+  "address": "0x0E636858Ae0214e73841CD4925770B1B91fE6B91",
+  "generatedAt": "2026-04-11T11:25:11.583Z",
+  "note": "This is the proposer address. The private key lives in .env (gitignored). Import into Rabby for safekeeping."
+}

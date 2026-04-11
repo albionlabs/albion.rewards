@@ -80,7 +80,7 @@ export async function waitForExecution(
 }
 
 /**
- * Check that the proposer is registered as a delegate on a Safe.
+ * Check that the proposer is an owner or delegate on a Safe.
  */
 export async function checkDelegate(safeAddress: string): Promise<void> {
   const signerKey = process.env.PROPOSER_PRIVATE_KEY;
@@ -88,19 +88,27 @@ export async function checkDelegate(safeAddress: string): Promise<void> {
 
   const signer = new ethers.Wallet(signerKey);
   const proposerAddress = signer.address.toLowerCase();
+  const checksummedSafe = ethers.getAddress(safeAddress);
 
   const apiKit = new SafeApiKit({ chainId: BASE_CHAIN_ID });
-  const delegates = await apiKit.getSafeDelegates({ safeAddress: ethers.getAddress(safeAddress) });
 
+  // Check owners
+  const safeInfo = await apiKit.getSafeInfo(checksummedSafe);
+  const isOwner = safeInfo.owners.some(
+    (owner: string) => owner.toLowerCase() === proposerAddress
+  );
+  if (isOwner) return;
+
+  // Check delegates
+  const delegates = await apiKit.getSafeDelegates({ safeAddress: checksummedSafe });
   const isDelegate = delegates.results.some(
     (d: any) => d.delegate.toLowerCase() === proposerAddress
   );
+  if (isDelegate) return;
 
-  if (!isDelegate) {
-    throw new Error(
-      `Proposer ${proposerAddress} is not a delegate on Safe ${safeAddress}. Add via Safe UI > Settings > Delegates.`
-    );
-  }
+  throw new Error(
+    `Proposer ${proposerAddress} is not an owner or delegate on Safe ${safeAddress}.`
+  );
 }
 
 /**

@@ -11,6 +11,7 @@
     "generate-snapshots": "tsx src/snapshot-generator.ts",
     "build": "tsc",
     "distribute": "tsx src/distribute.ts",
+    "generate-key": "tsx scripts/generate-proposer-key.ts",
     "test": "vitest"
   },
   "dependencies": {
