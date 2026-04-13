@@ -86,10 +86,6 @@ export async function simulateDeployment(
   }
 
   if (!foundEvent) {
-    console.log(`  Simulation debug: ${deployReceipt.logs.length} logs in receipt`);
-    for (const log of deployReceipt.logs) {
-      console.log(`    topic0: ${log.topics[0]}, address: ${log.address}`);
-    }
     throw new Error('Simulation: AddOrderV2 event not found in deployment receipt');
   }
 
