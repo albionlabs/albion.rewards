@@ -1,0 +1,280 @@
+{
+  "generatedAt": "2026-04-11T08:46:44.746Z",
+  "totalSnapshots": 54,
+  "network": "Base",
+  "dataSource": "Hypersync",
+  "startTimestamp": 1769904000,
+  "endTimestamp": 1772236800,
+  "snapshots": [
+    {
+      "blockNumber": 41588568,
+      "timestamp": 0,
+      "day": 1
+    },
+    {
+      "blockNumber": 41559174,
+      "timestamp": 0,
+      "day": 1
+    },
+    {
+      "blockNumber": 41623835,
+      "timestamp": 0,
+      "day": 2
+    },
+    {
+      "blockNumber": 41620210,
+      "timestamp": 0,
+      "day": 2
+    },
+    {
+      "blockNumber": 41656455,
+      "timestamp": 0,
+      "day": 3
+    },
+    {
+      "blockNumber": 41665609,
+      "timestamp": 0,
+      "day": 3
+    },
+    {
+      "blockNumber": 41711572,
+      "timestamp": 0,
+      "day": 4
+    },
+    {
+      "blockNumber": 41689702,
+      "timestamp": 0,
+      "day": 4
+    },
+    {
+      "blockNumber": 41764325,
+      "timestamp": 0,
+      "day": 5
+    },
+    {
+      "blockNumber": 41769759,
+      "timestamp": 0,
+      "day": 5
+    },
+    {
+      "blockNumber": 41805786,
+      "timestamp": 0,
+      "day": 6
+    },
+    {
+      "blockNumber": 41805091,
+      "timestamp": 0,
+      "day": 6
+    },
+    {
+      "blockNumber": 41834432,
+      "timestamp": 0,
+      "day": 7
+    },
+    {
+      "blockNumber": 41851032,
+      "timestamp": 0,
+      "day": 7
+    },
+    {
+      "blockNumber": 41896292,
+      "timestamp": 0,
+      "day": 8
+    },
+    {
+      "blockNumber": 41878697,
+      "timestamp": 0,
+      "day": 8
+    },
+    {
+      "blockNumber": 41914456,
+      "timestamp": 0,
+      "day": 9
+    },
+    {
+      "blockNumber": 41921526,
+      "timestamp": 0,
+      "day": 9
+    },
+    {
+      "blockNumber": 41968034,
+      "timestamp": 0,
+      "day": 10
+    },
+    {
+      "blockNumber": 41966942,
+      "timestamp": 0,
+      "day": 10
+    },
+    {
+      "blockNumber": 41994808,
+      "timestamp": 0,
+      "day": 11
+    },
+    {
+      "blockNumber": 42001912,
+      "timestamp": 0,
+      "day": 11
+    },
+    {
+      "blockNumber": 42032726,
+      "timestamp": 0,
+      "day": 12
+    },
+    {
+      "blockNumber": 42053147,
+      "timestamp": 0,
+      "day": 12
+    },
+    {
+      "blockNumber": 42095430,
+      "timestamp": 0,
+      "day": 13
+    },
+    {
+      "blockNumber": 42081407,
+      "timestamp": 0,
+      "day": 13
+    },
+    {
+      "blockNumber": 42121245,
+      "timestamp": 0,
+      "day": 14
+    },
+    {
+      "blockNumber": 42128694,
+      "timestamp": 0,
+      "day": 14
+    },
+    {
+      "blockNumber": 42200657,
+      "timestamp": 0,
+      "day": 15
+    },
+    {
+      "blockNumber": 42174327,
+      "timestamp": 0,
+      "day": 15
+    },
+    {
+      "blockNumber": 42241650,
+      "timestamp": 0,
+      "day": 16
+    },
+    {
+      "blockNumber": 42216057,
+      "timestamp": 0,
+      "day": 16
+    },
+    {
+      "blockNumber": 42251359,
+      "timestamp": 0,
+      "day": 17
+    },
+    {
+      "blockNumber": 42285313,
+      "timestamp": 0,
+      "day": 17
+    },
+    {
+      "blockNumber": 42303336,
+      "timestamp": 0,
+      "day": 18
+    },
+    {
+      "blockNumber": 42313390,
+      "timestamp": 0,
+      "day": 18
+    },
+    {
+      "blockNumber": 42378102,
+      "timestamp": 0,
+      "day": 19
+    },
+    {
+      "blockNumber": 42373171,
+      "timestamp": 0,
+      "day": 19
+    },
+    {
+      "blockNumber": 42410529,
+      "timestamp": 0,
+      "day": 20
+    },
+    {
+      "blockNumber": 42388853,
+      "timestamp": 0,
+      "day": 20
+    },
+    {
+      "blockNumber": 42444634,
+      "timestamp": 0,
+      "day": 21
+    },
+    {
+      "blockNumber": 42459253,
+      "timestamp": 0,
+      "day": 21
+    },
+    {
+      "blockNumber": 42474300,
+      "timestamp": 0,
+      "day": 22
+    },
+    {
+      "blockNumber": 42491119,
+      "timestamp": 0,
+      "day": 22
+    },
+    {
+      "blockNumber": 42546619,
+      "timestamp": 0,
+      "day": 23
+    },
+    {
+      "blockNumber": 42509919,
+      "timestamp": 0,
+      "day": 23
+    },
+    {
+      "blockNumber": 42566655,
+      "timestamp": 0,
+      "day": 24
+    },
+    {
+      "blockNumber": 42584013,
+      "timestamp": 0,
+      "day": 24
+    },
+    {
+      "blockNumber": 42622587,
+      "timestamp": 0,
+      "day": 25
+    },
+    {
+      "blockNumber": 42632409,
+      "timestamp": 0,
+      "day": 25
+    },
+    {
+      "blockNumber": 42653635,
+      "timestamp": 0,
+      "day": 26
+    },
+    {
+      "blockNumber": 42658524,
+      "timestamp": 0,
+      "day": 26
+    },
+    {
+      "blockNumber": 42681615,
+      "timestamp": 0,
+      "day": 27
+    },
+    {
+      "blockNumber": 42690438,
+      "timestamp": 0,
+      "day": 27
+    }
+  ]
+}

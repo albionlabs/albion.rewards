@@ -98,6 +98,112 @@ output/
 - `1725148800` = September 1, 2025 00:00:00 UTC
 - `1727740799` = September 30, 2025 23:59:59 UTC
 
+## Distribution
+
+Automates the on-chain distribution workflow: Raindex order deployment, metadata updates, IPFS uploads, on-chain metadata pinning, and issuance-site PR creation.
+
+Distribution runs in **3 phases**, separated by Safe multisig signing steps.
+
+### Prerequisites
+
+- **Foundry** (for `anvil` fork simulation):
+  ```bash
+  curl -L https://foundry.paradigm.xyz | bash && foundryup
+  ```
+- **GitHub CLI** authenticated (`gh auth status`)
+- **Proposer EOA** registered as a delegate on all 3 Safes (R1, R2, Metadata) via Safe UI
+
+### Environment Variables
+
+Add the following to your `.env`:
+
+| Variable | Description |
+|----------|-------------|
+| `PROPOSER_PRIVATE_KEY` | EOA private key registered as Safe delegate. Generate with `npm run generate-key` |
+| `BASE_RPC_URL` | Base mainnet RPC (e.g. Alchemy) |
+| `PINATA_JWT` | Pinata v3 API JWT for IPFS uploads |
+| `SAFE_API_KEY` | Safe Transaction Service API key |
+| `GITHUB_TOKEN` | Fine-grained PAT with Contents + Pull requests read/write on issuance-site repo |
+| `ISSUANCE_SITE_PATH` | Optional. Path to `Albion-issuance-site` clone (auto-detected if sibling directory) |
+
+### Proposer key
+
+The proposer is a **delegate** (not an owner) on the Safe multisigs. Generate a key pair:
+
+```bash
+npm run generate-key
+```
+
+This writes the private key to `.env` and saves the public address to `proposer-address.json`. Register the address as a delegate on each Safe (R1, R2, and Metadata).
+
+### Phase 1: Validate, simulate, and propose
+
+```bash
+npm run distribute:phase1 -- --month 2026-02 --r1-amount 728.46 --r2-amount 2630.26
+```
+
+1. Validates CSVs, merkle trees, metadata, delegate status, and Safe USDC balances
+2. Builds Raindex order calldata via the Rain SDK
+3. Simulates transactions on an Anvil fork
+4. Proposes Safe transactions for both tokens
+
+**Action required:** Sign and execute both Safe transactions in the Safe UI.
+
+### Phase 2: Finalize orders and propose metadata
+
+```bash
+npm run distribute:phase2 -- --month 2026-02
+```
+
+5. Verifies both Safe transactions executed and extracts order hashes
+6. Patches `metadata.json` with txHash, orderHash, and date, then commits and pushes
+7. Uploads reward CSVs to Pinata (IPFS)
+8. Proposes MetaBoard `emitMeta` transaction via the Metadata Safe
+
+**Action required:** Sign and execute the metadata Safe transaction.
+
+### Phase 3: Verify metadata and update issuance site
+
+```bash
+npm run distribute:phase3 -- --month 2026-02
+```
+
+9. Verifies the metadata transaction executed
+10. Patches `network.ts` in `Albion-issuance-site` with new claim entries and creates a PR
+
+### CLI options
+
+| Flag | Default | Description |
+|------|---------|-------------|
+| `--month` | required | Target month (`YYYY-MM`) |
+| `--r1-amount` | required (phase 1 only) | USDC deposit for R1 (must be >= CSV total) |
+| `--r2-amount` | required (phase 1 only) | USDC deposit for R2 (must be >= CSV total) |
+| `--output-token` | USDC (Base) | Override output token address |
+| `--input-token` | WETH (Base) | Override input token address |
+
+### State file
+
+Phases communicate via `output/{dateRange}/distribute-state.json`. Phase 1 writes it, phase 2 updates it, phase 3 reads it.
+
+### Module structure
+
+```
+src/
+  distribute-phase1.ts   # Validate, simulate, propose orders
+  distribute-phase2.ts   # Finalize orders, upload, propose metadata
+  distribute-phase3.ts   # Verify metadata, update issuance site
+  constants.ts           # Addresses, ABIs, magic numbers
+  lib/
+    validation.ts        # Pre-flight checks (CSV, merkle, balances)
+    order.ts             # DotrainOrderGui wrapper (order calldata)
+    simulation.ts        # Anvil fork simulation
+    safe.ts              # Safe SDK (propose, poll, extract orderHash)
+    metadata.ts          # CBOR encoding, MetaBoard calls, JSON patching
+    pinata.ts            # Pinata v3 API upload
+    git.ts               # Git operations (commit + push metadata)
+    github.ts            # Issuance-site patching + PR creation
+```
+
 ## Algorithm Details
 
 ### Reward Calculation
