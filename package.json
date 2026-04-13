@@ -10,7 +10,9 @@
     "merkle": "tsx src/merkle.ts",
     "generate-snapshots": "tsx src/snapshot-generator.ts",
     "build": "tsc",
-    "distribute": "tsx src/distribute.ts",
+    "distribute:phase1": "tsx src/distribute-phase1.ts",
+    "distribute:phase2": "tsx src/distribute-phase2.ts",
+    "distribute:phase3": "tsx src/distribute-phase3.ts",
     "generate-key": "tsx scripts/generate-proposer-key.ts",
     "test": "vitest"
   },

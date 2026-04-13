@@ -98,9 +98,11 @@ output/
 - `1725148800` = September 1, 2025 00:00:00 UTC
 - `1727740799` = September 30, 2025 23:59:59 UTC
 
-## Distribution Script
+## Distribution
 
-Automates the full 5-step manual workflow: order deployment, metadata updates, Pinata uploads, on-chain metadata pinning, and issuance-site PR creation.
+Automates the on-chain distribution workflow: Raindex order deployment, metadata updates, IPFS uploads, on-chain metadata pinning, and issuance-site PR creation.
+
+Distribution runs in **3 phases**, separated by Safe multisig signing steps.
 
 ### Prerequisites
 
@@ -109,59 +111,93 @@ Automates the full 5-step manual workflow: order deployment, metadata updates, P
   curl -L https://foundry.paradigm.xyz | bash && foundryup
   ```
 - **GitHub CLI** authenticated (`gh auth status`)
-- **Proposer EOA** registered as a delegate on all 3 Safes (R1, R2, Metadata) via Safe UI > Settings > Delegates
+- **Proposer EOA** registered as a delegate on all 3 Safes (R1, R2, Metadata) via Safe UI
 
 ### Environment Variables
 
 Add the following to your `.env`:
 
-```
-# Proposer wallet (delegate on all 3 Safes)
-PROPOSER_PRIVATE_KEY=0x...
+| Variable | Description |
+|----------|-------------|
+| `PROPOSER_PRIVATE_KEY` | EOA private key registered as Safe delegate. Generate with `npm run generate-key` |
+| `BASE_RPC_URL` | Base mainnet RPC (e.g. Alchemy) |
+| `PINATA_JWT` | Pinata v3 API JWT for IPFS uploads |
+| `SAFE_API_KEY` | Safe Transaction Service API key |
+| `GITHUB_TOKEN` | Fine-grained PAT with Contents + Pull requests read/write on issuance-site repo |
+| `ISSUANCE_SITE_PATH` | Optional. Path to `Albion-issuance-site` clone (auto-detected if sibling directory) |
 
-# Pinata v3
-PINATA_JWT=...
-PINATA_GATEWAY=https://gateway.pinata.cloud/ipfs
+### Proposer key
 
-# Base RPC
-BASE_RPC_URL=https://mainnet.base.org
-
-# GitHub token (or rely on gh CLI auth)
-GITHUB_TOKEN=ghp_...
-```
-
-### Usage
+The proposer is a **delegate** (not an owner) on the Safe multisigs. Generate a key pair:
 
 ```bash
-npm run distribute -- --month 2026-02 --r1-amount 1234.56 --r2-amount 789.01
+npm run generate-key
 ```
 
-- `--month` — distribution month (e.g., `2026-02`), maps to `output/2026-02-01_to_2026-02-28/`
-- `--r1-amount` / `--r2-amount` — human-readable USDC amounts, validated against CSV totals
+This writes the private key to `.env` and saves the public address to `proposer-address.json`. Register the address as a delegate on each Safe (R1, R2, and Metadata).
 
-### Script Flow
+### Phase 1: Validate, simulate, and propose
 
-1. **Pre-flight checks** — validates CSVs exist, merkle roots match, Safe delegates registered, USDC balances sufficient
-2. **Build calldata** — uses `DotrainOrderGui` SDK to build order deployment transactions
-3. **Fork simulation** — spins up Anvil, simulates both deployments, verifies `AddOrderV2` events
-4. **Propose Safe txs** — submits R1 + R2 order deployment transactions to their respective Safes
-5. **PAUSE 1** — sign and execute both Safe txs in the Safe UI, then press Enter
-6. **Finalize** — polls for execution, extracts orderHashes, updates `metadata.json`, commits and pushes
-7. **Upload to Pinata** — uploads reward CSVs and metadata JSONs, captures CIDs
-8. **Pin metadata on-chain** — CBOR-encodes metadata, proposes `emitMeta` calls via Metadata Safe
-9. **PAUSE 2** — sign and execute the metadata Safe tx, then press Enter
-10. **Issuance-site PR** — patches `network.ts` in `Albion-issuance-site` and opens a PR
+```bash
+npm run distribute:phase1 -- --month 2026-02 --r1-amount 728.46 --r2-amount 2630.26
+```
 
-### Module Structure
+1. Validates CSVs, merkle trees, metadata, delegate status, and Safe USDC balances
+2. Builds Raindex order calldata via the Rain SDK
+3. Simulates transactions on an Anvil fork
+4. Proposes Safe transactions for both tokens
+
+**Action required:** Sign and execute both Safe transactions in the Safe UI.
+
+### Phase 2: Finalize orders and propose metadata
+
+```bash
+npm run distribute:phase2 -- --month 2026-02
+```
+
+5. Verifies both Safe transactions executed and extracts order hashes
+6. Patches `metadata.json` with txHash, orderHash, and date, then commits and pushes
+7. Uploads reward CSVs to Pinata (IPFS)
+8. Proposes MetaBoard `emitMeta` transaction via the Metadata Safe
+
+**Action required:** Sign and execute the metadata Safe transaction.
+
+### Phase 3: Verify metadata and update issuance site
+
+```bash
+npm run distribute:phase3 -- --month 2026-02
+```
+
+9. Verifies the metadata transaction executed
+10. Patches `network.ts` in `Albion-issuance-site` with new claim entries and creates a PR
+
+### CLI options
+
+| Flag | Default | Description |
+|------|---------|-------------|
+| `--month` | required | Target month (`YYYY-MM`) |
+| `--r1-amount` | required (phase 1 only) | USDC deposit for R1 (must be >= CSV total) |
+| `--r2-amount` | required (phase 1 only) | USDC deposit for R2 (must be >= CSV total) |
+| `--output-token` | USDC (Base) | Override output token address |
+| `--input-token` | WETH (Base) | Override input token address |
+
+### State file
+
+Phases communicate via `output/{dateRange}/distribute-state.json`. Phase 1 writes it, phase 2 updates it, phase 3 reads it.
+
+### Module structure
 
 ```
 src/
-  distribute.ts          # Main distribution orchestrator
+  distribute-phase1.ts   # Validate, simulate, propose orders
+  distribute-phase2.ts   # Finalize orders, upload, propose metadata
+  distribute-phase3.ts   # Verify metadata, update issuance site
+  constants.ts           # Addresses, ABIs, magic numbers
   lib/
     validation.ts        # Pre-flight checks (CSV, merkle, balances)
     order.ts             # DotrainOrderGui wrapper (order calldata)
     simulation.ts        # Anvil fork simulation
-    safe.ts              # Safe SDK (propose, poll, extract results)
+    safe.ts              # Safe SDK (propose, poll, extract orderHash)
     metadata.ts          # CBOR encoding, MetaBoard calls, JSON patching
     pinata.ts            # Pinata v3 API upload
     git.ts               # Git operations (commit + push metadata)
