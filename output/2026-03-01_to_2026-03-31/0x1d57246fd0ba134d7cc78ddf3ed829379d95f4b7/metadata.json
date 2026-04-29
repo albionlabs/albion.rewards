@@ -1,17 +1,73 @@
 {
-  "contractAddress": "0xf836a500910453A397084ADe41321ee20a5AAde1",
-  "assetId": "WRESSLE-1-ROYALTY-STREAM",
-  "symbol": "ALB-WR1-R3",
-  "releaseName": "Wressle-1 Royalty Stream",
+  "contractAddress": "0x1d57246fd0ba134d7cc78ddf3ed829379d95f4b7",
+  "assetId": "WRESSLE-1-ROYALTY-4.5",
+  "symbol": "ALB-WR1-R2",
+  "releaseName": "Investor Preview",
   "tokenType": "royalty",
-  "firstPaymentDate": "2026-05",
-  "sharePercentage": 90.0,
-  "payoutData": [],
+  "firstPaymentDate": "2026-01",
+  "sharePercentage": 7.5,
+  "payoutData": [
+    {
+      "month": "2025-11",
+      "tokenPayout": {
+        "date": "2026-01-05T12:00:00Z",
+        "totalPayout": 2390.854,
+        "payoutPerToken": 0.1106,
+        "txHash": "0x3c382c0dd282d46060f0cef888ab73588ed2e01a7bfa3827ea8e6d61c173ad05",
+        "orderHash": "0xca9ebf6d282d24a63d6892c0a888d3604b17ddfca69a035b2a6c06b769fc84f7",
+        "note": "November monthly payment + 1/12 pending distributions"
+      }
+    },
+    {
+      "month": "2025-12",
+      "tokenPayout": {
+        "date": "2026-02-12T12:00:00Z",
+        "totalPayout": 2448.979,
+        "payoutPerToken": 0.1361,
+        "txHash": "0xd5f9223af2492269e9482be0549805740a73b33259f44b2439d89321975a6f29",
+        "orderHash": "0x6793d41107fa9bc7e6661e1d462c6e622479a85f8d67d366a03cae90e45370f6",
+        "note": "December monthly payment + 1/12 pending distributions"
+      }
+    },
+    {
+      "month": "2026-01",
+      "tokenPayout": {
+        "date": "2026-03-24T12:00:00Z",
+        "totalPayout": 2657.779,
+        "payoutPerToken": 0,
+        "txHash": "0xd6f953e54edf172049457aa81eea951cf06ac55a936fac2da7e9abbaeb5a60cb",
+        "orderHash": "0xeccc3d0645670eac0a3dc294d0b9313970d8a09a1d60cd8b5aaaffedfaafd2b7",
+        "note": "January monthly payment + 1/12 pending distributions"
+      }
+    },
+    {
+      "month": "2026-02",
+      "tokenPayout": {
+        "date": "2026-04-13T07:17:17.829Z",
+        "totalPayout": 2630.254,
+        "payoutPerToken": 0,
+        "txHash": "0x99378ed12fca004b169fb4d5ffe29726460b16b028fba20517f7718abe6fc044",
+        "orderHash": "0xc0d9d51f80db654aa1c27fc4c47e98d29940f96694daed5dfb115e8dfb93794e",
+        "note": "February monthly payment + 1/12 pending distributions"
+      }
+    },
+    {
+      "month": "2026-03",
+      "tokenPayout": {
+        "date": "",
+        "totalPayout": 4035.604,
+        "payoutPerToken": 0,
+        "txHash": "",
+        "orderHash": "",
+        "note": "March monthly payment + 1/12 pending distributions"
+      }
+    }
+  ],
   "asset": {
-    "assetName": "Wressle-1 Royalty Stream - 4.5% of Production",
+    "assetName": "Wressle-1 4.5% Royalty Stream",
     "description": "Onshore conventional oil field near Scunthorpe, North Lincolnshire, producing light Brent-linked crude from the Ashover Grit reservoir.",
     "status": "producing",
-    "royaltyStartDate": "2026-03",
+    "royaltyStartDate": "2025-05",
     "location": {
       "state": "East Midlands",
       "county": "Lincolnshire",
@@ -40,7 +96,6 @@
     },
     "assetTerms": {
       "interestType": "Royalty",
-      "Provider": "Europa Oil & Gas",
       "amount": 4.5
     },
     "plannedProduction": {
@@ -359,80 +414,119 @@
         }
       },
       {
-          "month": "2025-08",
-          "assetData": {
-            "production": 397.03,
-            "revenue": 26375,
-            "expenses": 0,
-            "netIncome": 0
-          },
-          "realisedPrice": {
-            "oilPrice": 66.9,
-            "gasPrice": 4.25
-          }
+        "month": "2025-08",
+        "assetData": {
+          "production": 397.03,
+          "revenue": 26375,
+          "expenses": 0,
+          "netIncome": 0
         },
-        {
-          "month": "2025-09",
-          "assetData": {
-            "production": 258.93,
-            "revenue": 17090,
-            "expenses": 0,
-            "netIncome": 0
-          },
-          "realisedPrice": {
-            "oilPrice": 66.7,
-            "gasPrice": 2.38
-          }
-        },
-        {
-          "month": "2025-10",
-          "assetData": {
-            "production": 421.88,
-            "revenue": 26601,
-            "expenses": 0,
-            "netIncome": 0
-          },
-          "realisedPrice": {
-            "oilPrice": 63.45,
-            "gasPrice": 3.1
-          }
-        },
-        {
-          "month": "2025-11",
-          "assetData": {
-            "production": 314.00,
-            "revenue": 19402,
-            "expenses": 0,
-            "netIncome": 0
-          },
-          "realisedPrice": {
-            "oilPrice": 62.35,
-            "gasPrice": 3.1
-          }
-        },
-        {
-          "month": "2025-12",
-          "assetData": {
-            "production": 331.61,
-            "revenue": 6106.17,
-            "expenses": 0,
-            "netIncome": 0
-          },
-          "realisedPrice": {
-            "oilPrice": 61.38,
-            "gasPrice": 0
-          }
+        "realisedPrice": {
+          "oilPrice": 66.9,
+          "gasPrice": 4.25
         }
+      },
+      {
+        "month": "2025-09",
+        "assetData": {
+          "production": 258.93,
+          "revenue": 17090,
+          "expenses": 0,
+          "netIncome": 0
+        },
+        "realisedPrice": {
+          "oilPrice": 66.7,
+          "gasPrice": 2.38
+        }
+      },
+      {
+        "month": "2025-10",
+        "assetData": {
+          "production": 421.88,
+          "revenue": 26601,
+          "expenses": 0,
+          "netIncome": 0
+        },
+        "realisedPrice": {
+          "oilPrice": 63.45,
+          "gasPrice": 3.1
+        }
+      },
+      {
+        "month": "2025-11",
+        "assetData": {
+          "production": 314,
+          "revenue": 19402,
+          "expenses": 0,
+          "netIncome": 0
+        },
+        "realisedPrice": {
+          "oilPrice": 62.35,
+          "gasPrice": 3.1
+        }
+      },
+      {
+        "month": "2025-12",
+        "assetData": {
+          "production": 331.61,
+          "revenue": 20177,
+          "expenses": 0,
+          "netIncome": 0
+        },
+        "realisedPrice": {
+          "oilPrice": 61.38,
+          "gasPrice": 0
+        }
+      },
+      {
+        "month": "2026-01",
+        "assetData": {
+          "production": 353.35,
+          "revenue": 22961,
+          "expenses": 0,
+          "netIncome": 0
+        },
+        "realisedPrice": {
+          "oilPrice": 65.5,
+          "gasPrice": 0
+        }
+      },
+      {
+        "month": "2026-02",
+        "assetData": {
+          "production": 325.95,
+          "revenue": 22594,
+          "expenses": 0,
+          "netIncome": 0
+        },
+        "realisedPrice": {
+          "oilPrice": 69.85,
+          "gasPrice": 0
+        }
+      },
+      {
+        "month": "2026-03",
+        "assetData": {
+          "production": 404.88,
+          "revenue": 41332,
+          "expenses": 0,
+          "netIncome": 0
+        },
+        "realisedPrice": {
+          "oilPrice": 102.59,
+          "gasPrice": 0
+        }
+      }
     ],
     "operationalMetrics": {
       "uptime": {
-        "percentage": 77.4,
+        "percentage": 99.7,
         "unit": "percent",
         "period": "last_30_days",
-        "notes": "8 day shut down at the end of December through New Year"
+        "notes": "No material change to the decline curve; good operational uptime"
       },
       "hseMetrics": {
-        "incidentFreeDays": 181
+        "incidentFreeDays": 243
       }
     },
     "documents": [],
