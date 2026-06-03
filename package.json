@@ -14,6 +14,7 @@
     "distribute:phase2": "tsx src/distribute-phase2.ts",
     "distribute:phase3": "tsx src/distribute-phase3.ts",
     "generate-key": "tsx scripts/generate-proposer-key.ts",
+    "upload-docs": "tsx src/upload-documents.ts",
     "test": "vitest"
   },
   "dependencies": {

@@ -181,6 +181,26 @@ npm run distribute:phase3 -- --month 2026-02
 | `--output-token` | USDC (Base) | Override output token address |
 | `--input-token` | WETH (Base) | Override input token address |
 
+### Document hub (sales / operations reports)
+
+Publish monthly reports to IPFS and stage them into the latest month's metadata so
+phase 2 pins them on-chain (the issuance site links them from the asset's Documents tab).
+
+Prerequisite (one-time): `brew install --cask libreoffice` (provides `soffice` for
+`.docx` -> PDF conversion).
+
+```bash
+npm run upload-docs -- \
+  --doc 2026-04:sales:"/path/Egdon Apr26.pdf" \
+  --doc 2026-04:operations:"/path/26_04_Albion_Report.docx"
+```
+
+- `--doc <YYYY-MM>:<sales|operations>:<path>` — repeatable; pass any number of files.
+- `--into <YYYY-MM>` — metadata month to write into (default: latest `output/` folder).
+- Files are converted to PDF, uploaded to Pinata, and merged (idempotent, by name) into
+  `metadata.asset.documents` for both tokens. Run **before** that month's phase 2.
+- Staging only: it does not commit or pin. Phase 2's `emitMeta` publishes `documents[]`.
+
 ### State file
 
 Phases communicate via `output/{dateRange}/distribute-state.json`. Phase 1 writes it, phase 2 updates it, phase 3 reads it.
