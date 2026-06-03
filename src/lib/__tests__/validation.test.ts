@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest';
-import { resolveOutputDir, validateCsvTotal, findPendingPayoutEntry } from '../validation';
+import { resolveOutputDir, validateCsvTotal, findPendingPayoutEntry, buildMerkleLeaves } from '../validation';
+import { buildClaimLeaves } from '../leaf';
 
 describe('resolveOutputDir', () => {
   it('converts --month 2026-03 to date range', () => {
@@ -35,6 +36,16 @@ describe('validateCsvTotal', () => {
   it('returns false on mismatch', () => {
     const csvAmountsWei = [500000000000000000000n];
     expect(validateCsvTotal(1234.56, csvAmountsWei)).toBe(false);
+  });
+});
+
+describe('buildMerkleLeaves', () => {
+  it('matches the shared leaf encoder', async () => {
+    const rows: Array<[string, string, string]> = [
+      ['0', '0x0000000000000000000000000000000000000001', '1000000000000000000'],
+      ['1', '0x0000000000000000000000000000000000000000', '0'],
+    ];
+    expect(await buildMerkleLeaves(rows)).toEqual(await buildClaimLeaves(rows));
   });
 });
 

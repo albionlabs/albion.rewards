@@ -1,8 +1,8 @@
 import fs from 'fs';
 import { ethers } from 'ethers';
 import { SimpleMerkleTree } from '@openzeppelin/merkle-tree';
-import { keccak256 } from 'ethers';
 import { USDC_DECIMALS, CSV_AMOUNT_DECIMALS, TOKENS } from '../constants';
+import { buildClaimLeaves } from './leaf';
 
 /**
  * Convert --month YYYY-MM to date range string: YYYY-MM-DD_to_YYYY-MM-DD
@@ -61,37 +61,30 @@ export function parseCsv(csvPath: string): Array<[string, string, string]> {
 }
 
 /**
- * Build merkle leaves from CSV data using the same encoding as src/merkle.ts.
+ * Build merkle leaves from CSV data, delegating to the shared Float leaf encoder.
  */
-export function buildMerkleLeaves(csvData: Array<[string, string, string]>): string[] {
-  return csvData.map(([index, address, amount]) => {
-    const inputs = [BigInt(index), BigInt(address), BigInt(amount)];
-    const packed = inputs.map((input) => input.toString(16).padStart(64, '0')).join('');
-    return keccak256('0x' + packed);
-  });
+export async function buildMerkleLeaves(csvData: Array<[string, string, string]>): Promise<string[]> {
+  return buildClaimLeaves(csvData);
 }
 
 /**
  * Verify that a CSV produces the same merkle root as the saved tree JSON.
  */
-export function verifyMerkleRoot(csvPath: string, treeJsonPath: string): {
+export async function verifyMerkleRoot(csvPath: string, treeJsonPath: string): Promise<{
   valid: boolean;
   computedRoot: string;
   savedRoot: string;
-} {
+}> {
   const csvData = parseCsv(csvPath);
   if (csvData.length !== 256) {
     throw new Error(`CSV must have exactly 256 entries, found ${csvData.length}`);
   }
-  const leaves = buildMerkleLeaves(csvData);
+  const leaves = await buildMerkleLeaves(csvData);
   const tree = SimpleMerkleTree.of(leaves);
-  const computedRoot = tree.root;
 
   const savedTree = JSON.parse(fs.readFileSync(treeJsonPath, 'utf8'));
   const loadedTree = SimpleMerkleTree.load(savedTree);
-  const savedRoot = loadedTree.root;
-
-  return { valid: computedRoot === savedRoot, computedRoot, savedRoot };
+  return { valid: tree.root === loadedTree.root, computedRoot: tree.root, savedRoot: loadedTree.root };
 }
 
 export interface TokenValidation {
@@ -107,12 +100,12 @@ export interface TokenValidation {
 /**
  * Run all pre-flight checks for a single token. Returns validated paths and data.
  */
-export function validateToken(
+export async function validateToken(
   outputBase: string,
   dateRange: string,
   token: typeof TOKENS[number],
   cliAmount: number
-): TokenValidation {
+): Promise<TokenValidation> {
   const tokenDir = `${outputBase}/${dateRange}/${token.address}`;
   const csvPath = `${tokenDir}/rewards_${dateRange}.csv`;
   const treePath = `${tokenDir}/tree_${dateRange}.json`;
@@ -127,7 +120,7 @@ export function validateToken(
     throw new Error(`${token.symbol} CSV must have 256 entries, found ${csvData.length}`);
   }
 
-  const merkleCheck = verifyMerkleRoot(csvPath, treePath);
+  const merkleCheck = await verifyMerkleRoot(csvPath, treePath);
   if (!merkleCheck.valid) {
     throw new Error(
       `${token.symbol} merkle root mismatch: computed=${merkleCheck.computedRoot}, saved=${merkleCheck.savedRoot}`
