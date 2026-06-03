@@ -51,6 +51,10 @@ describe('parseArgs', () => {
   it('throws on a bad --into format', () => {
     expect(() => parseArgs(['--doc', '2026-04:sales:/p/x.pdf', '--into', '2026-4'])).toThrow(/into/i);
   });
+
+  it('throws on an out-of-range month', () => {
+    expect(() => parseArgs(['--doc', '2026-13:sales:/p/x.pdf'])).toThrow(/01-12|month/i);
+  });
 });
 
 describe('resolveLatestDateRange', () => {

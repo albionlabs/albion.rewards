@@ -63,6 +63,10 @@ export function parseArgs(argv: string[]): ParsedArgs {
       if (!MONTH_RE.test(month)) {
         throw new Error(`Bad month in --doc "${value}": expected YYYY-MM`);
       }
+      const monthNum = Number(month.slice(5, 7));
+      if (monthNum < 1 || monthNum > 12) {
+        throw new Error(`Bad month in --doc "${value}": month must be 01-12`);
+      }
       if (!(DOC_KINDS as readonly string[]).includes(kind)) {
         throw new Error(`Bad kind "${kind}" in --doc "${value}": expected ${DOC_KINDS.join(' | ')}`);
       }
@@ -100,6 +104,16 @@ async function main() {
 
   console.log(`\n=== Upload documents -> ${dateRange} ===\n`);
 
+  // Fail fast: verify both tokens' metadata.json exist BEFORE uploading anything,
+  // so a missing target never leaves files orphaned on public IPFS.
+  const metadataPaths = TOKENS.map((token) => {
+    const p = `${outputBase}/${dateRange}/${token.address}/metadata.json`;
+    if (!fs.existsSync(p)) {
+      throw new Error(`metadata.json not found for ${token.symbol}: ${p}`);
+    }
+    return p;
+  });
+
   // Each run re-converts and re-uploads every file passed (no upload-level dedup);
   // only the metadata merge is idempotent. Re-running with the same files creates
   // fresh CIDs. Pinata dedups identical content, so this is cheap but not a no-op.
@@ -119,15 +133,12 @@ async function main() {
   }
 
   // Merge into both tokens' metadata.
-  for (const token of TOKENS) {
-    const metadataPath = `${outputBase}/${dateRange}/${token.address}/metadata.json`;
-    if (!fs.existsSync(metadataPath)) {
-      throw new Error(`metadata.json not found for ${token.symbol}: ${metadataPath}`);
-    }
+  for (let i = 0; i < TOKENS.length; i++) {
+    const metadataPath = metadataPaths[i];
     const metadata = JSON.parse(fs.readFileSync(metadataPath, 'utf8'));
     metadata.asset.documents = mergeDocuments(metadata.asset.documents ?? [], entries);
     fs.writeFileSync(metadataPath, JSON.stringify(metadata, null, 2) + '\n');
-    console.log(`  ${token.symbol}: documents[] now ${metadata.asset.documents.length} entries`);
+    console.log(`  ${TOKENS[i].symbol}: documents[] now ${metadata.asset.documents.length} entries`);
   }
 
   console.log('\nSummary:');
