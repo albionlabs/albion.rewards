@@ -42,7 +42,7 @@ describe('convertToPdf', () => {
     cp = await import('node:child_process');
     vi.clearAllMocks();
   });
-  afterEach(() => vi.restoreAllMocks());
+  afterEach(() => { vi.restoreAllMocks(); vi.unstubAllEnvs(); });
 
   it('passes a .pdf through unchanged', async () => {
     const bytes = Buffer.from('%PDF-1.7');
@@ -56,8 +56,9 @@ describe('convertToPdf', () => {
   });
 
   it('converts a .docx via soffice and returns the produced pdf bytes', async () => {
+    vi.stubEnv('SOFFICE_BIN', '/usr/bin/soffice');
     const pdfBytes = Buffer.from('%PDF-from-docx');
-    vi.spyOn(fs, 'existsSync').mockReturnValue(true); // soffice bin + output pdf exist
+    vi.spyOn(fs, 'existsSync').mockReturnValue(true); // output pdf exists
     vi.spyOn(fs, 'mkdtempSync').mockReturnValue('/tmp/docpdf-xyz' as never);
     vi.spyOn(fs, 'readFileSync').mockReturnValue(pdfBytes as never);
     vi.spyOn(fs, 'rmSync').mockReturnValue(undefined as never);
@@ -73,6 +74,17 @@ describe('convertToPdf', () => {
     expect(args).toContain('/in/26_04_Albion_Report.docx');
     expect(out.filename).toBe('26_04_Albion_Report.pdf');
     expect(out.bytes).toEqual(pdfBytes);
+  });
+
+  it('throws when soffice exits cleanly but produces no pdf', async () => {
+    vi.stubEnv('SOFFICE_BIN', '/usr/bin/soffice');
+    vi.spyOn(fs, 'mkdtempSync').mockReturnValue('/tmp/docpdf-empty' as never);
+    vi.spyOn(fs, 'rmSync').mockReturnValue(undefined as never);
+    vi.spyOn(fs, 'existsSync').mockReturnValue(false); // output pdf never appears
+    const execSpy = vi.spyOn(cp, 'execFileSync').mockReturnValue(Buffer.from('') as never);
+
+    await expect(convertToPdf('/in/empty.docx')).rejects.toThrow(/produced no/i);
+    expect(execSpy).toHaveBeenCalledOnce();
   });
 
   it('throws a helpful error when soffice is not found', async () => {
