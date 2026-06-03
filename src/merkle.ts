@@ -1,7 +1,7 @@
 import { SimpleMerkleTree } from "@openzeppelin/merkle-tree";
 import fs from "fs";
 import { config } from "dotenv";
-import { keccak256 } from "ethers";
+import { buildClaimLeaves } from './lib/leaf';
 
 // Load environment variables
 config();
@@ -26,7 +26,7 @@ async function main() {
     
     // Skip header line and parse CSV data
     const csvData = lines.slice(1).map(line => {
-        const [index, address, reward] = line.split(',');
+        const [index, address, reward] = line.split(',').map((s) => s.trim());
         return [index, address, reward];
     });
 
@@ -50,22 +50,8 @@ async function main() {
 
     console.log(`Padded to ${rawValues.length} entries`);
 
-    // Hash each value to create the leaves (matching Solidity's single hash approach)
-    const leaves = rawValues.map(([index, address, amount]) => {
-        // Convert to uint256 (like uint256(uint160(address)) in Solidity)
-        const indexAsUint256 = BigInt(index);
-        const addressAsUint256 = BigInt(address);
-        const amountAsUint256 = BigInt(amount);
-        
-        // Create inputs array like in Solidity: uint256[] memory inputs = [indexAsUint256, addressAsUint256, amountAsUint256]
-        const inputs = [indexAsUint256, addressAsUint256, amountAsUint256];
-        
-        // Pack the inputs array like abi.encodePacked(inputs) in Solidity
-        const packed = inputs.map(input => input.toString(16).padStart(64, '0')).join('');
-        
-        // Hash the packed data (single hash, matching Solidity)
-        return keccak256('0x' + packed);
-    });
+    // Hash each value to create the leaves via the shared Rain Float encoder
+    const leaves = await buildClaimLeaves(rawValues as Array<[string, string, string]>);
 
     console.log("Generated", leaves.length, "leaves");
     console.log("First few leaves:", leaves.slice(0, 3));
