@@ -57,13 +57,23 @@ describe('uploadFileToPinata', () => {
     expect(url).toBe('https://uploads.pinata.cloud/v3/files');
     const body = (options as RequestInit).body as FormData;
     const file = body.get('file') as File;
-    expect(file).toBeInstanceOf(Blob);
+    expect(file).toBeInstanceOf(File);
     expect(file.type).toBe('application/pdf');
     expect(new Uint8Array(await file.arrayBuffer())).toEqual(bytes);
     expect(body.get('name')).toBe('report.pdf');
     expect(result.cid).toBe('QmBin456');
     expect(result.gatewayUrl).toBe('https://gateway.pinata.cloud/ipfs/QmBin456');
 
+    fetchSpy.mockRestore();
+  });
+
+  it('throws on non-200 response', async () => {
+    const fetchSpy = vi.spyOn(globalThis, 'fetch').mockResolvedValueOnce(
+      new Response('Unauthorized', { status: 401 })
+    );
+    await expect(
+      uploadFileToPinata(new Uint8Array([1, 2, 3]), 'file.pdf', 'application/pdf')
+    ).rejects.toThrow('Pinata upload failed');
     fetchSpy.mockRestore();
   });
 });

@@ -8,6 +8,7 @@ export interface PinataUploadResult {
 
 /**
  * Upload raw bytes to Pinata's v3 public files API. Binary-safe.
+ * `contentType` is required and must be supplied explicitly by callers (no default — unlike the string wrapper).
  */
 export async function uploadFileToPinata(
   data: Uint8Array,
