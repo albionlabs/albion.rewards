@@ -109,17 +109,18 @@ export async function checkDelegate(safeAddress: string): Promise<void> {
 }
 
 /**
- * Extract orderHash from AddOrderV2 event in a transaction receipt.
+ * Extract orderHash from AddOrderV3 event in a transaction receipt (Raindex v6).
+ * AddOrderV3 uses OrderV4 IOs: (address token, bytes32 vaultId) — no decimals field.
  */
 export function extractOrderHashFromReceipt(receipt: ethers.TransactionReceipt): string {
   const iface = new ethers.Interface([
-    'event AddOrderV2(address sender, bytes32 orderHash, (address owner, (address interpreter, address store, bytes bytecode) evaluable, (address token, uint8 decimals, uint256 vaultId)[] validInputs, (address token, uint8 decimals, uint256 vaultId)[] validOutputs, bytes32 nonce) order)',
+    'event AddOrderV3(address sender, bytes32 orderHash, (address owner, (address interpreter, address store, bytes bytecode) evaluable, (address token, bytes32 vaultId)[] validInputs, (address token, bytes32 vaultId)[] validOutputs, bytes32 nonce) order)',
   ]);
 
   for (const log of receipt.logs) {
     try {
       const parsed = iface.parseLog({ topics: log.topics as string[], data: log.data });
-      if (parsed && parsed.name === 'AddOrderV2') {
+      if (parsed && parsed.name === 'AddOrderV3') {
         return parsed.args.orderHash;
       }
     } catch {
@@ -127,5 +128,5 @@ export function extractOrderHashFromReceipt(receipt: ethers.TransactionReceipt):
     }
   }
 
-  throw new Error('AddOrderV2 event not found in transaction receipt');
+  throw new Error('AddOrderV3 event not found in transaction receipt');
 }
