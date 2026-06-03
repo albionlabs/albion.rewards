@@ -47,6 +47,9 @@ export function parseArgs(argv: string[]): ParsedArgs {
   for (let i = 0; i < argv.length; i++) {
     if (argv[i] === '--into' && argv[i + 1]) {
       into = argv[++i];
+      if (!MONTH_RE.test(into)) {
+        throw new Error(`Bad --into "${into}": expected YYYY-MM`);
+      }
     } else if (argv[i] === '--doc' && argv[i + 1]) {
       const value = argv[++i];
       const first = value.indexOf(':');
@@ -96,6 +99,10 @@ async function main() {
   const dateRange = args.into ? resolveOutputDir(args.into) : resolveLatestDateRange(outputBase);
 
   console.log(`\n=== Upload documents -> ${dateRange} ===\n`);
+
+  // Each run re-converts and re-uploads every file passed (no upload-level dedup);
+  // only the metadata merge is idempotent. Re-running with the same files creates
+  // fresh CIDs. Pinata dedups identical content, so this is cheap but not a no-op.
 
   // Convert + upload each file, building entries.
   const entries: AssetDocument[] = [];

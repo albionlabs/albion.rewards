@@ -39,6 +39,18 @@ describe('parseArgs', () => {
       parseArgs(['--doc', '2026-04:sales:/p/a.pdf', '--doc', '2026-04:sales:/p/b.pdf'])
     ).toThrow(/duplicate/i);
   });
+
+  it('throws on a malformed --doc with no colons', () => {
+    expect(() => parseArgs(['--doc', 'noColonsHere'])).toThrow(/malformed/i);
+  });
+
+  it('throws on a --doc with an empty path', () => {
+    expect(() => parseArgs(['--doc', '2026-04:sales:'])).toThrow(/path/i);
+  });
+
+  it('throws on a bad --into format', () => {
+    expect(() => parseArgs(['--doc', '2026-04:sales:/p/x.pdf', '--into', '2026-4'])).toThrow(/into/i);
+  });
 });
 
 describe('resolveLatestDateRange', () => {
