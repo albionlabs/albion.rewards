@@ -5,7 +5,8 @@ export interface DeploymentArgs {
   deploymentCalldata: string;
   orderbookAddress: string;
   chainId: number;
-  emitMetaCall?: unknown;
+  // alpha.229 adds this; we ignore it (we keep the existing MetaBoard phase-2 step).
+  emitMetaCall?: { to: string; calldata: string };
 }
 
 /**
@@ -81,7 +82,7 @@ export async function buildOrderCalldata(
     );
   }
 
-  // Set the merkle root field (must be awaited in alpha.229)
+  // Set the merkle root field (sync in alpha.229; await is a harmless no-op, kept for uniformity)
   const fieldResult = await gui.setFieldValue("root", merkleRoot);
   if (fieldResult.error) {
     throw new Error(
