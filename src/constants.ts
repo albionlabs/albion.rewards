@@ -28,8 +28,14 @@ export const CSV_AMOUNT_DECIMALS = 18;
 
 // Rain / MetaBoard
 export const METABOARD_ADDRESS = "0x59401c9302e79eb8ac6aea659b8b3ae475715e86";
+// Pinned to rain.strategies @ 3c8b935ba2b00ef4623eb1e74507c490c33d4dcc
+// (last commit with YAML version: 5, compatible with alpha.229 SDK)
+// Orderbook is SDK/settings-sourced; currently resolves to 0xe522cB4a5fCb2eb31a52Ff41a4653d85A4fd7C9D;
+// eventual target 0xb05D73E6BCc26AEB5b67Ff68C6E9C6151073e3cE (deferred).
 export const CLAIMS_STRATEGY_URL =
-  "https://raw.githubusercontent.com/rainlanguage/rain.strategies/7c8d5f1e95f8e6c1c6c13de366b0cf0493b50758/src/claims.rain";
+  "https://raw.githubusercontent.com/rainlanguage/rain.strategies/3c8b935ba2b00ef4623eb1e74507c490c33d4dcc/src/claims.rain";
+export const SETTINGS_YAML_URL =
+  "https://raw.githubusercontent.com/rainlanguage/rain.strategies/3c8b935ba2b00ef4623eb1e74507c490c33d4dcc/settings.yaml";
 
 // Metadata subgraph
 export const METADATA_SUBGRAPH_URL =

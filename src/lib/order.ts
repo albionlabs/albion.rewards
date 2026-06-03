@@ -1,10 +1,11 @@
-import { CLAIMS_STRATEGY_URL } from "../constants";
+import { CLAIMS_STRATEGY_URL, SETTINGS_YAML_URL } from "../constants";
 
 export interface DeploymentArgs {
   approvals: Array<{ token: string; calldata: string; symbol: string }>;
   deploymentCalldata: string;
   orderbookAddress: string;
   chainId: number;
+  emitMetaCall?: unknown;
 }
 
 /**
@@ -19,10 +20,22 @@ async function fetchDotrain(): Promise<string> {
 }
 
 /**
+ * Fetch the settings YAML from the pinned URL.
+ */
+async function fetchSettings(): Promise<string> {
+  const response = await fetch(SETTINGS_YAML_URL);
+  if (!response.ok) {
+    throw new Error(`Failed to fetch settings YAML: ${response.status}`);
+  }
+  return response.text();
+}
+
+/**
  * Build deployment transaction args for a claims order using the Rain SDK.
  *
- * Uses DotrainOrderGui (same pattern as raindex v4 webapp).
- * The SDK bundles addOrder2 + deposit2 into a single deploymentCalldata via TaskV1 post-action.
+ * Uses DotrainOrderGui (same pattern as raindex v6 webapp).
+ * The SDK bundles addOrder4 + deposit4 into a single deploymentCalldata via the
+ * new v6 settings YAML (which supplies the orderbook address / network config).
  */
 export async function buildOrderCalldata(
   merkleRoot: string,
@@ -34,14 +47,14 @@ export async function buildOrderCalldata(
   // Dynamic import since @rainlanguage/orderbook uses WASM
   const { DotrainOrderGui } = await import("@rainlanguage/orderbook");
 
-  const dotrain = await fetchDotrain();
+  const [dotrain, settings] = await Promise.all([fetchDotrain(), fetchSettings()]);
 
   // The deployment key for claims orders — needs to match what the .rain file exports.
-  // Check the dotrain for available deployment keys.
   const deploymentKey = "base";
 
   const guiResult = await DotrainOrderGui.newWithDeployment(
     dotrain,
+    [settings], // alpha.229: settings is string[] | null
     deploymentKey,
     null, // state_update_callback — no-op for CLI usage
   );
@@ -68,16 +81,16 @@ export async function buildOrderCalldata(
     );
   }
 
-  // Set the merkle root field
-  const fieldResult = gui.setFieldValue("root", merkleRoot);
+  // Set the merkle root field (must be awaited in alpha.229)
+  const fieldResult = await gui.setFieldValue("root", merkleRoot);
   if (fieldResult.error) {
     throw new Error(
       `Failed to set merkle root field: ${fieldResult.error.readableMsg ?? JSON.stringify(fieldResult.error)}`,
     );
   }
 
-  // Set deposit amount (human-readable, e.g. "1000.50")
-  const depositResult = gui.setDeposit("output", depositAmountHuman);
+  // Set deposit amount — human-readable, e.g. "1000.50" (must be awaited in alpha.229)
+  const depositResult = await gui.setDeposit("output", depositAmountHuman);
   if (depositResult.error) {
     throw new Error(
       `Failed to set deposit: ${depositResult.error.readableMsg ?? JSON.stringify(depositResult.error)}`,
