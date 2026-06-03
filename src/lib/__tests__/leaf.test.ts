@@ -41,8 +41,8 @@ describe('buildClaimLeaf', () => {
   });
 
   it('is deterministic', async () => {
-    const a = await buildClaimLeaf(1, '0x0000000000000000000000000000000000000001', 7n);
-    const b = await buildClaimLeaf(1, '0x0000000000000000000000000000000000000001', 7n);
+    const a = await buildClaimLeaf(1n, '0x0000000000000000000000000000000000000001', 7n);
+    const b = await buildClaimLeaf(1n, '0x0000000000000000000000000000000000000001', 7n);
     expect(a).toBe(b);
   });
 });
