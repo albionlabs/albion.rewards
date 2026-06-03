@@ -53,7 +53,9 @@ async function main() {
 
   // Re-validate to get paths
   const outputBase = 'output';
-  const validations = TOKENS.map((token, i) => validateToken(outputBase, dateRange, token, amounts[i]));
+  const validations = await Promise.all(
+    TOKENS.map((token, i) => validateToken(outputBase, dateRange, token, amounts[i]))
+  );
 
   const provider = new ethers.JsonRpcProvider(process.env.BASE_RPC_URL);
 
