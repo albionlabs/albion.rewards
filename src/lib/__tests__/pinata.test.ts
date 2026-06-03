@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { uploadToPinata } from '../pinata';
+import { uploadToPinata, uploadFileToPinata } from '../pinata';
 
 describe('uploadToPinata', () => {
   beforeEach(() => {
@@ -34,6 +34,36 @@ describe('uploadToPinata', () => {
     );
 
     await expect(uploadToPinata('data', 'file.csv')).rejects.toThrow('Pinata upload failed');
+    fetchSpy.mockRestore();
+  });
+});
+
+describe('uploadFileToPinata', () => {
+  beforeEach(() => {
+    vi.stubEnv('PINATA_JWT', 'test-jwt-token');
+    vi.stubEnv('PINATA_GATEWAY', 'https://gateway.pinata.cloud/ipfs');
+  });
+
+  it('uploads raw bytes with the given filename and content type', async () => {
+    const fetchSpy = vi.spyOn(globalThis, 'fetch').mockResolvedValueOnce(
+      new Response(JSON.stringify({ data: { cid: 'QmBin456' } }), { status: 200 })
+    );
+
+    const bytes = new Uint8Array([0x25, 0x50, 0x44, 0x46]); // "%PDF"
+    const result = await uploadFileToPinata(bytes, 'report.pdf', 'application/pdf');
+
+    expect(fetchSpy).toHaveBeenCalledOnce();
+    const [url, options] = fetchSpy.mock.calls[0];
+    expect(url).toBe('https://uploads.pinata.cloud/v3/files');
+    const body = (options as RequestInit).body as FormData;
+    const file = body.get('file') as File;
+    expect(file).toBeInstanceOf(Blob);
+    expect(file.type).toBe('application/pdf');
+    expect(new Uint8Array(await file.arrayBuffer())).toEqual(bytes);
+    expect(body.get('name')).toBe('report.pdf');
+    expect(result.cid).toBe('QmBin456');
+    expect(result.gatewayUrl).toBe('https://gateway.pinata.cloud/ipfs/QmBin456');
+
     fetchSpy.mockRestore();
   });
 });

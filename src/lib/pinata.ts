@@ -6,10 +6,13 @@ export interface PinataUploadResult {
   gatewayUrl: string;
 }
 
-export async function uploadToPinata(
-  content: string,
+/**
+ * Upload raw bytes to Pinata's v3 public files API. Binary-safe.
+ */
+export async function uploadFileToPinata(
+  data: Uint8Array,
   filename: string,
-  contentType = 'text/csv'
+  contentType: string
 ): Promise<PinataUploadResult> {
   const jwt = process.env.PINATA_JWT;
   if (!jwt) throw new Error('PINATA_JWT environment variable is not set');
@@ -17,7 +20,7 @@ export async function uploadToPinata(
   const gateway = process.env.PINATA_GATEWAY || 'https://gateway.pinata.cloud/ipfs';
 
   const formData = new FormData();
-  formData.append('file', new Blob([content], { type: contentType }), filename);
+  formData.append('file', new Blob([data], { type: contentType }), filename);
   formData.append('network', 'public');
   formData.append('name', filename);
 
@@ -35,8 +38,16 @@ export async function uploadToPinata(
   const result = await response.json();
   const cid = result.data.cid;
 
-  return {
-    cid,
-    gatewayUrl: `${gateway}/${cid}`,
-  };
+  return { cid, gatewayUrl: `${gateway}/${cid}` };
+}
+
+/**
+ * Upload string content (CSV/JSON). Delegates to the binary uploader.
+ */
+export async function uploadToPinata(
+  content: string,
+  filename: string,
+  contentType = 'text/csv'
+): Promise<PinataUploadResult> {
+  return uploadFileToPinata(new TextEncoder().encode(content), filename, contentType);
 }
