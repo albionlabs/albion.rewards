@@ -1,4 +1,9 @@
-import { CLAIMS_STRATEGY_URL, SETTINGS_YAML_URL } from "../constants";
+import {
+  CLAIMS_STRATEGY_URL,
+  SETTINGS_YAML_URL,
+  ORDERBOOK_STANDIN_ADDRESS,
+  ORDERBOOK_ADDRESS,
+} from "../constants";
 
 export interface DeploymentArgs {
   approvals: Array<{ token: string; calldata: string; symbol: string }>;
@@ -21,14 +26,45 @@ async function fetchDotrain(): Promise<string> {
 }
 
 /**
- * Fetch the settings YAML from the pinned URL.
+ * Rewrite the base orderbook address in the pinned settings.yaml to `targetAddress`.
+ *
+ * Pure string substitution on the raw YAML — no parse/round-trip — so the SDK
+ * receives the file in its original format with only the orderbook address
+ * changed (avoids any YAML re-emit coercing the mixed-case `0x…` address).
+ * The settings.yaml is pinned to a fixed commit, where the base orderbook
+ * address appears exactly once; we assert that and fail loudly otherwise rather
+ * than silently deploy to the wrong orderbook.
+ */
+export function applyOrderbookOverride(
+  rawYaml: string,
+  standinAddress: string,
+  targetAddress: string,
+): string {
+  if (standinAddress.toLowerCase() === targetAddress.toLowerCase()) {
+    return rawYaml; // default: no override requested
+  }
+  const occurrences = rawYaml.split(standinAddress).length - 1;
+  if (occurrences !== 1) {
+    throw new Error(
+      `Orderbook override: expected exactly one occurrence of the stand-in ` +
+        `orderbook address ${standinAddress} in settings.yaml, found ${occurrences}. ` +
+        `Refusing to override (settings.yaml shape may have changed).`,
+    );
+  }
+  return rawYaml.replace(standinAddress, targetAddress);
+}
+
+/**
+ * Fetch the settings YAML from the pinned URL, applying the in-memory orderbook
+ * address override (see ORDERBOOK_ADDRESS in constants.ts).
  */
 async function fetchSettings(): Promise<string> {
   const response = await fetch(SETTINGS_YAML_URL);
   if (!response.ok) {
     throw new Error(`Failed to fetch settings YAML: ${response.status}`);
   }
-  return response.text();
+  const raw = await response.text();
+  return applyOrderbookOverride(raw, ORDERBOOK_STANDIN_ADDRESS, ORDERBOOK_ADDRESS);
 }
 
 /**
