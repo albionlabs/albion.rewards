@@ -1,39 +1,50 @@
-import { keccak256 } from 'ethers';
-import { CSV_AMOUNT_DECIMALS } from '../constants';
+import { keccak256 } from "ethers";
+import { Float } from "@rainlanguage/float";
+import { CSV_AMOUNT_DECIMALS } from "../constants";
 
-/** Encode an 18-decimal integer amount as the Rain Float bytes32 hex (0x + 64 hex). */
-export async function floatAmountHex(amountWei: string | bigint): Promise<string> {
-  const { Float } = await import('@rainlanguage/orderbook');
-  const res = Float.fromFixedDecimal(BigInt(amountWei), CSV_AMOUNT_DECIMALS);
-  if (res.error || !res.value) {
-    throw new Error(
-      `Float encode failed for amount ${amountWei}: ${res.error?.readableMsg ?? JSON.stringify(res.error)}`
-    );
+type FloatEncodeResult = {
+  value?: { asHex(): string };
+  float?: { asHex(): string };
+};
+
+function asFloatHex(result: FloatEncodeResult, label: string): string {
+  const encoded = result.value ?? result.float;
+  if (!encoded) {
+    throw new Error(`Failed to encode ${label} as Float`);
   }
-  try {
-    return res.value.asHex();
-  } finally {
-    res.value.free?.(); // release the WASM handle even if asHex throws
-  }
+  return encoded.asHex();
 }
 
-const word = (x: string | bigint) => BigInt(x).toString(16).padStart(64, '0');
-
-/** keccak256 leaf = hash(word(index) ++ word(address) ++ floatAmountWord). */
-export async function buildClaimLeaf(
+/**
+ * Hash a CSV row the same way Rainlang claims orders verify merkle leaves:
+ * Float(index, 0) ++ address as bytes32 ++ Float(amount, 18), then keccak256.
+ */
+export function buildClaimLeaf(
   index: string | bigint,
   address: string,
-  amountWei: string | bigint
-): Promise<string> {
-  const amountWord = (await floatAmountHex(amountWei)).replace(/^0x/, '').toLowerCase().padStart(64, '0');
-  return keccak256('0x' + word(index) + word(address) + amountWord);
+  amountWei: string | bigint,
+): string {
+  const indexAsFloat = asFloatHex(
+    Float.fromFixedDecimalLossy(BigInt(index), 0),
+    `index ${index}`,
+  );
+  const addressAsBytes32 =
+    "0x" + BigInt(address).toString(16).padStart(64, "0");
+  const amountAsFloat = asFloatHex(
+    Float.fromFixedDecimalLossy(BigInt(amountWei), CSV_AMOUNT_DECIMALS),
+    `amount ${amountWei}`,
+  );
+
+  const packed =
+    indexAsFloat.slice(2) + addressAsBytes32.slice(2) + amountAsFloat.slice(2);
+  return keccak256("0x" + packed);
 }
 
 /** Build leaves for already-parsed/trimmed [index, address, amount] rows. */
-export async function buildClaimLeaves(rows: Array<[string, string, string]>): Promise<string[]> {
-  const leaves: string[] = [];
-  for (const [index, address, amount] of rows) {
-    leaves.push(await buildClaimLeaf(index, address, amount));
-  }
-  return leaves;
+export function buildClaimLeaves(
+  rows: Array<[string, string, string]>,
+): string[] {
+  return rows.map(([index, address, amount]) =>
+    buildClaimLeaf(index, address, amount),
+  );
 }
