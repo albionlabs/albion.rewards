@@ -38,10 +38,12 @@ export const METABOARD_ADDRESS = "0x59401c9302e79eb8ac6aea659b8b3ae475715e86";
 // (checksummed) for the in-memory rewrite to find it.
 export const ORDERBOOK_STANDIN_ADDRESS = "0xe522cB4a5fCb2eb31a52Ff41a4653d85A4fd7C9D";
 export const ORDERBOOK_V6_ADDRESS = "0xb05D73E6BCc26AEB5b67Ff68C6E9C6151073e3cE";
-// Which orderbook the claims deployment targets. Defaults to the stand-in to
-// preserve current behaviour; flip to ORDERBOOK_V6_ADDRESS to deploy against the
-// real v6 contract (validate first via the phase-1 Anvil fork simulation).
-export const ORDERBOOK_ADDRESS: string = ORDERBOOK_STANDIN_ADDRESS;
+// Which orderbook the claims deployment targets. Now points at the real v6
+// orderbook (0xb05D…e3cE); set back to ORDERBOOK_STANDIN_ADDRESS to fall back to
+// the stand-in. Always validate via the phase-1 Anvil fork simulation before a
+// live Safe proposal — that confirms the orderbook shares the same Base
+// deployer/interpreter/store the SDK expects.
+export const ORDERBOOK_ADDRESS: string = ORDERBOOK_V6_ADDRESS;
 
 // Pinned to rain.strategies @ 3c8b935ba2b00ef4623eb1e74507c490c33d4dcc
 // (last commit with YAML version: 5, compatible with alpha.229 SDK).
