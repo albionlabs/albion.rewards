@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { docDisplayName, mergeDocuments, type AssetDocument } from '../documents';
+import { docDisplayName, mergeDocuments, validatePeriod, type AssetDocument } from '../documents';
 import { convertToPdf } from '../documents';
 
 describe('docDisplayName', () => {
@@ -11,6 +11,34 @@ describe('docDisplayName', () => {
   });
   it('handles a non-April month', () => {
     expect(docDisplayName('2025-09', 'operations')).toBe('September 2025 Operations Report');
+  });
+  it('formats quarterly report names', () => {
+    expect(docDisplayName('2026-Q1', 'quarterly')).toBe('Q1 2026 Operations Report');
+    expect(docDisplayName('2025-Q3', 'quarterly')).toBe('Q3 2025 Operations Report');
+  });
+  it('formats annual report names', () => {
+    expect(docDisplayName('2025', 'annual')).toBe('2025 Annual Operations Report');
+  });
+});
+
+describe('validatePeriod', () => {
+  it('accepts YYYY-MM for sales/operations', () => {
+    expect(() => validatePeriod('2026-04', 'sales')).not.toThrow();
+    expect(() => validatePeriod('2025-12', 'operations')).not.toThrow();
+  });
+  it('rejects a bad month for sales/operations', () => {
+    expect(() => validatePeriod('2026-4', 'sales')).toThrow(/month/i);
+    expect(() => validatePeriod('2026-13', 'operations')).toThrow(/01-12|month/i);
+  });
+  it('accepts YYYY-Qn for quarterly and rejects others', () => {
+    expect(() => validatePeriod('2026-Q1', 'quarterly')).not.toThrow();
+    expect(() => validatePeriod('2025-Q3', 'quarterly')).not.toThrow();
+    expect(() => validatePeriod('2026-Q5', 'quarterly')).toThrow(/quarterly|YYYY-Qn/i);
+    expect(() => validatePeriod('2026-01', 'quarterly')).toThrow(/quarterly|YYYY-Qn/i);
+  });
+  it('accepts YYYY for annual and rejects others', () => {
+    expect(() => validatePeriod('2025', 'annual')).not.toThrow();
+    expect(() => validatePeriod('2025-01', 'annual')).toThrow(/annual|YYYY/);
   });
 });
 

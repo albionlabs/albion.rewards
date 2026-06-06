@@ -4,7 +4,7 @@ import { buildClaimLeaf, buildClaimLeaves } from "../leaf";
 describe("buildClaimLeaf", () => {
   it("matches Rain Float leaf encoding (index Float + address bytes32 + amount Float)", () => {
     const leaf = buildClaimLeaf(
-      5,
+      5n,
       "0x8f6bF4A948Af2Fc74eE34982C4435a7C013D1A52",
       "4924897972993079296",
     );

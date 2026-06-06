@@ -12,9 +12,24 @@ describe('parseArgs', () => {
     ]);
     expect(args.into).toBe('2026-04');
     expect(args.docs).toEqual([
-      { month: '2026-04', kind: 'sales', path: '/p/Egdon Apr26.pdf' },
-      { month: '2026-04', kind: 'operations', path: '/p/26_04_Albion_Report.docx' },
+      { period: '2026-04', kind: 'sales', path: '/p/Egdon Apr26.pdf' },
+      { period: '2026-04', kind: 'operations', path: '/p/26_04_Albion_Report.docx' },
     ]);
+  });
+
+  it('parses quarterly (YYYY-Qn) and annual (YYYY) periods', () => {
+    const args = parseArgs([
+      '--doc', '2026-Q1:quarterly:/p/26_Q1_Albion_Report.docx',
+      '--doc', '2025:annual:/p/2025_Albion_Report.docx',
+    ]);
+    expect(args.docs).toEqual([
+      { period: '2026-Q1', kind: 'quarterly', path: '/p/26_Q1_Albion_Report.docx' },
+      { period: '2025', kind: 'annual', path: '/p/2025_Albion_Report.docx' },
+    ]);
+  });
+
+  it('rejects a YYYY-MM period for the quarterly kind', () => {
+    expect(() => parseArgs(['--doc', '2026-01:quarterly:/p/x.docx'])).toThrow(/quarterly|YYYY-Qn/i);
   });
 
   it('keeps colons in the path (split on first two only)', () => {
@@ -58,7 +73,7 @@ describe('parseArgs', () => {
 });
 
 describe('resolveLatestDateRange', () => {
-  afterEach(() => vi.restoreAllMocks());
+  afterEach(() => { vi.restoreAllMocks(); });
 
   it('returns the dir with the latest end date', async () => {
     const fs = await import('node:fs');

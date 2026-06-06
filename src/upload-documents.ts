@@ -24,13 +24,14 @@ import {
   convertToPdf,
   docDisplayName,
   mergeDocuments,
+  validatePeriod,
 } from './lib/documents';
 
 const MONTH_RE = /^\d{4}-\d{2}$/;
 const DATE_RANGE_RE = /^(\d{4}-\d{2}-\d{2})_to_(\d{4}-\d{2}-\d{2})$/;
 
 export interface DocArg {
-  month: string;
+  period: string;
   kind: DocKind;
   path: string;
 }
@@ -55,31 +56,27 @@ export function parseArgs(argv: string[]): ParsedArgs {
       const first = value.indexOf(':');
       const second = value.indexOf(':', first + 1);
       if (first < 0 || second < 0) {
-        throw new Error(`Malformed --doc "${value}": expected <YYYY-MM>:<kind>:<path>`);
+        throw new Error(`Malformed --doc "${value}": expected <period>:<kind>:<path>`);
       }
-      const month = value.slice(0, first);
+      const period = value.slice(0, first);
       const kind = value.slice(first + 1, second);
       const path = value.slice(second + 1);
-      if (!MONTH_RE.test(month)) {
-        throw new Error(`Bad month in --doc "${value}": expected YYYY-MM`);
-      }
-      const monthNum = Number(month.slice(5, 7));
-      if (monthNum < 1 || monthNum > 12) {
-        throw new Error(`Bad month in --doc "${value}": month must be 01-12`);
-      }
       if (!(DOC_KINDS as readonly string[]).includes(kind)) {
         throw new Error(`Bad kind "${kind}" in --doc "${value}": expected ${DOC_KINDS.join(' | ')}`);
       }
+      validatePeriod(period, kind as DocKind);
       if (!path) throw new Error(`Missing path in --doc "${value}"`);
-      const key = `${month}:${kind}`;
-      if (seen.has(key)) throw new Error(`Duplicate (month, kind) in one run: ${key}`);
+      const key = `${period}:${kind}`;
+      if (seen.has(key)) throw new Error(`Duplicate (period, kind) in one run: ${key}`);
       seen.add(key);
-      docs.push({ month, kind: kind as DocKind, path });
+      docs.push({ period, kind: kind as DocKind, path });
     }
   }
 
   if (docs.length === 0) {
-    throw new Error('No --doc provided. Usage: --doc <YYYY-MM>:<sales|operations>:<path> [--into YYYY-MM]');
+    throw new Error(
+      'No --doc provided. Usage: --doc <period>:<sales|operations|quarterly|annual>:<path> [--into YYYY-MM]'
+    );
   }
   return { docs, into };
 }
@@ -118,17 +115,24 @@ async function main() {
   // only the metadata merge is idempotent. Re-running with the same files creates
   // fresh CIDs. Pinata dedups identical content, so this is cheap but not a no-op.
 
-  // Convert + upload each file, building entries.
+  // Keep committable copies of the converted PDFs in the repo, alongside the
+  // target month's output, so the source-of-truth documents live in git too.
+  const documentsDir = `${outputBase}/${dateRange}/documents`;
+  fs.mkdirSync(documentsDir, { recursive: true });
+
+  // Convert + copy-to-repo + upload each file, building entries.
   const entries: AssetDocument[] = [];
-  const summary: Array<{ month: string; kind: string; name: string; cid: string; url: string }> = [];
+  const summary: Array<{ period: string; kind: string; name: string; cid: string; url: string }> = [];
   for (const doc of args.docs) {
     if (!fs.existsSync(doc.path)) throw new Error(`File not found: ${doc.path}`);
-    // Upload under a deterministic name; the entry's display name comes from docDisplayName.
+    // Deterministic file name; the entry's display name comes from docDisplayName.
+    const fileName = `${doc.period}-${doc.kind}.pdf`;
     const { bytes } = await convertToPdf(doc.path);
-    const upload = await uploadFileToPinata(bytes, `${doc.month}-${doc.kind}.pdf`, 'application/pdf');
-    const name = docDisplayName(doc.month, doc.kind);
+    fs.writeFileSync(`${documentsDir}/${fileName}`, bytes);
+    const upload = await uploadFileToPinata(bytes, fileName, 'application/pdf');
+    const name = docDisplayName(doc.period, doc.kind);
     entries.push({ name, type: 'pdf', ipfs: upload.cid });
-    summary.push({ month: doc.month, kind: doc.kind, name, cid: upload.cid, url: upload.gatewayUrl });
+    summary.push({ period: doc.period, kind: doc.kind, name, cid: upload.cid, url: upload.gatewayUrl });
     console.log(`  uploaded ${name} -> ${upload.cid}`);
   }
 
@@ -143,7 +147,7 @@ async function main() {
 
   console.log('\nSummary:');
   for (const s of summary) {
-    console.log(`  ${s.month} ${s.kind.padEnd(10)} ${s.name}  [${s.cid}]  ${s.url}`);
+    console.log(`  ${s.period.padEnd(8)} ${s.kind.padEnd(10)} ${s.name}  [${s.cid}]  ${s.url}`);
   }
   console.log(
     '\nStaged into metadata.json (not committed, not pinned). ' +

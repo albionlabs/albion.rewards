@@ -3,7 +3,7 @@ import * as fs from 'node:fs';
 import * as os from 'node:os';
 import * as path from 'node:path';
 
-export const DOC_KINDS = ['sales', 'operations'] as const;
+export const DOC_KINDS = ['sales', 'operations', 'quarterly', 'annual'] as const;
 export type DocKind = (typeof DOC_KINDS)[number];
 
 export interface AssetDocument {
@@ -17,12 +17,53 @@ const MONTH_NAMES = [
   'July', 'August', 'September', 'October', 'November', 'December',
 ];
 
-/** "2026-04" + "sales" -> "April 2026 Sales Report". */
-export function docDisplayName(month: string, kind: DocKind): string {
-  const [yearStr, monthStr] = month.split('-');
-  const monthName = MONTH_NAMES[parseInt(monthStr, 10) - 1];
-  const kindLabel = kind === 'sales' ? 'Sales' : 'Operations';
-  return `${monthName} ${yearStr} ${kindLabel} Report`;
+/**
+ * Validate the period token for a given kind. Period format depends on kind:
+ *   sales | operations -> YYYY-MM
+ *   quarterly          -> YYYY-Qn (n = 1-4)
+ *   annual             -> YYYY
+ * Throws with a descriptive message on mismatch.
+ */
+export function validatePeriod(period: string, kind: DocKind): void {
+  if (kind === 'sales' || kind === 'operations') {
+    if (!/^\d{4}-\d{2}$/.test(period)) {
+      throw new Error(`Bad month "${period}" for ${kind}: expected YYYY-MM`);
+    }
+    const mm = Number(period.slice(5, 7));
+    if (mm < 1 || mm > 12) {
+      throw new Error(`Bad month "${period}": month must be 01-12`);
+    }
+  } else if (kind === 'quarterly') {
+    if (!/^\d{4}-Q[1-4]$/.test(period)) {
+      throw new Error(`Bad period "${period}" for quarterly: expected YYYY-Qn (n=1-4)`);
+    }
+  } else if (kind === 'annual') {
+    if (!/^\d{4}$/.test(period)) {
+      throw new Error(`Bad period "${period}" for annual: expected YYYY`);
+    }
+  }
+}
+
+/**
+ * Period + kind -> display name shown in the document hub. Examples:
+ *   "2026-04" + "sales"     -> "April 2026 Sales Report"
+ *   "2026-04" + "operations"-> "April 2026 Operations Report"
+ *   "2026-Q1" + "quarterly" -> "Q1 2026 Operations Report"
+ *   "2025"    + "annual"    -> "2025 Annual Operations Report"
+ */
+export function docDisplayName(period: string, kind: DocKind): string {
+  if (kind === 'sales' || kind === 'operations') {
+    const [yearStr, monthStr] = period.split('-');
+    const monthName = MONTH_NAMES[parseInt(monthStr, 10) - 1];
+    const kindLabel = kind === 'sales' ? 'Sales' : 'Operations';
+    return `${monthName} ${yearStr} ${kindLabel} Report`;
+  }
+  if (kind === 'quarterly') {
+    const [yearStr, quarter] = period.split('-'); // quarter like "Q1"
+    return `${quarter} ${yearStr} Operations Report`;
+  }
+  // annual
+  return `${period} Annual Operations Report`;
 }
 
 /**
