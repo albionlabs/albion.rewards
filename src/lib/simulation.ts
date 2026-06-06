@@ -68,16 +68,16 @@ export async function simulateDeployment(
   }
 
   const iface = new ethers.Interface([
-    'event AddOrderV2(address sender, bytes32 orderHash, (address, (address, address, bytes), (address, uint8, uint256)[], (address, uint8, uint256)[], bytes32) order)',
+    'event AddOrderV3(address sender, bytes32 orderHash, (address, (address, address, bytes), (address, bytes32)[], (address, bytes32)[], bytes32) order)',
   ]);
 
   let foundEvent = false;
   for (const log of deployReceipt.logs) {
     try {
       const parsed = iface.parseLog({ topics: log.topics as string[], data: log.data });
-      if (parsed && parsed.name === 'AddOrderV2') {
+      if (parsed && parsed.name === 'AddOrderV3') {
         foundEvent = true;
-        console.log(`  Simulation: AddOrderV2 emitted, orderHash=${parsed.args.orderHash}`);
+        console.log(`  Simulation: AddOrderV3 emitted, orderHash=${parsed.args.orderHash}`);
         break;
       }
     } catch {
@@ -86,7 +86,7 @@ export async function simulateDeployment(
   }
 
   if (!foundEvent) {
-    throw new Error('Simulation: AddOrderV2 event not found in deployment receipt');
+    throw new Error('Simulation: AddOrderV3 event not found in deployment receipt');
   }
 
   await provider.send('anvil_stopImpersonatingAccount', [safeAddress]);

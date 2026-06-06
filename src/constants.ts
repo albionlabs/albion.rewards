@@ -28,8 +28,27 @@ export const CSV_AMOUNT_DECIMALS = 18;
 
 // Rain / MetaBoard
 export const METABOARD_ADDRESS = "0x59401c9302e79eb8ac6aea659b8b3ae475715e86";
+
+// Orderbook (Raindex v6) addresses on Base. The pinned settings.yaml below
+// resolves the base orderbook to the stand-in; order.ts:fetchSettings() rewrites
+// that address in-memory to ORDERBOOK_ADDRESS before handing the YAML to the SDK.
+// The upstream pinned file is never mutated, and only the orderbook *address* is
+// changed — the stale subgraph / deployment-block fields are unused by this
+// repo's deploy/simulate/finalize path. Casing must match the settings.yaml
+// (checksummed) for the in-memory rewrite to find it.
+export const ORDERBOOK_STANDIN_ADDRESS = "0xe522cB4a5fCb2eb31a52Ff41a4653d85A4fd7C9D";
+export const ORDERBOOK_V6_ADDRESS = "0xb05D73E6BCc26AEB5b67Ff68C6E9C6151073e3cE";
+// Which orderbook the claims deployment targets. Defaults to the stand-in to
+// preserve current behaviour; flip to ORDERBOOK_V6_ADDRESS to deploy against the
+// real v6 contract (validate first via the phase-1 Anvil fork simulation).
+export const ORDERBOOK_ADDRESS: string = ORDERBOOK_STANDIN_ADDRESS;
+
+// Pinned to rain.strategies @ 3c8b935ba2b00ef4623eb1e74507c490c33d4dcc
+// (last commit with YAML version: 5, compatible with alpha.229 SDK).
 export const CLAIMS_STRATEGY_URL =
-  "https://raw.githubusercontent.com/rainlanguage/rain.strategies/7c8d5f1e95f8e6c1c6c13de366b0cf0493b50758/src/claims.rain";
+  "https://raw.githubusercontent.com/rainlanguage/rain.strategies/3c8b935ba2b00ef4623eb1e74507c490c33d4dcc/src/claims.rain";
+export const SETTINGS_YAML_URL =
+  "https://raw.githubusercontent.com/rainlanguage/rain.strategies/3c8b935ba2b00ef4623eb1e74507c490c33d4dcc/settings.yaml";
 
 // Metadata subgraph
 export const METADATA_SUBGRAPH_URL =
