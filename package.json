@@ -19,7 +19,8 @@
   },
   "dependencies": {
     "@openzeppelin/merkle-tree": "^1.0.8",
-    "@rainlanguage/orderbook": "=0.0.1-alpha.154",
+    "@rainlanguage/float": "0.0.0-alpha.40",
+    "@rainlanguage/orderbook": "0.0.1-alpha.231",
     "@safe-global/api-kit": "^4.1.0",
     "@safe-global/protocol-kit": "^7.0.0",
     "axios": "^1.7.9",

@@ -70,7 +70,7 @@ async function main() {
 
   const validations = [];
   for (let i = 0; i < TOKENS.length; i++) {
-    const v = validateToken(outputBase, dateRange, TOKENS[i], amounts[i]);
+    const v = await validateToken(outputBase, dateRange, TOKENS[i], amounts[i]);
     validations.push(v);
     console.log(`  ${TOKENS[i].symbol}: CSV OK, merkle root ${v.merkleRoot.slice(0, 10)}...`);
   }
