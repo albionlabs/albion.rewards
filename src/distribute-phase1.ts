@@ -24,6 +24,7 @@ interface CliArgs {
   r2Amount: number;
   outputToken: string;
   inputToken: string;
+  allowUnderfund: boolean;
 }
 
 function parseArgs(): CliArgs {
@@ -33,6 +34,7 @@ function parseArgs(): CliArgs {
   let r2Amount = NaN;
   let outputToken = USDC_BASE;
   let inputToken = WETH_BASE;
+  let allowUnderfund = false;
 
   for (let i = 0; i < args.length; i++) {
     if (args[i] === '--month' && args[i + 1]) month = args[++i];
@@ -40,19 +42,20 @@ function parseArgs(): CliArgs {
     else if (args[i] === '--r2-amount' && args[i + 1]) r2Amount = parseFloat(args[++i]);
     else if (args[i] === '--output-token' && args[i + 1]) outputToken = args[++i];
     else if (args[i] === '--input-token' && args[i + 1]) inputToken = args[++i];
+    else if (args[i] === '--allow-underfund') allowUnderfund = true;
   }
 
   if (!month || isNaN(r1Amount) || r1Amount <= 0 || isNaN(r2Amount) || r2Amount <= 0) {
     console.error('Usage: npx tsx src/distribute-phase1.ts --month YYYY-MM --r1-amount <USDC> --r2-amount <USDC>');
-    console.error('Optional: --output-token <address> --input-token <address>');
+    console.error('Optional: --output-token <address> --input-token <address> --allow-underfund');
     process.exit(1);
   }
 
-  return { month, r1Amount, r2Amount, outputToken, inputToken };
+  return { month, r1Amount, r2Amount, outputToken, inputToken, allowUnderfund };
 }
 
 async function main() {
-  const { month, r1Amount, r2Amount, outputToken, inputToken } = parseArgs();
+  const { month, r1Amount, r2Amount, outputToken, inputToken, allowUnderfund } = parseArgs();
   const amounts = [r1Amount, r2Amount];
 
   console.log(`\n=== Phase 1: Prepare & Propose (${month}) ===`);
@@ -70,7 +73,7 @@ async function main() {
 
   const validations = [];
   for (let i = 0; i < TOKENS.length; i++) {
-    const v = await validateToken(outputBase, dateRange, TOKENS[i], amounts[i]);
+    const v = await validateToken(outputBase, dateRange, TOKENS[i], amounts[i], allowUnderfund);
     validations.push(v);
     console.log(`  ${TOKENS[i].symbol}: CSV OK, merkle root ${v.merkleRoot.slice(0, 10)}...`);
   }

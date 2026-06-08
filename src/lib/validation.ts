@@ -126,6 +126,7 @@ export async function validateToken(
   dateRange: string,
   token: (typeof TOKENS)[number],
   cliAmount: number,
+  allowUnderfund = false,
 ): Promise<TokenValidation> {
   const tokenDir = `${outputBase}/${dateRange}/${token.address}`;
   const csvPath = `${tokenDir}/rewards_${dateRange}.csv`;
@@ -155,9 +156,9 @@ export async function validateToken(
   const csvAmounts = csvData.map(([, , amount]) => BigInt(amount));
   if (!validateCsvTotal(cliAmount, csvAmounts)) {
     const totalWei = csvAmounts.reduce((sum, a) => sum + a, 0n);
-    throw new Error(
-      `${token.symbol} deposit too low: CLI=${cliAmount} USDC (${ethers.parseUnits(cliAmount.toString(), CSV_AMOUNT_DECIMALS)} wei), CSV total=${totalWei} wei`,
-    );
+    const msg = `${token.symbol} deposit too low: CLI=${cliAmount} USDC (${ethers.parseUnits(cliAmount.toString(), CSV_AMOUNT_DECIMALS)} wei), CSV total=${totalWei} wei`;
+    if (!allowUnderfund) throw new Error(msg);
+    console.warn(`  ⚠ allow-underfund: ${msg} — order will be deposited below the claimable total; top up the vault later.`);
   }
 
   const metadata = JSON.parse(fs.readFileSync(metadataPath, "utf8"));
