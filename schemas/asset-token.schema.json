@@ -1,0 +1,585 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://albion.energy/schemas/asset-token.schema.json",
+  "title": "AlbionAssetToken",
+  "description": "Unified metadata for an Albion tokenised energy revenue interest. One shape spans the full asset lifecycle: development-stage assets carry a developmentStage block and empty actuals arrays; producing assets omit developmentStage and populate payoutData/historicalProduction/receiptsData.",
+  "type": "object",
+  "required": [
+    "assetId",
+    "symbol",
+    "tokenType",
+    "sharePercentage",
+    "asset"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "schemaVersion": {
+      "type": "string"
+    },
+    "contractAddress": {
+      "type": "string"
+    },
+    "assetId": {
+      "type": "string"
+    },
+    "symbol": {
+      "type": "string"
+    },
+    "releaseName": {
+      "type": "string"
+    },
+    "tokenType": {
+      "type": "string"
+    },
+    "firstPaymentDate": {
+      "type": "string"
+    },
+    "sharePercentage": {
+      "type": "number"
+    },
+    "payoutData": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/payoutEntry"
+      }
+    },
+    "asset": {
+      "$ref": "#/definitions/asset"
+    }
+  },
+  "definitions": {
+    "party": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "companyNumber": {
+          "type": "string"
+        },
+        "website": {
+          "type": "string"
+        },
+        "role": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "name"
+      ],
+      "additionalProperties": false
+    },
+    "productionPoint": {
+      "type": "object",
+      "properties": {
+        "month": {
+          "type": "string",
+          "description": "YYYY-MM"
+        },
+        "year": {
+          "type": "string"
+        },
+        "production": {
+          "type": "number"
+        }
+      },
+      "required": [
+        "production"
+      ],
+      "additionalProperties": false
+    },
+    "money": {
+      "type": "object",
+      "properties": {
+        "amount": {
+          "type": "number"
+        },
+        "currency": {
+          "type": "string"
+        },
+        "period": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "amount",
+        "currency"
+      ],
+      "additionalProperties": false
+    },
+    "payoutEntry": {
+      "type": "object",
+      "properties": {
+        "month": {
+          "type": "string"
+        },
+        "tokenPayout": {
+          "type": "object",
+          "properties": {
+            "date": {
+              "type": "string"
+            },
+            "totalPayout": {
+              "type": "number"
+            },
+            "payoutPerToken": {
+              "type": "number"
+            },
+            "txHash": {
+              "type": "string"
+            },
+            "orderHash": {
+              "type": "string"
+            },
+            "note": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "month",
+        "tokenPayout"
+      ],
+      "additionalProperties": false
+    },
+    "receiptEntry": {
+      "type": "object",
+      "properties": {
+        "month": {
+          "type": "string"
+        },
+        "assetData": {
+          "type": "object",
+          "properties": {
+            "production": {
+              "type": "number"
+            },
+            "revenue": {
+              "type": "number"
+            },
+            "expenses": {
+              "type": "number"
+            },
+            "netIncome": {
+              "type": "number"
+            }
+          },
+          "additionalProperties": false
+        },
+        "realisedPrice": {
+          "type": "object",
+          "properties": {
+            "oilPrice": {
+              "type": "number"
+            },
+            "gasPrice": {
+              "type": "number"
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "month"
+      ],
+      "additionalProperties": false
+    },
+    "update": {
+      "type": "object",
+      "properties": {
+        "date": {
+          "type": "string"
+        },
+        "category": {
+          "type": "string",
+          "enum": [
+            "deal",
+            "development",
+            "regulatory",
+            "production",
+            "hse",
+            "commercial",
+            "other"
+          ]
+        },
+        "title": {
+          "type": "string"
+        },
+        "body": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "date",
+        "title"
+      ],
+      "additionalProperties": false
+    },
+    "roadmapGate": {
+      "type": "object",
+      "properties": {
+        "phase": {
+          "type": "string"
+        },
+        "gate": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "pending",
+            "in_progress",
+            "complete",
+            "failed"
+          ]
+        },
+        "targetDate": {
+          "type": "string"
+        },
+        "actualDate": {
+          "type": "string"
+        },
+        "note": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "gate",
+        "status"
+      ],
+      "additionalProperties": false
+    },
+    "condition": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "pending",
+            "in_progress",
+            "satisfied",
+            "failed"
+          ]
+        },
+        "targetDate": {
+          "type": "string"
+        },
+        "note": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "name",
+        "status"
+      ],
+      "additionalProperties": false
+    },
+    "commitment": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "summary": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "on_track",
+            "pending",
+            "at_risk",
+            "breached",
+            "complete"
+          ]
+        }
+      },
+      "required": [
+        "summary",
+        "status"
+      ],
+      "additionalProperties": false
+    },
+    "asset": {
+      "type": "object",
+      "required": [
+        "assetName",
+        "status",
+        "location",
+        "counterparty",
+        "technical",
+        "assetTerms"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "assetName": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "prospect",
+            "appraisal",
+            "development",
+            "producing",
+            "decommissioned"
+          ]
+        },
+        "revenueStartDate": {
+          "type": "string"
+        },
+        "location": {
+          "type": "object",
+          "properties": {
+            "setting": {
+              "type": "string",
+              "enum": [
+                "onshore",
+                "offshore"
+              ]
+            },
+            "country": {
+              "type": "string"
+            },
+            "region": {
+              "type": "string"
+            },
+            "locality": {
+              "type": "string"
+            },
+            "coordinates": {
+              "type": "object",
+              "properties": {
+                "lat": {
+                  "type": "number"
+                },
+                "lng": {
+                  "type": "number"
+                }
+              },
+              "additionalProperties": false
+            }
+          },
+          "additionalProperties": false
+        },
+        "counterparty": {
+          "type": "object",
+          "properties": {
+            "operator": {
+              "$ref": "#/definitions/party"
+            },
+            "provider": {
+              "$ref": "#/definitions/party"
+            },
+            "guarantor": {
+              "$ref": "#/definitions/party"
+            }
+          },
+          "additionalProperties": false
+        },
+        "technical": {
+          "type": "object",
+          "properties": {
+            "fieldType": {
+              "type": "string"
+            },
+            "licence": {
+              "type": "object",
+              "properties": {
+                "reference": {
+                  "type": "string"
+                },
+                "blocks": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              },
+              "required": [
+                "reference"
+              ],
+              "additionalProperties": false
+            },
+            "discoveryWell": {
+              "type": "string"
+            },
+            "regulator": {
+              "type": "string"
+            },
+            "firstProductionDate": {
+              "type": "string"
+            },
+            "exportRoute": {
+              "type": "string"
+            },
+            "environmental": {
+              "type": "string"
+            },
+            "priceBenchmark": {
+              "type": "string"
+            },
+            "pricing": {
+              "type": "object",
+              "properties": {
+                "benchmarkPremium": {
+                  "type": "number"
+                },
+                "transportCosts": {
+                  "type": "number"
+                }
+              },
+              "additionalProperties": false
+            }
+          },
+          "additionalProperties": false
+        },
+        "assetTerms": {
+          "type": "object",
+          "properties": {
+            "interestType": {
+              "type": "string"
+            },
+            "amount": {
+              "type": "number"
+            },
+            "revenueDeduction": {
+              "$ref": "#/definitions/money"
+            },
+            "taxBasis": {
+              "type": "string"
+            },
+            "governingLaw": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "interestType",
+            "amount"
+          ],
+          "additionalProperties": false
+        },
+        "plannedProduction": {
+          "type": "object",
+          "properties": {
+            "priceAssumption": {
+              "type": "number"
+            },
+            "priceUnit": {
+              "type": "string"
+            },
+            "projections": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/productionPoint"
+              }
+            }
+          },
+          "additionalProperties": false
+        },
+        "developmentStage": {
+          "type": "object",
+          "properties": {
+            "currentPhase": {
+              "type": "string"
+            },
+            "nextMilestone": {
+              "type": "string"
+            },
+            "fdpRoadmap": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/roadmapGate"
+              }
+            },
+            "conditionsPrecedent": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/condition"
+              }
+            },
+            "developmentCommitments": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/commitment"
+              }
+            }
+          },
+          "additionalProperties": false
+        },
+        "updates": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/update"
+          }
+        },
+        "operationalMetrics": {
+          "type": "object",
+          "additionalProperties": true
+        },
+        "historicalProduction": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/productionPoint"
+          }
+        },
+        "receiptsData": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/receiptEntry"
+          }
+        },
+        "documents": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "title": {
+                "type": "string"
+              },
+              "url": {
+                "type": "string"
+              },
+              "category": {
+                "type": "string"
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "coverImage": {
+          "type": "string"
+        },
+        "galleryImages": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "title": {
+                "type": "string"
+              },
+              "caption": {
+                "type": "string"
+              },
+              "url": {
+                "type": "string"
+              }
+            },
+            "additionalProperties": false
+          }
+        }
+      }
+    }
+  }
+}

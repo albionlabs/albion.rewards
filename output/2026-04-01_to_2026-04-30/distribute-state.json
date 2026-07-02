@@ -1,0 +1,48 @@
+{
+  "month": "2026-04",
+  "dateRange": "2026-04-01_to_2026-04-30",
+  "r1Amount": 1148.250001,
+  "r2Amount": 3889.654001,
+  "outputToken": "0x833589fcd6edb6e08f4c7c32d4f71b54bda02913",
+  "inputToken": "0x4200000000000000000000000000000000000006",
+  "proposals": [
+    {
+      "symbol": "ALB-WR1-R1",
+      "safeTxHash": "0x0fb92a762a9610f1d60ccf6d1be614d3f7e0e9ab6f860c99fcd986c1d5d2578d",
+      "safeUrl": "https://app.safe.global/transactions/tx?safe=base:0xA51fd23D6E2442805130eac0712F590691e91517&id=multisig_0xA51fd23D6E2442805130eac0712F590691e91517_0x0fb92a762a9610f1d60ccf6d1be614d3f7e0e9ab6f860c99fcd986c1d5d2578d"
+    },
+    {
+      "symbol": "ALB-WR1-R2",
+      "safeTxHash": "0x46be9383efa4317c361db85861656e4500307d805e70c306d4838158d21867ad",
+      "safeUrl": "https://app.safe.global/transactions/tx?safe=base:0x1c56Fc57BBc18879D8059562A371722b682CA984&id=multisig_0x1c56Fc57BBc18879D8059562A371722b682CA984_0x46be9383efa4317c361db85861656e4500307d805e70c306d4838158d21867ad"
+    }
+  ],
+  "merkleRoots": [
+    "0x4fe663800243f4ea4269334d7fbe93aa90ba3567415ee15d4c03706b000f73d5",
+    "0x96096dca44f395b5d7576273448f6af88f8640067203fe4267e43f5dda2ee43c"
+  ],
+  "executionResults": [
+    {
+      "orderHash": "0x41e3ca1f4ea1e839539d9f942684904bbd84f534b8894e9031c2291d6375e825",
+      "txHash": "0xbf8dd07415ab849911cc1852d176b3d56f8f296aaabe1c91a75a2767a651569b"
+    },
+    {
+      "orderHash": "0x7264deb4f653b059bd5cf9516bd26a0f6bf6f51fb3a6df3d89ea19907c318c53",
+      "txHash": "0x45370a18ed3bd47a81c945954b7fe8d56fb3b1b4944bdeadaab49651d260d1b0"
+    }
+  ],
+  "csvUploads": [
+    {
+      "cid": "bafkreihr5ymyhpq7s357efvtq2af5cooocer4xzgekvwc32xhjfkyg754y",
+      "gatewayUrl": "https://gateway.pinata.cloud/ipfs/bafkreihr5ymyhpq7s357efvtq2af5cooocer4xzgekvwc32xhjfkyg754y"
+    },
+    {
+      "cid": "bafkreigdcpbpiaroroikdxhunl7dncouea4mhjhxiv5f2jdbbfzngysgvq",
+      "gatewayUrl": "https://gateway.pinata.cloud/ipfs/bafkreigdcpbpiaroroikdxhunl7dncouea4mhjhxiv5f2jdbbfzngysgvq"
+    }
+  ],
+  "metadataProposal": {
+    "safeTxHash": "0xafa4e4d9f154a6e0440558dba743da8d5545e2bf7fc7598d9646a84d3b5dabe7",
+    "safeUrl": "https://app.safe.global/transactions/tx?safe=base:0x4E5Bd3Cf829010280F76754B49921d4e1448B8Cf&id=multisig_0x4E5Bd3Cf829010280F76754B49921d4e1448B8Cf_0xafa4e4d9f154a6e0440558dba743da8d5545e2bf7fc7598d9646a84d3b5dabe7"
+  }
+}

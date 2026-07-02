@@ -1,0 +1,176 @@
+{
+  "schemaVersion": "2.0",
+  "contractAddress": "",
+  "assetId": "EARLHAM-P2680-GRI",
+  "symbol": "ALB-EAR-1",
+  "releaseName": "Earlham \u2014 Development Preview 1",
+  "tokenType": "royalty",
+  "firstPaymentDate": "",
+  "sharePercentage": 0.5,
+  "payoutData": [],
+  "asset": {
+    "assetName": "Earlham Discovery \u2014 Gross Revenue Interest",
+    "description": "Pre-development gas discovery (well 50/26b-6), UK Southern North Sea, Licence P.2680. Token holders purchase a share of gross revenue and bear pre-production development risk: the field is not yet producing and requires farm-out, gas route-to-market and FDP Approval.",
+    "status": "development",
+    "revenueStartDate": "",
+    "location": {
+      "setting": "offshore",
+      "country": "United Kingdom",
+      "region": "Southern North Sea",
+      "locality": "",
+      "coordinates": {
+        "lat": 53.07,
+        "lng": 2.98
+      }
+    },
+    "counterparty": {
+      "operator": {
+        "name": "Orcadian Energy (CNS) Ltd",
+        "website": ""
+      },
+      "provider": {
+        "name": "Orcadian Energy (CNS) Ltd",
+        "companyNumber": "08954960"
+      },
+      "guarantor": {
+        "name": "Orcadian Energy PLC",
+        "companyNumber": "13298968"
+      }
+    },
+    "technical": {
+      "fieldType": "Gas",
+      "licence": {
+        "reference": "P.2680",
+        "blocks": [
+          "49/25b",
+          "49/30b",
+          "50/21a",
+          "50/26"
+        ]
+      },
+      "discoveryWell": "50/26b-6",
+      "regulator": "NSTA",
+      "firstProductionDate": "",
+      "exportRoute": "Not yet secured \u2014 likely subsea tie-back to a third-party host facility (TBD)",
+      "environmental": "ES/EIA required as part of FDP authorisation",
+      "priceBenchmark": "NBP",
+      "pricing": {
+        "benchmarkPremium": 0,
+        "transportCosts": 0
+      }
+    },
+    "assetTerms": {
+      "interestType": "Gross Revenue Interest",
+      "amount": 0.5,
+      "revenueDeduction": {
+        "amount": 2500000,
+        "currency": "GBP",
+        "period": "per Royalty Calculation Period"
+      },
+      "taxBasis": "pre-tax",
+      "governingLaw": "England & Wales"
+    },
+    "plannedProduction": {
+      "priceAssumption": 80,
+      "priceUnit": "p/therm",
+      "projections": []
+    },
+    "developmentStage": {
+      "currentPhase": "Pre-Assessment",
+      "nextMilestone": "Launch farm-out process",
+      "fdpRoadmap": [
+        {
+          "phase": "Assessment",
+          "gate": "Concept Select Report",
+          "status": "pending",
+          "targetDate": "",
+          "actualDate": ""
+        },
+        {
+          "phase": "Authorisation",
+          "gate": "FID + Final FDP submitted",
+          "status": "pending",
+          "targetDate": "",
+          "actualDate": ""
+        },
+        {
+          "phase": "Authorisation",
+          "gate": "FDP Approval (Development & Production Consent)",
+          "status": "pending",
+          "targetDate": "",
+          "actualDate": ""
+        },
+        {
+          "phase": "Execute",
+          "gate": "First Production",
+          "status": "pending",
+          "targetDate": "",
+          "actualDate": ""
+        }
+      ],
+      "conditionsPrecedent": [
+        {
+          "id": "nsta-condition",
+          "name": "NSTA acknowledgement of the grant",
+          "status": "pending"
+        },
+        {
+          "id": "farm-out",
+          "name": "Farm-in / development funding secured",
+          "status": "pending"
+        },
+        {
+          "id": "gas-offtake",
+          "name": "Gas Purchaser / route to market",
+          "status": "pending"
+        },
+        {
+          "id": "fdp-approval",
+          "name": "FDP Approval",
+          "status": "pending"
+        }
+      ],
+      "developmentCommitments": [
+        {
+          "id": "licence-good-standing",
+          "summary": "Maintain P.2680 in good standing; no voluntary relinquishment without offering reassignment",
+          "status": "on_track"
+        },
+        {
+          "id": "farm-out-process",
+          "summary": "Run a genuine farm-out process within 12 months of signing",
+          "status": "pending"
+        },
+        {
+          "id": "gas-route-to-market",
+          "summary": "Reasonable endeavours to secure a Gas Purchaser / evacuation route",
+          "status": "pending"
+        },
+        {
+          "id": "concept-select",
+          "summary": "Submit Concept Select Report within 12 months of farm-in",
+          "status": "pending"
+        }
+      ]
+    },
+    "updates": [
+      {
+        "date": "2026-06",
+        "category": "deal",
+        "title": "Revenue purchase agreement in negotiation",
+        "body": "Agreement (v9) under negotiation; development-effort and refund protections being added."
+      }
+    ],
+    "operationalMetrics": {
+      "asOf": "",
+      "fdpStatus": "not submitted",
+      "lastRegulatoryEngagement": "",
+      "wellsDrilled": 1
+    },
+    "historicalProduction": [],
+    "receiptsData": [],
+    "documents": [],
+    "coverImage": "",
+    "galleryImages": []
+  }
+}
