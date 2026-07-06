@@ -171,6 +171,18 @@ export async function updateIssuanceSiteAndPR(
     throw new Error(`network.ts not found at ${networkTsPath}`);
   }
 
+  // Git operations. Base branch defaults to main, but v6 claims target the
+  // issuance-site feat/v6-claims-dual-era branch — override via ISSUANCE_BASE_BRANCH.
+  const baseBranch = process.env.ISSUANCE_BASE_BRANCH || 'main';
+  const branchName = `rewards-${month}`;
+
+  // Check out the base branch BEFORE patching, so the claims are inserted into
+  // that branch's network.ts (not whatever branch the repo happened to be on)
+  // and no uncommitted change blocks the checkout.
+  run('git', ['checkout', baseBranch], { cwd: repoPath });
+  run('git', ['pull', 'origin', baseBranch], { cwd: repoPath });
+  run('git', ['checkout', '-b', branchName], { cwd: repoPath });
+
   // Patch network.ts with new claims
   let content = fs.readFileSync(networkTsPath, 'utf-8');
   content = insertClaim(content, TOKENS[0].address, r1Update);
@@ -178,13 +190,6 @@ export async function updateIssuanceSiteAndPR(
   fs.writeFileSync(networkTsPath, content);
 
   console.log(`  Patched network.ts with R1 and R2 claims`);
-
-  // Git operations
-  const branchName = `rewards-${month}`;
-
-  run('git', ['checkout', 'main'], { cwd: repoPath });
-  run('git', ['pull', 'origin', 'main'], { cwd: repoPath });
-  run('git', ['checkout', '-b', branchName], { cwd: repoPath });
 
   run('git', ['add', 'src/lib/network.ts'], { cwd: repoPath });
   run('git', ['commit', '-m', `feat: add ${month} rewards claims data`], { cwd: repoPath });
@@ -194,7 +199,7 @@ export async function updateIssuanceSiteAndPR(
     'pr', 'create',
     '--title', `Add ${month} rewards claims data`,
     '--body', `Automated by distribute.ts\n\nR1 orderHash: ${r1Update.orderHash}\nR2 orderHash: ${r2Update.orderHash}`,
-    '--base', 'main',
+    '--base', baseBranch,
   ], { cwd: repoPath });
 
   return prUrl;

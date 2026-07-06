@@ -1,0 +1,48 @@
+{
+  "month": "2026-05",
+  "dateRange": "2026-05-01_to_2026-05-31",
+  "r1Amount": 1012.775001,
+  "r2Amount": 3483.229001,
+  "outputToken": "0x833589fcd6edb6e08f4c7c32d4f71b54bda02913",
+  "inputToken": "0x4200000000000000000000000000000000000006",
+  "proposals": [
+    {
+      "symbol": "ALB-WR1-R1",
+      "safeTxHash": "0x5e06c4b692b44f979c50be517a3c0a97e76370e7ab42328fc6aaa61682389a8b",
+      "safeUrl": "https://app.safe.global/transactions/tx?safe=base:0xA51fd23D6E2442805130eac0712F590691e91517&id=multisig_0xA51fd23D6E2442805130eac0712F590691e91517_0x5e06c4b692b44f979c50be517a3c0a97e76370e7ab42328fc6aaa61682389a8b"
+    },
+    {
+      "symbol": "ALB-WR1-R2",
+      "safeTxHash": "0xaef36041858e5148b6b3cac3f77cecc80a873ad73418c6d659c32a74d686e410",
+      "safeUrl": "https://app.safe.global/transactions/tx?safe=base:0x1c56Fc57BBc18879D8059562A371722b682CA984&id=multisig_0x1c56Fc57BBc18879D8059562A371722b682CA984_0xaef36041858e5148b6b3cac3f77cecc80a873ad73418c6d659c32a74d686e410"
+    }
+  ],
+  "merkleRoots": [
+    "0xc9623ce1348f3316300ca403b25bf45ddb2b9c928b0c97193d177e3a88bdd69b",
+    "0x539b534e1cefb45b8342842fe403cd7fa89e3b9cf6121932434dc15d58afeea2"
+  ],
+  "executionResults": [
+    {
+      "orderHash": "0x3ffb4bfe1fb2c7d9dd788b497dff0d997cac747d27036904d78addb71587d46c",
+      "txHash": "0x915601c3ae899ecad1010dd49009793f4a497131038f920b9091d8cc33138a70"
+    },
+    {
+      "orderHash": "0x4859ea8e6f2c3a99cec46151747b4b709ab6c0c5241c6d3001ffde0c9cc46d6b",
+      "txHash": "0x69cd33fbab7cfe22035fdc60c740f91df3a65b054bad54b7351ccec84ffc942a"
+    }
+  ],
+  "csvUploads": [
+    {
+      "cid": "bafkreigbe2h5za2ozxfwozy5cbqfdzbiyyimyxzfpwre2fgs3lc3nwcjq4",
+      "gatewayUrl": "https://gateway.pinata.cloud/ipfs/bafkreigbe2h5za2ozxfwozy5cbqfdzbiyyimyxzfpwre2fgs3lc3nwcjq4"
+    },
+    {
+      "cid": "bafkreigp3awvdgfsx5snxihkkhjo36zyx7xs6lfftlu64bp7hq2c747lx4",
+      "gatewayUrl": "https://gateway.pinata.cloud/ipfs/bafkreigp3awvdgfsx5snxihkkhjo36zyx7xs6lfftlu64bp7hq2c747lx4"
+    }
+  ],
+  "metadataProposal": {
+    "safeTxHash": "0xb55405e9cddba385eb933722e4065972f9fd77a8d8eac8d2841491e3daae13be",
+    "safeUrl": "https://app.safe.global/transactions/tx?safe=base:0x4E5Bd3Cf829010280F76754B49921d4e1448B8Cf&id=multisig_0x4E5Bd3Cf829010280F76754B49921d4e1448B8Cf_0xb55405e9cddba385eb933722e4065972f9fd77a8d8eac8d2841491e3daae13be"
+  }
+}
