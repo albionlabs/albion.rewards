@@ -27,7 +27,12 @@ interface Phase2State {
   month: string;
   dateRange: string;
   merkleRoots: string[];
-  executionResults: Array<{ orderHash: string; txHash: string }>;
+  executionResults: Array<{
+    orderHash: string;
+    txHash: string;
+    orderBytes: string;
+    deployBlock: number;
+  }>;
   csvUploads: Array<{ cid: string; gatewayUrl: string }>;
   metadataProposal: { safeTxHash: string; safeUrl: string };
 }
@@ -64,6 +69,8 @@ async function main() {
     csvCid: state.csvUploads[0].cid,
     merkleRoot: state.merkleRoots[0],
     csvGatewayUrl: state.csvUploads[0].gatewayUrl,
+    orderBytes: state.executionResults[0].orderBytes,
+    deployBlock: state.executionResults[0].deployBlock,
   };
 
   const r2Update: IssuanceSiteUpdate = {
@@ -71,6 +78,8 @@ async function main() {
     csvCid: state.csvUploads[1].cid,
     merkleRoot: state.merkleRoots[1],
     csvGatewayUrl: state.csvUploads[1].gatewayUrl,
+    orderBytes: state.executionResults[1].orderBytes,
+    deployBlock: state.executionResults[1].deployBlock,
   };
 
   const prUrl = await updateIssuanceSiteAndPR(r1Update, r2Update, month);

@@ -22,6 +22,14 @@ export interface IssuanceSiteUpdate {
   csvCid: string;
   merkleRoot: string;
   csvGatewayUrl: string;
+  /**
+   * ABI-encoded OrderV4 + its deploy block. The issuance site resolves each
+   * claim's order entirely from these (no runtime subgraph lookup); omitting
+   * them makes every payout render as $0. Sourced from the AddOrderV3 event in
+   * phase 2 (see safe.ts extractOrderFromReceipt).
+   */
+  orderBytes: string;
+  deployBlock: number;
 }
 
 /**
@@ -49,12 +57,19 @@ function findIssuanceSiteRepo(): string {
 
 /**
  * Format a claim entry as TypeScript source matching network.ts style.
+ *
+ * `orderBytes` + `deployBlock` are REQUIRED by the issuance site to resolve the
+ * order (no runtime subgraph lookup); leaving them out is what caused the
+ * $0-claims bug that had to be patched by hand for 2026-05.
  */
-function formatClaimEntry(update: IssuanceSiteUpdate, indent: string): string {
+export function formatClaimEntry(update: IssuanceSiteUpdate, indent: string): string {
   return [
     `${indent}{`,
     `${indent}  orderHash:`,
     `${indent}    "${update.orderHash}",`,
+    `${indent}  orderBytes:`,
+    `${indent}    "${update.orderBytes}",`,
+    `${indent}  deployBlock: ${update.deployBlock},`,
     `${indent}  csvLink: \`\${PINATA_GATEWAY}/${update.csvCid}\`,`,
     `${indent}  expectedMerkleRoot:`,
     `${indent}    "${update.merkleRoot}",`,

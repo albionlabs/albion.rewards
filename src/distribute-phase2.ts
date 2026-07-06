@@ -12,7 +12,7 @@ import fs from 'fs';
 import { ethers } from 'ethers';
 import { TOKENS, METABOARD_ADDRESS, METADATA_SAFE, METABOARD_ABI } from './constants';
 import { resolveOutputDir, validateToken } from './lib/validation';
-import { waitForExecution, extractOrderHashFromReceipt, proposeSafeTransaction } from './lib/safe';
+import { waitForExecution, extractOrderFromReceipt, proposeSafeTransaction } from './lib/safe';
 import { uploadToPinata } from './lib/pinata';
 import { fetchSchemaHash, buildMetadataHex, generateMetaboardSubject, patchPendingPayout } from './lib/metadata';
 import { commitAndPushMetadata } from './lib/git';
@@ -61,7 +61,12 @@ async function main() {
 
   // 5. Wait for execution and extract results
   console.log('5. Checking execution status...');
-  const executionResults: Array<{ orderHash: string; txHash: string }> = [];
+  const executionResults: Array<{
+    orderHash: string;
+    txHash: string;
+    orderBytes: string;
+    deployBlock: number;
+  }> = [];
 
   for (let i = 0; i < TOKENS.length; i++) {
     console.log(`  Polling ${TOKENS[i].symbol}...`);
@@ -71,10 +76,17 @@ async function main() {
     const receipt = await provider.getTransactionReceipt(execResult.transactionHash);
     if (!receipt) throw new Error(`Could not fetch receipt for ${execResult.transactionHash}`);
 
-    const orderHash = extractOrderHashFromReceipt(receipt);
-    console.log(`  ${TOKENS[i].symbol}: orderHash=${orderHash}`);
+    // orderBytes + deployBlock feed phase 3's issuance-site claim entry — without
+    // them the site can't resolve the order and claims show $0 (see safe.ts).
+    const { orderHash, orderBytes, deployBlock } = extractOrderFromReceipt(receipt);
+    console.log(`  ${TOKENS[i].symbol}: orderHash=${orderHash} deployBlock=${deployBlock}`);
 
-    executionResults.push({ orderHash, txHash: execResult.transactionHash });
+    executionResults.push({
+      orderHash,
+      txHash: execResult.transactionHash,
+      orderBytes,
+      deployBlock,
+    });
   }
 
   // 6. Update metadata.json files

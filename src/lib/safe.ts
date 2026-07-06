@@ -108,20 +108,46 @@ export async function checkDelegate(safeAddress: string): Promise<void> {
   }
 }
 
+/** OrderV4 tuple ABI (Raindex v6): IOs are (address token, bytes32 vaultId) — no decimals. */
+const ORDER_V4_TUPLE =
+  '(address owner, (address interpreter, address store, bytes bytecode) evaluable, (address token, bytes32 vaultId)[] validInputs, (address token, bytes32 vaultId)[] validOutputs, bytes32 nonce)';
+
+export interface ExtractedOrder {
+  orderHash: string;
+  /**
+   * ABI-encoded OrderV4 tuple. The issuance site reconstructs the order for
+   * claim proofs via AbiCoder.decode([OrderV4], orderBytes) — it has no runtime
+   * subgraph lookup — so this MUST be baked into the network.ts claim entry or
+   * claims render as $0. Encoded from the same tuple that hashes to orderHash.
+   */
+  orderBytes: string;
+  /** Block the add-order tx landed in; the issuance site's claim entry deployBlock. */
+  deployBlock: number;
+}
+
 /**
- * Extract orderHash from AddOrderV3 event in a transaction receipt (Raindex v6).
- * AddOrderV3 uses OrderV4 IOs: (address token, bytes32 vaultId) — no decimals field.
+ * Extract the order (hash + ABI-encoded bytes + deploy block) from the AddOrderV3
+ * event in a transaction receipt (Raindex v6). AddOrderV3 uses OrderV4 IOs:
+ * (address token, bytes32 vaultId) — no decimals field.
  */
-export function extractOrderHashFromReceipt(receipt: ethers.TransactionReceipt): string {
+export function extractOrderFromReceipt(receipt: ethers.TransactionReceipt): ExtractedOrder {
   const iface = new ethers.Interface([
-    'event AddOrderV3(address sender, bytes32 orderHash, (address owner, (address interpreter, address store, bytes bytecode) evaluable, (address token, bytes32 vaultId)[] validInputs, (address token, bytes32 vaultId)[] validOutputs, bytes32 nonce) order)',
+    `event AddOrderV3(address sender, bytes32 orderHash, ${ORDER_V4_TUPLE} order)`,
   ]);
 
   for (const log of receipt.logs) {
     try {
       const parsed = iface.parseLog({ topics: log.topics as string[], data: log.data });
       if (parsed && parsed.name === 'AddOrderV3') {
-        return parsed.args.orderHash;
+        const orderBytes = ethers.AbiCoder.defaultAbiCoder().encode(
+          [ORDER_V4_TUPLE],
+          [parsed.args.order],
+        );
+        return {
+          orderHash: parsed.args.orderHash,
+          orderBytes,
+          deployBlock: receipt.blockNumber,
+        };
       }
     } catch {
       // Not this event, continue
@@ -129,4 +155,12 @@ export function extractOrderHashFromReceipt(receipt: ethers.TransactionReceipt):
   }
 
   throw new Error('AddOrderV3 event not found in transaction receipt');
+}
+
+/**
+ * Extract just the orderHash from an AddOrderV3 receipt. Thin wrapper over
+ * {@link extractOrderFromReceipt} for callers that only need the hash.
+ */
+export function extractOrderHashFromReceipt(receipt: ethers.TransactionReceipt): string {
+  return extractOrderFromReceipt(receipt).orderHash;
 }
