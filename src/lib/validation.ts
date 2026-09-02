@@ -3,6 +3,7 @@ import { ethers } from "ethers";
 import { SimpleMerkleTree } from "@openzeppelin/merkle-tree";
 import { USDC_DECIMALS, CSV_AMOUNT_DECIMALS, TOKENS } from "../constants";
 import { buildClaimLeaves } from "./leaf";
+import { assertSnapshotFile } from "./snapshot-plan";
 
 /**
  * Convert --month YYYY-MM to date range string: YYYY-MM-DD_to_YYYY-MM-DD
@@ -138,6 +139,9 @@ export async function validateToken(
     throw new Error(`Tree JSON not found: ${treePath}`);
   if (!fs.existsSync(metadataPath))
     throw new Error(`metadata.json not found: ${metadataPath}`);
+
+  // Sampling plan must match the month it claims to cover (see snapshot-plan.ts).
+  assertSnapshotFile(`${tokenDir}/snapshot.json`);
 
   const csvData = parseCsv(csvPath);
   if (csvData.length !== 256) {

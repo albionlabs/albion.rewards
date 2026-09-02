@@ -3,12 +3,12 @@ import { config } from "dotenv";
 import { SnapshotInfo } from "./types";
 import { ethers } from "ethers";
 import axios from "axios";
+import { planSnapshots, assertSnapshotCount } from "./lib/snapshot-plan";
 
 config();
 
 const HYPERSYNC_URL = "https://8453.hypersync.xyz/query";
 const BASE_RPC="https://mainnet.base.org";
-const BASE_BLOCK_TIME = 2;
 const HYPERSYNC_BEARER_TOKEN = process.env.HYPERSYNC_BEARER_TOKEN;
 
 async function getBlockNumberForTimestampByHyperSync(
@@ -132,38 +132,12 @@ async function getBlockNumberForTimestampByHyperSync(
 }
 
 async function generateRandomBlocks(startBlock: number, endBlock: number, startTimestamp: number, endTimestamp: number, tokenAddress: string) {
-    const blocksPerDay = 86400 / BASE_BLOCK_TIME;
-    const totalBlocks = endBlock - startBlock + 1;
-    const totalDays = Math.ceil(totalBlocks / blocksPerDay);
-    
-    const snapshots: any[] = [];
-    
-    for (let day = 0; day < totalDays; day++) {
-        const dayStartBlock = startBlock + (day * blocksPerDay);
-        const dayEndBlock = Math.min(dayStartBlock + blocksPerDay - 1, endBlock);
-        
-        const randomBlock1 = Math.floor(Math.random() * (dayEndBlock - dayStartBlock + 1)) + dayStartBlock;
-        let randomBlock2 = Math.floor(Math.random() * (dayEndBlock - dayStartBlock + 1)) + dayStartBlock;
-        
-        while (randomBlock2 === randomBlock1 && (dayEndBlock - dayStartBlock) > 0) {
-            randomBlock2 = Math.floor(Math.random() * (dayEndBlock - dayStartBlock + 1)) + dayStartBlock;
-        }
-        
-        snapshots.push(
-            {
-                blockNumber: randomBlock1,
-                timestamp: 0, // Will be filled when we fetch actual block data
-                day: day + 1
-            },
-            {
-                blockNumber: randomBlock2,
-                timestamp: 0, // Will be filled when we fetch actual block data
-                day: day + 1
-            }
-        );
-        
-    }
-    
+    // Day buckets come from the calendar window, not the block span: the block
+    // boundaries are an approximate, chain-head-dependent binary search result,
+    // so a span-derived count produced spurious extra days (see snapshot-plan.ts).
+    const snapshots = planSnapshots(startBlock, endBlock, startTimestamp, endTimestamp);
+    assertSnapshotCount(snapshots, startTimestamp, endTimestamp);
+
     // Create the snapshot file structure
     const snapshotData = {
         generatedAt: new Date().toISOString(),
