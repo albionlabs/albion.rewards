@@ -41,6 +41,7 @@ Easiest pattern: copy the previous month's `metadata.json` for that token, then 
 - **`receiptsData`**: append last month's actuals (`production`, `revenue`, `expenses`, `netIncome`, `realisedPrice.{oilPrice,gasPrice}`).
 - **`asset.historicalProduction`**: append last month's production figure.
 - **`asset.operationalMetrics.hseMetrics.incidentFreeDays`** (and `uptime` if relevant): bump per the latest HSE report.
+- **`tokenTerms`**: carries forward unchanged from the previous month. Only touch it if the terms documents themselves changed — see [Token terms](#token-terms) below.
 
 `example.json` shows the full shape. The schema lives implicitly in `findPendingPayoutEntry` / `patchPendingPayout` (`src/lib/{validation,metadata}.ts`) — phase 1 will reject the run if no pending entry is found.
 
@@ -82,6 +83,33 @@ npm run distribute:phase3 -- --month YYYY-MM
 
 Verifies metadata tx executed, then patches `Albion-issuance-site/src/lib/network.ts` (`PROD_ENERGY_FIELDS` claim arrays for both R1 and R2) and opens a PR via `gh`.
 
+### Token terms
+
+Each token's metadata carries a top-level **`tokenTerms`** — the IPFS CID of that token's legal terms document, sitting immediately after `tokenType`. It is the only contractual link holders get; `asset.assetTerms` is just `{interestType, amount}` and `documents[]` is all sales/operations reports. First pinned in the July 2026 run (MetaBoard tx `0x4fefa0e9…`, block 50780513).
+
+**The same content lives in three places, and they must stay in step:**
+
+1. **Source of truth** — `Albion-issuance-site/static/token_terms/<contractAddress>.md`. The site serves these at `/token-terms/<contract>` via `src/routes/token-terms/[contract]/+page.ts`, which fetches `/token_terms/<address>.md` (checksum address first, then lowercase — R1's file is checksum-cased, R2's is lowercase; keep whatever casing each file already has).
+2. **IPFS** — the same markdown pinned to Pinata; its CID is the `tokenTerms` value.
+3. **On-chain** — pinned into the SFT metadata by phase 2's `emitMeta`.
+
+Current mapping (note the file names are the *contract* addresses, and each document governs the release its title implies):
+
+| Token | Document | Royalty Token Release | CID |
+| --- | --- | --- | --- |
+| R1 `0xf836…ade1` | Albion Token Terms - Community Preview | 1 | `bafkreiabyk3fpptr6abgldsbdoz44n35wmpl32m54y4bxvfsxmicnvecze` |
+| R2 `0x1d57…f4b7` | Albion Token Terms - Investor Preview | 2 | `bafkreid3ojz75hnrjktp7itgt6ixdqqyllomo6u3og7mmawxzwobmngjwy` |
+
+**If a terms document ever changes**, all three must be updated or holders read stale terms: edit the markdown in the issuance site (PR it), re-upload to Pinata, put the new CID in `tokenTerms` for the current month, and re-pin on-chain. Editing only the markdown silently leaves the pinned CID pointing at the old text.
+
+**Re-pinning after a distribution**: phase 2 cannot be re-run once its `payoutData` entry is filled — `validateToken` requires a *pending* entry and throws without one. Use:
+
+```bash
+npx tsx scripts/repin-metadata.ts --month YYYY-MM
+```
+
+That performs only phase 2's step 8 (upload metadata → propose `emitMeta` via the Metadata Safe) and touches neither `payoutData`, CSVs, nor git. The user still signs the Safe tx.
+
 ### State handoff
 
 Phases communicate via `output/<dateRange>/distribute-state.json`. Phase 1 writes, phase 2 updates, phase 3 reads. If a phase fails partway, inspect this file before re-running — re-running phase 1 will overwrite proposals.
@@ -92,6 +120,7 @@ Phases communicate via `output/<dateRange>/distribute-state.json`. Phase 1 write
 - **Merkle leaves are Rain Float–encoded for the v6 claims contract.** The amount word is `Float.fromFixedDecimal(amount, 18).asHex()` (Rain Float `bytes32`); the index and address words and the commutative `SimpleMerkleTree` pairing are unchanged. Both `src/merkle.ts` and `src/lib/validation.ts` build leaves via the shared `src/lib/leaf.ts` — keep them on that one encoder; never route the Float through `BigInt()` (it would reframe the packed value and break on-chain verification). (The old `keccak256(abi.encodePacked(index, address, uint256 amount))` packing applied only to the retired v4 contract.)
 - **`@rainlanguage/orderbook` is pinned to `0.0.1-alpha.229`** (the v6-capable SDK, matching `albion.dex`). Don't bump it without testing — the SDK is pre-release and breaking changes happen (e.g. `setDeposit` became async; `newWithDeployment` takes a settings `string[]`; this version rejects YAML `version: 6`).
 - **v6 deploy event is `AddOrderV3`** (was `AddOrderV2`) — `safe.ts` and `simulation.ts` decode it; the `OrderV4` IO tuple is `(address token, bytes32 vaultId)` (no `decimals`).
+- **Snapshot day buckets come from the calendar, never the block span** (`src/lib/snapshot-plan.ts`). The start/end blocks come from a binary search seeded with the *live chain head*, so the same month resolves to a different span on every run; deriving the day count from that span used to produce a phantom extra day whose degenerate block range collapsed both samples onto one block. It hit whichever token happened to lose the race — R2 in Jul 2026 and Jan 2026, R1 in Apr 2026, both in May 2026. A month must yield exactly `days × 2` snapshots; the generator asserts this before writing and phase 1's `validateToken` re-asserts it against the on-disk file. Fixed Jul 2026 — expect old months' `snapshot.json` to still show the artifact.
 - **Claim side must match.** `Albion-issuance-site` reconstructs leaves to build proofs; it must use the identical Float leaf encoding (port `leaf.ts`) or v6 claims won't verify.
 - **Never edit `metadata.json` by hand between phase 1 and phase 2.** Phase 2 finds the pending entry by empty fields; manual edits will either corrupt the entry or hide the pending one.
 - **Always run phase 1 with a clean git tree** — `assertCleanGitState()` enforces it because phase 2 commits to that tree.
