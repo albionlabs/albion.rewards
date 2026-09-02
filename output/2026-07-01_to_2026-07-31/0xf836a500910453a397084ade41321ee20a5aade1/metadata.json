@@ -142,11 +142,11 @@
     {
       "month": "2026-07",
       "tokenPayout": {
-        "date": "",
+        "date": "2026-09-02T11:05:34.469Z",
         "totalPayout": 743.3,
         "payoutPerToken": 0,
-        "txHash": "",
-        "orderHash": "",
+        "txHash": "0x8bdfa5aed10c4317d78d0f23a2ad5298b0b0ec1b8cd1a43ec6a4c9fc3feb6d49",
+        "orderHash": "0x13efdc397452355f628a2bdf48b53f72b3d37ab87f6201cf8312cc06785fcd63",
         "note": "July monthly payment + 1/12 pending distributions"
       }
     }
