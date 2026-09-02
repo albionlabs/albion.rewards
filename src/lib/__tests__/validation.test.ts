@@ -35,9 +35,22 @@ describe("validateCsvTotal", () => {
     expect(validateCsvTotal(728.45, csvAmountsWei)).toBe(true);
   });
 
-  it("returns false on mismatch", () => {
+  it("returns true when the deposit is rounded up over the CSV total", () => {
+    // Real July 2026 R1 case: the CSV carries sub-picoUSDC rounding dust above
+    // the clean totalPayout, so the deposit is bumped to the next microUSDC.
+    const csvAmountsWei = [743300000000000635674n];
+    expect(validateCsvTotal(743.300001, csvAmountsWei)).toBe(true);
+  });
+
+  it("returns false when the deposit is below the CSV total", () => {
+    // Same case without the roundup: 743.30 does not cover the dust.
+    const csvAmountsWei = [743300000000000635674n];
+    expect(validateCsvTotal(743.3, csvAmountsWei)).toBe(false);
+  });
+
+  it("returns false when the deposit is far below the CSV total", () => {
     const csvAmountsWei = [500000000000000000000n];
-    expect(validateCsvTotal(1234.56, csvAmountsWei)).toBe(false);
+    expect(validateCsvTotal(12.34, csvAmountsWei)).toBe(false);
   });
 });
 
