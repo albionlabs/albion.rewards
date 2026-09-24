@@ -41,7 +41,14 @@ Easiest pattern: copy the previous month's `metadata.json` for that token, then 
 - **`receiptsData`**: append last month's actuals (`production`, `revenue`, `expenses`, `netIncome`, `realisedPrice.{oilPrice,gasPrice}`).
 - **`asset.historicalProduction`**: append last month's production figure.
 - **`asset.operationalMetrics.hseMetrics.incidentFreeDays`** (and `uptime` if relevant): bump per the latest HSE report.
-- **`tokenTerms`**: carries forward unchanged from the previous month. Only touch it if the terms documents themselves changed — see [Token terms](#token-terms) below.
+- **`tokenTerms`**: **check it every month, do not just carry it forward.** The site markdown is the source of truth and it gets edited (24 Sep 2026: both R1 and R2 changed USDT → USDC). Run the check below; if a file's CID differs from the `tokenTerms` in last month's metadata.json, pin the new file and put the new CID in this month's metadata.json before phase 1 so the month's `emitMeta` carries it. Only if both match does the value carry forward unchanged. See [Token terms](#token-terms) below.
+  ```bash
+  # CIDv1 (raw, sha256) of each terms file in the issuance site vs the tokenTerms in last month's metadata.json
+  for f in ${ISSUANCE_SITE_PATH:-../Albion-issuance-site}/static/token_terms/0x*.md; do
+    python3 -c 'import sys,hashlib,base64;d=open(sys.argv[1],"rb").read();print(sys.argv[1].split("/")[-1][:10], "b"+base64.b32encode(b"\x01\x55\x12\x20"+hashlib.sha256(d).digest()).decode().lower().rstrip("="))' "$f"
+  done
+  grep -H tokenTerms output/<lastMonthDateRange>/*/metadata.json
+  ```
 
 `example.json` shows the full shape. The schema lives implicitly in `findPendingPayoutEntry` / `patchPendingPayout` (`src/lib/{validation,metadata}.ts`) — phase 1 will reject the run if no pending entry is found.
 
@@ -99,6 +106,8 @@ Current mapping (note the file names are the *contract* addresses, and each docu
 | --- | --- | --- | --- |
 | R1 `0xf836…ade1` | Albion Token Terms - Community Preview | 1 | `bafkreia4cxx2vgegawrtzpbk4lssg2cnrwaovqxm52ohjvzde4h2vwltwq` |
 | R2 `0x1d57…f4b7` | Albion Token Terms - Investor Preview | 2 | `bafkreiftbedmhumwpndhmwkthkgvp6mpmchcgtyhhjzvvzida4hhgzmol4` |
+
+**Terms changes are part of the monthly run, not a separate project.** Step 1 of the playbook includes the CID check above; a mismatch means someone edited the site markdown since the last pin. History: first pinned July 2026; USDT → USDC correction for both tokens on 24 Sep 2026 (issuance-site PRs #187, #188; re-pinned via `repin-metadata.ts --month 2026-07`).
 
 **If a terms document ever changes**, all three must be updated or holders read stale terms: edit the markdown in the issuance site (PR it), re-upload to Pinata, put the new CID in `tokenTerms` for the current month, and re-pin on-chain. Editing only the markdown silently leaves the pinned CID pointing at the old text.
 

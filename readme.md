@@ -136,6 +136,10 @@ npm run generate-key
 
 This writes the private key to `.env` and saves the public address to `proposer-address.json`. Register the address as a delegate on each Safe (R1, R2, and Metadata).
 
+### Phase 0: Token terms check
+
+Before each month's run, confirm each token's terms markdown in the issuance site (`static/token_terms/<address>.md`) still hashes to the `tokenTerms` CID in the previous month's `metadata.json`. If it does not, pin the new file to Pinata and put the new CID in this month's `metadata.json` first. The `emitMeta` in phase 2 is the only place holders' on-chain terms pointer gets updated. Details and the check command are in `CLAUDE.md` → Token terms.
+
 ### Phase 1: Validate, simulate, and propose
 
 ```bash
