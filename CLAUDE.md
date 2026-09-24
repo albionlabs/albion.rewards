@@ -97,7 +97,7 @@ Current mapping (note the file names are the *contract* addresses, and each docu
 
 | Token | Document | Royalty Token Release | CID |
 | --- | --- | --- | --- |
-| R1 `0xf836…ade1` | Albion Token Terms - Community Preview | 1 | `bafkreiabyk3fpptr6abgldsbdoz44n35wmpl32m54y4bxvfsxmicnvecze` |
+| R1 `0xf836…ade1` | Albion Token Terms - Community Preview | 1 | `bafkreia4cxx2vgegawrtzpbk4lssg2cnrwaovqxm52ohjvzde4h2vwltwq` |
 | R2 `0x1d57…f4b7` | Albion Token Terms - Investor Preview | 2 | `bafkreiftbedmhumwpndhmwkthkgvp6mpmchcgtyhhjzvvzida4hhgzmol4` |
 
 **If a terms document ever changes**, all three must be updated or holders read stale terms: edit the markdown in the issuance site (PR it), re-upload to Pinata, put the new CID in `tokenTerms` for the current month, and re-pin on-chain. Editing only the markdown silently leaves the pinned CID pointing at the old text.
