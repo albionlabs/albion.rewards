@@ -46,7 +46,7 @@
     }
   ],
   "metadataProposal": {
-    "safeTxHash": "0x9b57cffa30b5e12f67d114015798ea961eeee4376fe2c7cdd8d163c8d3a1a344",
-    "safeUrl": "https://app.safe.global/transactions/tx?safe=base:0x4E5Bd3Cf829010280F76754B49921d4e1448B8Cf&id=multisig_0x4E5Bd3Cf829010280F76754B49921d4e1448B8Cf_0x9b57cffa30b5e12f67d114015798ea961eeee4376fe2c7cdd8d163c8d3a1a344"
+    "safeTxHash": "0x8a110e7461c1dc909f9e2375abc528251cad096f8ed2cfd8b42153cf7728ed71",
+    "safeUrl": "https://app.safe.global/transactions/tx?safe=base:0x4E5Bd3Cf829010280F76754B49921d4e1448B8Cf&id=multisig_0x4E5Bd3Cf829010280F76754B49921d4e1448B8Cf_0x8a110e7461c1dc909f9e2375abc528251cad096f8ed2cfd8b42153cf7728ed71"
   }
 }
