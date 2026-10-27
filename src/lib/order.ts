@@ -10,7 +10,7 @@ export interface DeploymentArgs {
   deploymentCalldata: string;
   orderbookAddress: string;
   chainId: number;
-  // alpha.229 adds this; we ignore it (we keep the existing MetaBoard phase-2 step).
+  // The SDK returns this; we ignore it (we keep the existing MetaBoard phase-2 step).
   emitMetaCall?: { to: string; calldata: string };
 }
 
@@ -70,9 +70,9 @@ async function fetchSettings(): Promise<string> {
 /**
  * Build deployment transaction args for a claims order using the Rain SDK.
  *
- * Uses DotrainOrderGui (same pattern as raindex v6 webapp).
+ * Uses RaindexOrderBuilder (same pattern as raindex v6 webapp).
  * The SDK bundles addOrder4 + deposit4 into a single deploymentCalldata via the
- * new v6 settings YAML (which supplies the orderbook address / network config).
+ * v6 settings YAML (which supplies the raindex address / network config).
  */
 export async function buildOrderCalldata(
   merkleRoot: string,
@@ -81,24 +81,24 @@ export async function buildOrderCalldata(
   outputToken: string,
   inputToken: string,
 ): Promise<DeploymentArgs> {
-  // Dynamic import since @rainlanguage/orderbook uses WASM
-  const { DotrainOrderGui } = await import("@rainlanguage/orderbook");
+  // Dynamic import since @rainlanguage/raindex uses WASM
+  const { RaindexOrderBuilder } = await import("@rainlanguage/raindex");
 
   const [dotrain, settings] = await Promise.all([fetchDotrain(), fetchSettings()]);
 
   // The deployment key for claims orders — needs to match what the .rain file exports.
   const deploymentKey = "base";
 
-  const guiResult = await DotrainOrderGui.newWithDeployment(
+  const guiResult = await RaindexOrderBuilder.newWithDeployment(
     dotrain,
-    [settings], // alpha.229: settings is string[] | null
+    [settings],
     deploymentKey,
     null, // state_update_callback — no-op for CLI usage
   );
 
   if (guiResult.error) {
     throw new Error(
-      `Failed to initialise DotrainOrderGui: ${guiResult.error.readableMsg ?? JSON.stringify(guiResult.error)}`,
+      `Failed to initialise RaindexOrderBuilder: ${guiResult.error.readableMsg ?? JSON.stringify(guiResult.error)}`,
     );
   }
   const gui = guiResult.value;
@@ -118,7 +118,7 @@ export async function buildOrderCalldata(
     );
   }
 
-  // Set the merkle root field (sync in alpha.229; await is a harmless no-op, kept for uniformity)
+  // Set the merkle root field (sync; await is a harmless no-op, kept for uniformity)
   const fieldResult = await gui.setFieldValue("root", merkleRoot);
   if (fieldResult.error) {
     throw new Error(
@@ -126,7 +126,7 @@ export async function buildOrderCalldata(
     );
   }
 
-  // Set deposit amount — human-readable, e.g. "1000.50" (must be awaited in alpha.229)
+  // Set deposit amount — human-readable, e.g. "1000.50" (must be awaited)
   const depositResult = await gui.setDeposit("output", depositAmountHuman);
   if (depositResult.error) {
     throw new Error(
@@ -143,5 +143,6 @@ export async function buildOrderCalldata(
     );
   }
 
-  return result.value;
+  const { raindexAddress, ...rest } = result.value;
+  return { ...rest, orderbookAddress: raindexAddress };
 }

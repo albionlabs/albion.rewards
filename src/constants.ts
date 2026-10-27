@@ -45,12 +45,12 @@ export const ORDERBOOK_V6_ADDRESS = "0xb05D73E6BCc26AEB5b67Ff68C6E9C6151073e3cE"
 // deployer/interpreter/store the SDK expects.
 export const ORDERBOOK_ADDRESS: string = ORDERBOOK_V6_ADDRESS;
 
-// Pinned to rain.strategies @ 3c8b935ba2b00ef4623eb1e74507c490c33d4dcc
-// (last commit with YAML version: 5, compatible with alpha.229 SDK).
+// Pinned to albionlabs/albion.registry @ 4e0b4d098cff48f0d6a023cc293c1d703518d9f4
+// (YAML version: 6; requires @rainlanguage/raindex, not the v5-only @rainlanguage/orderbook).
 export const CLAIMS_STRATEGY_URL =
-  "https://raw.githubusercontent.com/rainlanguage/rain.strategies/3c8b935ba2b00ef4623eb1e74507c490c33d4dcc/src/claims.rain";
+  "https://raw.githubusercontent.com/albionlabs/albion.registry/4e0b4d098cff48f0d6a023cc293c1d703518d9f4/src/claims.rain";
 export const SETTINGS_YAML_URL =
-  "https://raw.githubusercontent.com/rainlanguage/rain.strategies/3c8b935ba2b00ef4623eb1e74507c490c33d4dcc/settings.yaml";
+  "https://raw.githubusercontent.com/albionlabs/albion.registry/4e0b4d098cff48f0d6a023cc293c1d703518d9f4/settings.yaml";
 
 // Metadata subgraph
 export const METADATA_SUBGRAPH_URL =

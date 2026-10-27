@@ -219,7 +219,7 @@ src/
   constants.ts           # Addresses, ABIs, magic numbers
   lib/
     validation.ts        # Pre-flight checks (CSV, merkle, balances)
-    order.ts             # DotrainOrderGui wrapper (order calldata)
+    order.ts             # RaindexOrderBuilder wrapper (order calldata)
     simulation.ts        # Anvil fork simulation
     safe.ts              # Safe SDK (propose, poll, extract orderHash)
     metadata.ts          # CBOR encoding, MetaBoard calls, JSON patching

@@ -4,10 +4,10 @@ import { applyOrderbookOverride } from '../order';
 const STANDIN = '0xe522cB4a5fCb2eb31a52Ff41a4653d85A4fd7C9D';
 const V6 = '0xb05D73E6BCc26AEB5b67Ff68C6E9C6151073e3cE';
 
-// Mirrors the relevant shape of the pinned rain.strategies settings.yaml:
+// Mirrors the relevant shape of the pinned albion.registry settings.yaml:
 // the base orderbook address appears exactly once, and other networks carry
 // their own (different) orderbook addresses that must not be touched.
-const SAMPLE = `orderbooks:
+const SAMPLE = `raindexes:
   base:
     address: ${STANDIN}
     network: base
