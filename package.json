@@ -15,7 +15,8 @@
     "distribute:phase3": "tsx src/distribute-phase3.ts",
     "generate-key": "tsx scripts/generate-proposer-key.ts",
     "upload-docs": "tsx src/upload-documents.ts",
-    "test": "vitest"
+    "test": "vitest",
+    "test:fork": "forge test --root foundry -vv"
   },
   "dependencies": {
     "@openzeppelin/merkle-tree": "^1.0.8",

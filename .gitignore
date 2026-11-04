@@ -6,5 +6,9 @@ dist/
 *.key
 docs/superpowers/
 
+# Foundry fork-test artifacts
+foundry/out/
+foundry/cache/
+
 # One-off data request doc, not part of the rewards pipeline
 Orcadian-Data-Request-Earlham.docx
