@@ -3,6 +3,7 @@ import {
   SETTINGS_YAML_URL,
   ORDERBOOK_STANDIN_ADDRESS,
   ORDERBOOK_ADDRESS,
+  METADATA_SUBGRAPH_URL,
 } from "../constants";
 
 export interface DeploymentArgs {
@@ -55,8 +56,29 @@ export function applyOrderbookOverride(
 }
 
 /**
+ * The pinned settings.yaml points `metaboards.base` at a Goldsky subgraph that
+ * has 404'd since the 28 Sep 2026 move to Ormi. The SDK queries it while
+ * building the deployment, so rewrite that one URL in-memory to
+ * METADATA_SUBGRAPH_URL. Same exactly-one guard as the orderbook override.
+ */
+export const PINNED_METABOARD_BASE_URL =
+  "https://api.goldsky.com/api/public/project_clv14x04y9kzi01saerx7bxpg/subgraphs/metadata-base/2025-07-06-594f/gn";
+
+export function applyMetaboardOverride(rawYaml: string, targetUrl: string): string {
+  const occurrences = rawYaml.split(PINNED_METABOARD_BASE_URL).length - 1;
+  if (occurrences !== 1) {
+    throw new Error(
+      `Metaboard override: expected exactly one occurrence of ${PINNED_METABOARD_BASE_URL} ` +
+        `in settings.yaml, found ${occurrences}. Refusing to override (settings.yaml shape may have changed).`,
+    );
+  }
+  return rawYaml.replace(PINNED_METABOARD_BASE_URL, targetUrl);
+}
+
+/**
  * Fetch the settings YAML from the pinned URL, applying the in-memory orderbook
- * address override (see ORDERBOOK_ADDRESS in constants.ts).
+ * address override (see ORDERBOOK_ADDRESS in constants.ts) and the metaboard
+ * subgraph override.
  */
 async function fetchSettings(): Promise<string> {
   const response = await fetch(SETTINGS_YAML_URL);
@@ -64,7 +86,10 @@ async function fetchSettings(): Promise<string> {
     throw new Error(`Failed to fetch settings YAML: ${response.status}`);
   }
   const raw = await response.text();
-  return applyOrderbookOverride(raw, ORDERBOOK_STANDIN_ADDRESS, ORDERBOOK_ADDRESS);
+  return applyMetaboardOverride(
+    applyOrderbookOverride(raw, ORDERBOOK_STANDIN_ADDRESS, ORDERBOOK_ADDRESS),
+    METADATA_SUBGRAPH_URL,
+  );
 }
 
 /**

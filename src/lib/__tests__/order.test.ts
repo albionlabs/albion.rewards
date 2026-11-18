@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { applyOrderbookOverride } from '../order';
+import { applyOrderbookOverride, applyMetaboardOverride, PINNED_METABOARD_BASE_URL } from '../order';
 
 const STANDIN = '0xe522cB4a5fCb2eb31a52Ff41a4653d85A4fd7C9D';
 const V6 = '0xb05D73E6BCc26AEB5b67Ff68C6E9C6151073e3cE';
@@ -46,5 +46,21 @@ describe('applyOrderbookOverride', () => {
   it('throws if the stand-in address appears more than once (ambiguous)', () => {
     const dup = `${SAMPLE}metaboards:\n  base: ${STANDIN}\n`;
     expect(() => applyOrderbookOverride(dup, STANDIN, V6)).toThrow(/found 2/);
+  });
+});
+
+describe('applyMetaboardOverride', () => {
+  const ORMI = 'https://api.subgraph.ormilabs.com/api/public/x/subgraphs/metadata-base/prod/gn';
+  const YAML = `metaboards:\n  base: ${PINNED_METABOARD_BASE_URL}\n  polygon: https://example.com/mb-polygon/gn\n`;
+
+  it('rewrites only the base metaboard URL', () => {
+    const out = applyMetaboardOverride(YAML, ORMI);
+    expect(out).toContain(`base: ${ORMI}`);
+    expect(out).toContain('polygon: https://example.com/mb-polygon/gn');
+    expect(out).not.toContain(PINNED_METABOARD_BASE_URL);
+  });
+
+  it('refuses when the pinned URL is missing', () => {
+    expect(() => applyMetaboardOverride('metaboards:\n  base: https://other/gn\n', ORMI)).toThrow(/exactly one/);
   });
 });
