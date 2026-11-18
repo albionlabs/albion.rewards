@@ -8,7 +8,7 @@ import { ENERGY_FEILDS } from "./constants";
 config();
 
 const SUBGRAPH_URL =
-  "https://api.goldsky.com/api/public/project_cm153vmqi5gke01vy66p4ftzf/subgraphs/sft-offchainassetvaulttest-base/1.0.5/gn";
+  "https://api.subgraph.ormilabs.com/api/public/9f4fc2fa-4a15-44f7-a7c1-66fdaa518a71/subgraphs/sft-base/legacy/gn";
 const BATCH_SIZE = 1000;
 
 // ensure SNAPSHOT_BLOCK_2 env is set for deterministic transfers.dat,
@@ -225,4 +225,7 @@ async function main() {
   console.log(`Total transfers and deposits fetched: ${totalProcessed}`);
 }
 
-main().catch(console.error);
+main().catch((err) => {
+  console.error(err);
+  process.exit(1);
+});

@@ -54,7 +54,7 @@ export const SETTINGS_YAML_URL =
 
 // Metadata subgraph
 export const METADATA_SUBGRAPH_URL =
-  "https://api.goldsky.com/api/public/project_clv14x04y9kzi01saerx7bxpg/subgraphs/metadata-base/2025-07-06-594f/gn";
+  "https://api.subgraph.ormilabs.com/api/public/9f4fc2fa-4a15-44f7-a7c1-66fdaa518a71/subgraphs/metadata-base/prod/gn";
 
 // CBOR magic numbers (from operator.portal consts.ts)
 export const MAGIC_NUMBERS = {

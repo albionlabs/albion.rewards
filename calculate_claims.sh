@@ -28,7 +28,18 @@ echo ""
 
 # Step 1: Run scrape
 echo "Step 1: Running scrape..."
-nix develop -c npm run scrape
+# Fetch transfers up to the last block of the reward period. This is derived
+# from END_TIMESTAMP on every run and passed *inside* the nix shell because the
+# rainix shellHook re-sources .env, which would otherwise override it. (A
+# hand-maintained SNAPSHOT_BLOCK_2 in .env sat at 31 Mar 2026 for months and
+# silently dropped every later transfer.)
+SNAPSHOT_BLOCK_2=$(cast find-block "$END_TIMESTAMP" --rpc-url "${BASE_RPC_URL:-https://mainnet.base.org}")
+if ! [[ "$SNAPSHOT_BLOCK_2" =~ ^[0-9]+$ ]]; then
+    echo "Error: could not resolve end block for timestamp $END_TIMESTAMP (got: $SNAPSHOT_BLOCK_2)"
+    exit 1
+fi
+echo "Scraping transfers up to block $SNAPSHOT_BLOCK_2"
+nix develop -c env SNAPSHOT_BLOCK_2="$SNAPSHOT_BLOCK_2" npm run scrape
 if [ $? -ne 0 ]; then
     echo "Error: Scrape failed"
     exit 1
